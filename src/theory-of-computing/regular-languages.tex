@@ -1,0 +1,233 @@
+\input{src/header.tex}
+
+\title{Regular Languages}
+
+\begin{document}
+
+\initAfterBeginDocument{}
+
+
+\section{Strings and Languages}
+
+Basic definitions:
+
+\begin{itemize}
+\item Alphabet
+\item String, Empty string ($e$), Length of a string ($|w|$)
+\item Concatenation of 2 strings
+\item Suffix, Prefix, Substring
+\item Reversal of a string (denoted as $w^R$)
+\item Language
+\item Lexicographical ordering of strings
+\item Shortlex ordering of strings
+\end{itemize}
+
+Basic theorems:
+
+\begin{itemize}
+\item \begin{theorem}$(xy)^R = y^Rx^R$\end{theorem}
+\end{itemize}
+
+Operations on languages:
+
+\begin{itemize}
+\item Complement of language $L$ on alphabet $\Sigma$:
+    $\overline{L} = \Sigma^* - L$.
+\item Union and intersection of languages.
+\item Concatenation of languages:
+    $L_1L_2 = \{xy: x \in L_1 \wedge y \in L_2\}$.
+\item Power of a language:
+    $L^0 = \{e\} \wedge L^k = L^{k-1}L$.
+\item Kleene-star of a language $L$:
+    $L^* = \bigcup\limits_{i \ge 0} L^i$.
+\end{itemize}
+
+\subsection{Finite representation of languages}
+
+Every string in $\Sigma^*$ can be mapped to a number. That number is its rank in the shortlex order.
+Therefore, $\Sigma^*$ is countably infinite.
+Since every language is a subset of $\Sigma^*$, every language is countable.
+
+The set of all languages is $2^{\Sigma^*}$.
+It can be proven using diagonalization that there is no bijection from $\Sigma^*$ to $2^{\Sigma^*}$.
+Therefore, all languages cannot be represented as a finite string.
+
+\section{Regular expressions}
+
+Let $\Sigma$ be an alphabet.
+A regular expression $R$ is a string over
+$\Sigma \cup \{\phi, \cup, \texttt{(}, \texttt{)}, ^* \}$
+which represents a language over $\Sigma$. $L(R)$ is the language represented by $R$.
+
+\begin{itemize}
+\item $\phi$ is a regular expression, where $L(\phi) = \{\}$.
+\item $\forall a \in \Sigma$, $a$ is a regular expression where $L(a) = \{a\}$.
+\item If $R$ is a regular expression, then so is $\texttt{(}R\texttt{)}$,
+    where $L(\texttt{(}R\texttt{)}) = L(R)$.
+\item If $R_1$ and $R_2$ are regular expressions, then so is $R_1 \cup R_2$,
+    where $L(R_1 \cup R_2) = L(R_1) \cup L(R_2)$.
+\item If $R_1$ and $R_2$ are regular expressions, then so is $R_1 R_2$,
+    where $L(R_1 R_2) = L(R_1) L(R_2)$.
+\item If $R$ is a regular expression, then so is $R^*$,
+    where $L(R^*) = L(R)^*$.
+\end{itemize}
+
+A language $L'$ is defined to be regular iff there exists a regular expression $R$
+such that $L(R) = L'$.
+
+\subsection{Other closure results}
+
+\begin{theorem}
+If $L$ is a regular language, then the following are regular:
+
+\begin{itemize}
+\item $\operatorname{pref}(L)$: set of all prefixes of all strings in $L$.
+\item $\operatorname{suff}(L)$: set of all suffixes of all strings in $L$.
+\item $\operatorname{subseq}(L)$: set of all subsequences of all strings in $L$.
+\item $L^R$: reverse of all strings in $L$.
+\end{itemize}
+\end{theorem}
+
+They can all be proven to be regular by finding a regular expression for them.
+
+Let $h: \Sigma \mapsto \Delta^*$ be a function.
+Extend $h$ to $\Sigma^* \mapsto \Delta^*$ like this:
+\[ h(e) = e \wedge h(aw) = h(a)h(w) \textrm{ where } a \in \Sigma \textrm{ and } w \in \Sigma^* \]
+This extension is called an homomorphism. Also define $h(L) = \{h(w): w \in L\}$.
+
+\begin{theorem}$\forall x, y \in \Sigma^*, h(xy) = h(x)h(y)$\end{theorem}
+\begin{theorem}If $L$ is regular then $h(L)$ is regular.\end{theorem}
+
+\section{Finite automata}
+
+\subsection[DFA]{Deterministic Finite Automaton (DFA)}
+
+A DFA is a quintuple $M = (Q, \Sigma, \delta, s, F)$ where
+
+\begin{itemize}
+\item $Q$ is the set of states.
+\item $\Sigma$ is the alphabet.
+\item $\delta: Q \times \Sigma \mapsto Q$ is the transition function.
+\item $s \in Q$ is the start state.
+\item $F \subseteq Q$ are the final states.
+\end{itemize}
+
+We can extend $\delta$ to $Q \times \Sigma^* \mapsto Q$ like this:
+$\delta(q, e) = q$ and $\delta(q, aw) = \delta(\delta(q, a), w)$,
+where $a \in \Sigma$ and $w \in \Sigma^*$.
+Intuitively, $\delta(q, w)$ is the state reached by running $M$ on $w$.
+
+\begin{theorem}[Can be proved using induction]
+\[ \delta(q, xy) = \delta(\delta(q, x), y)$ where $x, y \in \Sigma^* \]
+\end{theorem}
+
+We define $L(M)$ as follows:
+$ w \in L(M) \iff \delta(s, w) \in F$.
+
+Automata $M_1$ and $M_2$ are equivalent iff $L(M_1) = L(M_2)$.
+
+\subsection[NFA]{Non-deterministic Finite Automaton (NFA)}
+
+Let $\Sigma? = \Sigma \cup \{e\}$.
+
+An NFA is a quntuple $M = (Q, \Sigma, \Delta, s, F)$.
+This is similar to a DFA, except that $\Delta$ is a subset of $Q \times (\Sigma?) \times Q$.
+
+$E(q)$ is the set of states reachable from $q$ by following only $e$~transitions.
+For $K \subseteq Q$, $E(K) = \cup_{q \in K} E(q)$.
+
+$w \in L(M) \iff$ there is a path from $s$ to a final state which consumes $w$.
+
+Define $\vdash_M$ as:
+\begin{itemize}
+\item $\forall w \in \Sigma^*, (p, w) \vdash_M (q, w) \iff (p, e, q) \in \Delta$.
+\item $\forall a \in \Sigma, \forall w \in \Sigma^*, (p, aw) \vdash_M (q, w) \iff (p, a, q) \in \Delta$.
+\end{itemize}
+
+\begin{theorem}$(p, x) \vdash_M (q, y) \iff (p, xz) \vdash_M (q, yz)$\end{theorem}
+
+Define $\vdash_M^*$ as the reflexive-transitive closure of $\vdash_M$.
+
+We define $L(M)$ as follows:
+\[ w \in L(M) \iff (\exists f \in F, (s, w) \vdash_M^* (f, e)) \]
+
+\begin{theorem}
+If $h$ is a homomorphism, then $h(\Delta) = \{(p, h(a), q) \in \Delta \}$ is an NFA
+accepting $h(L)$.
+\end{theorem}
+
+\subsection{NFA to DFA}
+
+\begin{theorem}
+Let $M = (K, \Sigma, \Delta, s, F)$ be an NFA.
+Then a DFA $M' = (2^K, \Sigma, \delta, E(s), F')$ exists such that $L(M) = L(M')$ where
+\[ F' = \{Q \subseteq K: Q \cap F \neq \{\}\} \]
+\[ \delta(Q, a) = \bigcup \{E(p): q \in Q \wedge (q, a, p) \in \Delta \} \]
+\end{theorem}
+
+This can be proven by using this lemma:
+\begin{lemma}
+\[ \forall w \in \Sigma^*, \forall p, q \in K, \]
+\[ (q, w) \vdash_M^* (p, e) \iff \left(\exists P \supseteq \{p\}, (E(q), w) \vdash_{M'}^* (P, e) \right) \]
+\end{lemma}
+This lemma can be proved by induction over $|w|$.
+
+\section{Finite automata and regular expressions}
+
+\subsection{Regular expression to finite automaton}
+
+\begin{theorem}
+Let $M$, $M_1$ and $M_2$ be finite automata.
+Then it is possible to construct finite automata which accept:
+
+\begin{itemize}
+\item $L(M_1) \cup L(M_2)$
+\item $L(M_1)L(M_2)$
+\item $L(M)^*$
+\item $\overline{L(M)}$
+\item $L(M_1) \cap L(M_2)$
+\end{itemize}
+\end{theorem}
+
+This proves closure properties and the fact that
+a finite automata can be constructed for a regular language.
+
+Intersection and union of DFAs can be constructed
+directly by taking the cross-product of states.
+
+\subsection{Finite automaton to regular expression}
+
+To construct a regular expression for an NFA,
+we consider a generalization of NFAs, called GNFAs.
+A GNFA can have an edge which is a regular expression.
+
+Take an NFA and add a new start and final state, so that
+there is no transition into a start state and a single transition out of the start state and
+there is a single final state with only a single transition into it and no transition out of it.
+
+Now iteratively remove nodes from the GNFA till only the start and final states remain.
+The edge between them is labeled with the required regular expression.
+
+\section{Pumping Lemma}
+
+\begin{theorem}
+Let $L$ be a regular language.
+Then there exists a positive integer $n$, called a `pumping length' of $L$, such that
+\[ \forall w \in L \cap \Sigma^n\Sigma^*,
+\exists (x, y, z) \textrm{ such that } \]
+\[ w = xyz \wedge y \neq e \wedge |xy| \le n \wedge
+(\forall i \ge 0, xy^iz \in L) \]
+\end{theorem}
+
+This can be proven by using the fact that if a DFA has $n$ states,
+then a string of length $\ge n$ will encounter some state $q$ more than once.
+The cycle from $q$ to $q$ can be pumped as many times as we want.
+
+The pumping lemma can be used to prove that a language is irregular,
+by showing that for every pumping length, there is a string which cannot be pumped.
+
+Another way of showing that a language is irregular is by showing that its
+intersection with a regular language is irregular
+(This works because regular languages are closed under intersection).
+
+\end{document}

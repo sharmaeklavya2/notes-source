@@ -1,0 +1,26 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={red!50!black},
+    urlcolor={blue!50!black}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\initAfterBeginDocument}{
+\maketitle
+\tableofcontents
+\newpage
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+}
+
+\author{Eklavya~Sharma}
