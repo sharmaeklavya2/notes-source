@@ -1,4 +1,5 @@
 \input{src/header.tex}
+%\usepackage{amsthm}
 
 \title{Regular Languages}
 
@@ -93,7 +94,7 @@ They can all be proven to be regular by finding a regular expression for them.
 Let $h: \Sigma \mapsto \Delta^*$ be a function.
 Extend $h$ to $\Sigma^* \mapsto \Delta^*$ like this:
 \[ h(e) = e \wedge h(aw) = h(a)h(w) \textrm{ where } a \in \Sigma \textrm{ and } w \in \Sigma^* \]
-This extension is called an homomorphism. Also define $h(L) = \{h(w): w \in L\}$.
+This extended $h$ is called a homomorphism. Also define $h(L) = \{h(w): w \in L\}$.
 
 \begin{theorem}$\forall x, y \in \Sigma^*, h(xy) = h(x)h(y)$\end{theorem}
 \begin{theorem}If $L$ is regular then $h(L)$ is regular.\end{theorem}
@@ -229,5 +230,185 @@ by showing that for every pumping length, there is a string which cannot be pump
 Another way of showing that a language is irregular is by showing that its
 intersection with a regular language is irregular
 (This works because regular languages are closed under intersection).
+
+\section{DFA minimization}
+
+\subsection{Similarity of strings w.r.t. a language}
+
+\begin{definition}
+For a language $L$, $x \approx_L y \iff (\forall z \in \Sigma^*, L(xz) = L(yz))$.
+\end{definition}
+
+\begin{theorem}$\approx_L$ is an equivalence relation.\end{theorem}
+\begin{definition}
+$[x]_L$ is the equivalence class of $\approx_L$ to which $x$ belongs.
+$[\cdot]_L$ is the set of all equivalence classes of $\approx_L$.
+$|\approx_L|$ is the number of equivalence classes of $\approx_L$.
+\end{definition}
+
+\begin{theorem}$x \approx_L y \implies xz \approx_L yz$\end{theorem}
+\begin{corollary}\label{append-equiv-well-defined}
+The function $f([x]_L) = [xz]_L$ is well-defined.
+\end{corollary}
+
+\subsection{Similarity of strings w.r.t. a DFA}
+
+\begin{definition}
+Let $M = (Q, \Sigma, \delta, s, F)$ be a DFA.
+Then $x \sim_M y \iff \delta(s, x) = \delta(s, y)$.
+\end{definition}
+
+\begin{theorem} $\sim_M$ is an equivalence relation. \end{theorem}
+\begin{definition}
+$[x]_M$ is the equivalence class of $\sim_M$ to which $x$ belongs.
+$[\cdot]_M$ is the set of all equivalence classes of $\sim_M$.
+$|\sim_M|$ is the number of equivalence classes of $\sim_M$.
+\end{definition}
+\begin{definition} $\delta(s, [x]_M) = \delta(s, x)$.
+This definition is consistent because it does not depend on the choice of $x$
+because $[x]_M = [y]_M \Rightarrow x \sim_M y \Rightarrow \delta(s, x) = \delta(s, y)$.
+\end{definition}
+Without loss of generality, assume that all states in $Q$ are reachable.
+\begin{theorem} $\delta(s, [\cdot]_M)$ is a bijection from $[\cdot]_M$ to $Q$. \end{theorem}
+\begin{corollary} $|\sim_M| = |Q|$ \end{corollary}
+
+\begin{theorem} $x \sim_M y \implies xz \sim_M yz$ \end{theorem}
+\begin{theorem} $x \sim_M y \implies x \approx_{L(M)} y$ \end{theorem}
+\begin{corollary} $[x]_M \subseteq [x]_{L(M)}$ \end{corollary}
+Therefore, $[\cdot]_M$ is a finer partitioning of $[\cdot]_{L(M)}$.
+\begin{corollary} $|\approx_{L(M)}| \le |\sim_M| = |Q|$ \end{corollary}
+
+\subsection{Standard DFA of a language}
+
+Let $L$ be a language where $|\approx_L|$ is finite.
+The standard DFA for $L$, $M(L) = (Q, \Sigma, \delta, s, F)$ is defined as follows:
+\begin{itemize}
+\item $Q = [\cdot]_L$.
+\item $s = [e]_L$.
+\item $F = \{[x]_L: x \in L\}$.
+\item $\delta([x]_L, a) = [xa]_L$.
+\end{itemize}
+
+$\delta$ is well-defined by corollary \ref{append-equiv-well-defined}.
+$[x]_L = [y]_L \implies x \approx_L y \implies L(x) = L(y) \implies ([x]_L \in F \iff [y]_L \in F)$.
+Therefore, $F$ is well-defined.
+
+\begin{lemma}[Can be proven using induction]
+$\delta([x]_L, y) = [xy]_L$\end{lemma}
+\begin{theorem}[Myhill-Nerode theorem (part 1)] $L(M(L)) = L$ \end{theorem}
+\begin{proof} $x \in L(M(L)) \iff \delta([e]_L, x) \in F \iff [x]_L \in F \iff x \in L$ \end{proof}
+\begin{theorem}[Myhill-Nerode theorem (part 2)] $L$ is regular iff $|\approx_L|$ is finite. \end{theorem}
+\begin{proof} If $L$ is regular, there is a DFA $M$ which accepts $L$.
+Therefore, $|\nobreak\approx_L\nobreak| \le |\nobreak\sim_M\nobreak|$, so $|\approx_L|$ is finite.
+Conversely, $|\approx_L|$ is finite implies $M(L)$ is a DFA which accepts $L$,
+so $L$ is regular. \end{proof}
+
+For any DFA $M$ which decides $L$, $|\approx_L| \le |\sim_M| = |Q|$.
+Since $M(L)$ has exactly $|\approx_L|$ states, it is a DFA with the minimum number of states.
+
+\subsection{Minimal DFA is isomorphic to standard DFA}
+
+Let $M = (Q, \Sigma, \delta, s, F)$ be a DFA of $L$ with $|\approx_L|$ states.
+Let $M' = (Q'=[\cdot]_L, \Sigma, \delta', s'=[e]_L, F')$ be the standard DFA of $L$.
+
+We will prove that $M$ is isomorphic to $M'$,
+which means that there is a bijection $\phi: Q \mapsto Q'$
+such that all of the following conditions are satisfied:
+\begin{itemize}
+\item $\phi(s) = s'$
+\item $\phi(F) = \{\phi(f): f \in F\} = F'$
+\item $\forall q \in Q, \delta'(\phi(q), a) = \phi(\delta(q, a))$
+\end{itemize}
+
+$\sim_M$ is a refinement of $\approx_L$
+and $|\sim_M| = |Q| = |\approx_L|$.
+Therefore, $\sim_M = \approx_L$.
+Therefore, $\forall x \in \Sigma^*, [x]_M = [x]_L$.
+Therefore, we will just write $[x]$.
+
+Let $\phi$ be the inverse of $\delta(s, [\cdot]_M)$
+(This means $\phi(q) = [x] \iff \delta(s, x) = q$).
+Therefore, $\phi$ is a bijection.
+\[ \delta(s, e) = s \implies \delta(s, [e]_M) = s \implies \phi(s) = [e]_M = [e]_L = s' \]
+\begin{align*}
+& [x] \in F'
+\\ &\iff x \in L
+\\ &\iff \exists f \in F, \delta(s, x) = f
+\\ &\iff \exists f \in F, \delta(s, [x]) = f
+\\ &\iff \exists f \in F, \phi(f) = [x]
+\\ &\iff [x] \in \phi(F)
+\end{align*}
+Therefore, $\phi(F) = F'$.
+
+Let $\phi(p) = [x]$, $\phi(q) = [y]$.
+\begin{align*}
+& \delta(p, a) = q
+\\ &\Rightarrow \delta(\delta(s, x), a) = \delta(s, y)
+\\ &\Rightarrow \delta(s, xa) = \delta(s, y)
+\\ &\Rightarrow xa \sim_M y
+\\ &\Rightarrow [xa] = [y]
+\\ &\Rightarrow \delta'([x], a) = [y]
+\\ &\Rightarrow \delta'(\phi(p), a) = \phi(q) = \phi(\delta(p, a))
+\end{align*}
+Therefore, $M$ is isomorphic to $M'$.
+
+\subsection{DFA minimization}
+
+Let $M = (Q, \Sigma, \delta, s, F)$ be a DFA.
+Without loss of generality, assume all states in $Q$ are reachable.
+
+\begin{definition} For $p, q \in Q$,
+\[ p \equiv q \iff (\forall z \in \Sigma^*, \delta(p, z) \in F \iff \delta(q, z) \in F) \]
+\end{definition}
+\begin{theorem}By taking $|z| = 0$, we get $p \equiv q \implies (p \in F \iff q \in F)$.\end{theorem}
+
+\begin{theorem}$\equiv$ is an equivalence relation.\end{theorem}
+\begin{definition}For $q \in Q$, $[q]$ is the equivalence class of $\equiv$ containing $q$.\end{definition}
+\begin{theorem}$\delta(s, x) \equiv \delta(s, y) \iff x \approx_{L(M)} y$\end{theorem}
+
+Therefore, if we clump together all states which are equivalent,
+then all strings reaching that clumped state are $\approx_L$-equivalent
+and all strings which are $\approx_L$-equivalent will reach the same clumped state.
+Therefore, the clumped states correspond exactly to the equivalence classes of $\approx_L$.
+Therefore, $|\nobreak\equiv\nobreak| = |\nobreak\approx_L\nobreak|$.
+
+We will now construct a DFA $M' = (Q', \Sigma, \delta', s', F')$
+which has exactly $|\equiv|$ states:
+\begin{itemize}
+\item $Q' = [\cdot]_{\equiv}$
+\item $s' = [s]$
+\item $F' = \{ [f]: f \in F \}$
+\item $\delta'([q], a) = [\delta(q, a)]$
+\end{itemize}
+
+\begin{theorem}$f \in F \iff [f] \in F'$\end{theorem}
+Therefore, $F'$ is well-defined.
+\begin{theorem}$\forall w \in \Sigma^*, p \equiv q \implies \delta(p, w) \equiv \delta(q, w)$\end{theorem}
+\begin{corollary}$\forall a \in \Sigma, p \equiv q \implies \delta(p, a) \equiv \delta(q, a)$\end{corollary}
+Therefore, $\delta'$ is well-defined.
+\begin{theorem}$\delta'([q], w) = [\delta(q, w)]$\end{theorem}
+\begin{theorem}$x \in L(M') \iff x \in L(M)$\end{theorem}
+
+\subsection{Finding state equivalence classes}
+
+\begin{definition} For $p, q \in Q$,
+\[ p \equiv_n q \iff (\forall |z| \le n, \delta(p, z) \in F \iff \delta(q, z) \in F) \]
+\end{definition}
+\begin{theorem}For $|z| = 0$, we get $p \equiv q \iff (p \in F \iff q \in F)$.\end{theorem}
+Therefore, equivalence classes of $\equiv_0$ are $F$ and $Q-F$.
+\begin{theorem}$\forall n \ge 0, p \equiv q \Rightarrow p \equiv_n q$\end{theorem}
+\begin{theorem}$\forall i < j, p \equiv_j q \Rightarrow p \equiv_i q$\end{theorem}
+Therefore, increasing $n$ refines $\equiv_n$ and $\equiv$ is finer than all $\equiv_n$.
+\begin{theorem}$(\forall a \in \Sigma, \delta(p, a) \equiv_{n-1} \delta(q, a))$\\
+$\iff (\forall 1 \le |z| \le n, \delta(p, z) \in F \iff \delta(q, z) \in F)$\end{theorem}
+\begin{theorem}$p \equiv_n q \iff (p \equiv_{n-1} q \wedge
+(\forall a \in \Sigma, \delta(p, a) \equiv_{n-1} \delta(q, a)))$ \end{theorem}
+\begin{theorem}$(\forall p, q \in Q, p \equiv_n q \iff p \equiv_{n+1} q)$\\
+$\implies (\forall p, q \in Q, p \equiv_{n+1} q \iff p \equiv_{n+2} q)$\end{theorem}
+
+Since $\equiv_{n+1}$ is a refinement of $\equiv_n$,
+$(\equiv_n) \neq (\equiv_{n+1}) \implies |\equiv_n| < |\equiv_{n+1}|$.
+Since $|\equiv_n| \le |Q|$, there will be a value of $n$ such that
+$(\equiv_n) = (\equiv_{n+1}) = (\equiv_{n+2}) = \ldots = (\equiv)$.
 
 \end{document}
