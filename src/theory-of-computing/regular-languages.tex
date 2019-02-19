@@ -410,4 +410,99 @@ $(\equiv_n) \neq (\equiv_{n+1}) \implies |\equiv_n| < |\equiv_{n+1}|$.
 Since $|\equiv_n| \le |Q|$, there will be a value of $n$ such that
 $(\equiv_n) = (\equiv_{n+1}) = (\equiv_{n+2}) = \ldots = (\equiv)$.
 
+\section{Algorithms for Finite Automata}
+
+\subsection{NFA to DFA}
+
+Let $M = (Q, \Sigma, \Delta, s, F)$ be an NFA
+and $M' = (Q', \Sigma, \delta', E(s), F')$ be the corresponding DFA,
+where $Q' \subseteq 2^Q$, $F' = \{K \subseteq Q: K \cap F \neq \{\}\}$
+and $\delta'(K, a) = E\left(\bigcup_{q \in K} \Delta(q, a) \right)$
+where $\Delta(q, a) = \{p: (q, a, p) \in \Delta\}$.
+
+It is assumed that intersection or union of 2 subsets of $Q$
+can be computed in $O(|Q|)$ time. This is because both sets
+can be expressed as $|Q|$-length bitsets.
+
+\begin{itemize}
+\item Calculate $E(q)$ for all $q \in Q$:
+    This can be done with a DFS from every node.
+    Time complexity: $O(|Q|^2)$.
+\item Calculate $\Delta(q, a)$ for all $(q, a) \in Q \times \Sigma$:
+    Create a table of size $|Q||\Sigma|$, each cell of which stores an empty list.
+    For each $(q, a, p) \in \Delta$, add $p$ to cell at $(q, a)$.
+    Time complexity: $O(|Q||\Sigma| + |\Delta|)$.
+\item Calculate $\delta'(K, a)$ for all $(K, a) \in Q' \times \Sigma$:
+    For each $(K, a)$, take the union of $|K|$ sets and then $|Q|$ sets.
+    Time complexity: $O(|Q'||\Sigma||Q|^2)$.
+\item Calculate $F'$: Intersect each state in $Q'$ with $F$.
+    Time complexity: $O(|Q'||Q|)$.
+\end{itemize}
+
+Since $\Delta \subseteq Q \times \Sigma \times Q$, $|\Delta| \le |Q|^2|\Sigma|$.
+
+Therefore, total time complexity is $O(|Q'||Q|^2|\Sigma|)$,
+where $|Q'| \le 2^{|Q|}$.
+
+\subsection{Regular expression to NFA}
+
+The NFA for a regular expression $R$ will have at most $2|R|$ states
+and at most $4|R|^2$ transitions.
+The cost of each operation is proportional to the number of states and transitions added.
+Therefore, running time is $O(|R|^2)$.
+
+\subsection{NFA to regular expression}
+
+If each edge on a GNFA has length at most $l$,
+removing a vertex will change the length to at most $4l + 10$.
+Therefore, an NFA with $n$ states will have a regular expression
+of length at most $(10n+1)4^n$.
+
+Time taken by naive algorithm, which just concatenates regular expressions:
+\[ O\left(\sum_{i=1}^n (n+2-i)^24^i(10i+1)\right) = O(n^34^n) \]
+Space complexity of this algorithm: $O(n^34^n)$.
+
+Concatenation of 2 strings takes time proportional to the length of the 2 strings.
+Therefore, concatenating multiple strings by repeated pairwise concatenation leads to
+unnecessarily repeated work.
+We can optimize this by using lazy concatenation: Instead of producing a new string object,
+create a `lazy-string' object, which just stores references to the strings being concatenated.
+Doing this repeatedly will give us a concatenation tree (actually a DAG, but we can safely ignore this detail).
+To convert a lazy string tree to a non-lazy string,
+do an in-order traversal of the tree and print each leaf node.
+
+A lazy-string tree is a full binary tree.
+Therefore, the number of nodes (after expanding the DAG to a tree)
+is equal to twice the number of leaf nodes.
+Therefore, time taken for traversal is linearly proportional to the size of the output.
+
+Creating a lazy string from an NFA takes time $O(n^3)$.
+Converting that lazy string to a non-lazy string takes time $O(n4^n)$.
+Therefore, time taken by this algorithm is $O(n4^n)$.
+Since the DAG has at most $O(n^3)$ entries, space complexity is $O(n^3)$.
+
+\subsection{DFA minimization}
+
+The algorithm proceeds in phases.
+In each phase, we compute $\equiv_i$ from $\equiv_{i-1}$.
+There can be at most $|Q|-1$ phases.
+To compute $\equiv_i$ from $\equiv_{i-1}$, a crude algorithm
+would consider every pair in every set in $\equiv_{i-1}$
+and it will check in $O(|\Sigma|)$ time whether elements of that
+pair are $\equiv_i$-equivalent.
+Therefore, a rough upper bound on running time is $O(|\Sigma||Q|^3)$.
+
+A better algorithm: to split a set, take the first element and find out
+which elements are similar to it. Move all those elements to a different set
+and repeat. Running time: $O(|\Sigma||Q|^2)$.
+
+\href{http://i.stanford.edu/pub/cstr/reports/cs/tr/71/190/CS-TR-71-190.pdf}{
+Hopcroft invented an $O(|\Sigma||Q|\log|Q|)$-time algorithm.}
+
+\subsection{Running an NFA}
+
+The algorithm for running an NFA is similar to the algorithm for NFA to DFA construction.
+We keep track of the set of states the NFA can be in.
+Running time is $O(|\Sigma||Q|^2)$.
+
 \end{document}
