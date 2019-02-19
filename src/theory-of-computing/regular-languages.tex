@@ -1,5 +1,4 @@
 \input{header.tex}
-%\usepackage{amsthm}
 
 \title{Regular Languages}
 
@@ -153,8 +152,8 @@ We define $L(M)$ as follows:
 \[ w \in L(M) \iff (\exists f \in F, (s, w) \vdash_M^* (f, e)) \]
 
 \begin{theorem}
-If $h$ is a homomorphism, then $h(\Delta) = \{(p, h(a), q) \in \Delta \}$ is an NFA
-accepting $h(L)$.
+If $h$ is a homomorphism, then $h(\Delta) = \{(p, h(a), q): (p, h(a), q) \in \Delta \}$
+is an NFA accepting $h(L)$.
 \end{theorem}
 
 \subsection{NFA to DFA}
