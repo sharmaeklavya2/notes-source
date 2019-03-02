@@ -1,5 +1,9 @@
 \input{header.tex}
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}
+
 \title{Context-free Grammars}
 
 \begin{document}
@@ -19,6 +23,11 @@ A context-free grammar $G$ is a quadruple $(V, \Sigma, R, S)$ where
 \item $S \in V-\Sigma$ is the start symbol.
 \item $R \in (V-\Sigma) \times V^*$ is the set of rules.
 \end{itemize}
+\end{definition}
+
+\begin{definition}
+$|R|$ is the number of rules in $G$.
+$|G|$ is the sum of length of all rules in $G$.
 \end{definition}
 
 \begin{definition}[$\rightarrow_G$]
@@ -330,4 +339,250 @@ $\langle p, A, q \rangle \Rightarrow_G^* x \iff (p, A, x) \vdash_M^* (q, e, e)$
 \end{align*}
 \end{proof}
 
+\section{Closure properties}
+
+Let $G_1 = (V_1, \Sigma_1, R_1, S_1)$ and $G_2 = (V_2, \Sigma_2, R_2, S_2)$
+be context-free grammars. Since renaming non-terminals does not affect a grammar,
+we can assume that $V_1 - \Sigma_1$ and $V_2 - \Sigma_2$ are disjoint.
+
+$L(G_1) \cup L(G_2)$
+$= L((V_1 \cup V_2 \cup \{S\}, \Sigma_1 \cup \Sigma_2,
+R_1 \cup R_2 \cup \{S \rightarrow S_1 | S_2 \}, S))$
+
+$L(G_1)L(G_2)$
+$= L((V_1 \cup V_2 \cup \{S\}, \Sigma_1 \cup \Sigma_2,
+R_1 \cup R_2 \cup \{S \rightarrow S_1S_2 \}, S))$
+
+$L(G_1)^* = L((V_1 \cup \{S\}, \Sigma_1,
+R_1 \cup \{S \rightarrow e | S_1S \}, S))$
+
+\begin{theorem}
+Intersection of a regular language with a context-free language is context-free.
+\end{theorem}
+A pushdown automaton for the intersection can be obtained by taking the
+cross product of the states of the DFA of the regular language
+and the states of the pushdown automaton of the context-free language.
+
+\section{Pumping Theorem}
+
+\begin{definition}
+The fanout of a grammar $G$, denoted as $\phi(G)$, is the maximum RHS length in its rules.
+\end{definition}
+\begin{lemma}
+Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
+For $w \in L(G)$, $|w| > \phi(G)^h$ implies that the parse tree of $w$ has height greater than $h$.
+\end{lemma}
+\begin{theorem}[Pumping theorem]
+Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
+Then $\forall w \in L(G), |w| > \phi(G)^{|V - \Sigma|} \implies$\\
+$(\exists u, v, x, y, z \in \Sigma^*, w = uvxyz \wedge vy \neq e \wedge$\\
+$(\forall i \ge 0, uv^nxy^nz \in L(G)))$.
+\end{theorem}
+
+\begin{corollary}
+$L = \{a^nb^nc^n: n \ge 0\}$ is not context-free.
+\end{corollary}
+\begin{proof}
+Let $w = a^nb^nc^n$ where $n > \phi(G)^{|V-\Sigma|}/3$.
+Let $w = uvxyz$ such that $vy \neq 0$.
+If $vy$ has all occurrences of all of $\{a, b, c\}$,
+then $v$ or $y$ has occurrences of 2 of $\{a, b, c\}$.
+Therefore, $uv^kxy^kz$ will have characters in the wrong order for $k \ge 2$.
+If $vy$ does not have a certain character,
+then $uv^kxy^kz$ will have unequal number of characters for $k \neq 1$.
+This contradicts the pumping theorem, so $L$ is not context-free.
+\end{proof}
+
+\begin{theorem}[Corollary of Parikh's Theorem]
+Let $L$ be a language over a single character.
+Then $L$ is context-free iff $L$ is regular.
+\end{theorem}
+
+\begin{theorem}
+Context-free languages are not closed under intersection or complementation.
+\end{theorem}
+\begin{proof}
+$L_1 = \{a^mb^nc^n: m, n \ge 0\}$ and $L_2 = \{a^mb^mc^n: m, n \ge 0\}$ are context-free.
+But $L_1 \cap L_2 = \{a^nb^nc^n: n \ge 0\}$ is not context-free.
+Complementation cannot be closed under context-free languages,
+because $L_1 \cap L_2 = \overline{\overline{L_1} \cup \overline{L_2}}$.
+\end{proof}
+
+\section{Algorithms for context-free grammars}
+
+\subsection{Finding erasable non-terminals}
+
+\begin{definition}
+A non-terminal $A$ is erasable iff $A \Rightarrow_G^* e$.
+\end{definition}
+
+To find the set of erasable non-terminals, follow this algorithm:
+
+\begin{algorithm}[H]
+\caption{Finding all erasable non-terminals in $G = (V, \Sigma, R, S)$}
+\label{algo-erasable-non-terminals}
+\begin{algorithmic}
+\State $\mathcal{E} = \{\}$
+\Comment{Implement as a bitset on $V - \Sigma$.}
+\Do
+    \State $\mathcal{E}' = \mathcal{E}$
+    \For{$A \rightarrow_G \beta \in R$ where $A \not\in \mathcal{E}$}
+        \If{$\beta \in \mathcal{E}^*$}
+            \State $\mathcal{E}.\operatorname{add}(A)$
+        \EndIf
+    \EndFor
+\doWhile{$\mathcal{E}' \neq \mathcal{E}$}
+\end{algorithmic}
+\end{algorithm}
+
+Running time: $O(|V-\Sigma||G|)$.
+Auxiliary space: $\Theta(|V-\Sigma|)$.
+
+\subsection{Finding unit derivability}
+
+\begin{definition}
+$B \in V$ is unit-derivable from $A$ iff $A \Rightarrow_G^* B$.
+$\operatorname{D}(A) = \{B \in V: A \Rightarrow_G^* B\}$.
+\end{definition}
+
+Algorithm to find $D(A)$ for all $A \in V$,
+if the grammar $G = (V, \Sigma, R, S)$ has no erasable non-terminals:
+\begin{itemize}
+\item Make a directed graph where $V$ is the set of vertices.
+    Make an edge from $A$ to $B$ iff $A \rightarrow_G B \in R$.
+\item Apply depth-first search from every $A \in V$.
+    Add every vertex encountered during depth-first search to $\operatorname{D}(A)$.
+\end{itemize}
+
+Running time: $O(|V-\Sigma|\min(|R|, |V||V-\Sigma|))$.\\
+Auxiliary space: $O(\min(|R|, |V||V-\Sigma|) + |V-\Sigma|)$.\\
+Output size: $O(|V-\Sigma||V|)$.
+
+\subsection{Chomsky normal form}
+
+\begin{definition}
+A grammar $G = (V, \Sigma, R, S)$ is in Chomsky normal form iff every rule is of one of these forms:
+\begin{itemize}
+\item $A \rightarrow_G BC$ where $A \in V - \Sigma$ and $B, C \in V - \{S\}$.
+\item $A \rightarrow_G a$ where $A \in V - \Sigma$ and $a \in \Sigma$.
+\item $S \rightarrow_G e$
+\end{itemize}
+\end{definition}
+
+The following algorithm transforms a grammar $G$ into Chomsky normal form grammar $G'$.
+The algorithm proceeds in stages, and in each state the language of the grammar remains unchanged:
+\begin{enumerate}
+\item Eliminate $S$ from RHS: Change the start symbol to $S'$ and add the rule $S' \rightarrow_G S$.
+\item Eliminate long rules, i.e. rules of the form $A \rightarrow_G B_1B_2\ldots B_n$ where $B_i \in V$ and $n \ge 3$.
+\item Eliminate $e-$rules, i.e. rules of the form $A \rightarrow_G e$.
+\item Eliminate unit rules, i.e. rules of the form $A \rightarrow_G B$, where $B \in V$.
+\end{enumerate}
+
+\subsubsection{Eliminating long rules}
+
+Replace each rule of the form $A \rightarrow_G B_1B_2\ldots B_n$ by the rules
+$A \rightarrow_G B_1A_1 \;,\; A_1 \rightarrow_G B_2A_2 \;,\; \ldots \;,\;
+A_{n-3} \rightarrow_G B_{n-2}A_{n-2} \;,\; A_{n-2} \rightarrow_G B_{n-1}B_n$.
+
+\begin{itemize}
+\item Running time: $\Theta(|G|)$.
+\item Auxiliary space: $\Theta(1)$.
+\item Change in grammar size: $|G'| \in \Theta(|G|)$ and $|R'| \in \Theta(|G|)$ and $|V'-\Sigma| \in O(|G|)$.
+\end{itemize}
+
+Since $|R'| = \Theta(|G'|)$, we will use $|R'|$ as a measure of grammar size in subsequent steps.
+
+\subsubsection[Eliminating e-rules]{Eliminating $e$-rules}
+
+\begin{enumerate}
+\item Remove all rules of the form $A \Rightarrow_G e$.
+\item Find $\mathcal{E}$, the set of erasable non-terminals.
+\item For every rule $A \rightarrow_G BC$,
+    if $B \in \mathcal{E}$ then add the rule $A \rightarrow_G C$
+    and if $C \in \mathcal{E}$ then add the rule $A \rightarrow_G B$.
+\item If $S \in \mathcal{E}$, add the rule $S \rightarrow_G e$.
+\end{enumerate}
+
+\begin{itemize}
+\item Running time: $O(|V-\Sigma||G|)$.
+\item Auxiliary space: $\Theta(|V-\Sigma|)$.
+\item Side-effects on grammar: Some non-terminals can become non-instantiable.
+\item Change in grammar's size: $|R| \le |R'| \le 3|R|-1$.
+\end{itemize}
+
+\subsubsection{Eliminating unit rules}
+
+\begin{enumerate}
+\item Find $\operatorname{D}(A) = \{B \in V: A \Rightarrow_G^* B\}$ for each $A \in V-\Sigma$.
+    This can be done easily since there are no $e$-rules.
+\item Remove all rules of the form $A \rightarrow_G B$.
+\item For all $A \in V - \Sigma$, add rule $A \rightarrow_G a$ for $a \in \Sigma \cap \operatorname{D}(A)$
+    and add rule $A \Rightarrow CD$ for all $B \in \operatorname{D}(A)$ and $B \rightarrow_G CD$.
+\end{enumerate}
+
+\begin{itemize}
+\item Running time: $O(|V-\Sigma|(|\Sigma| + |R|)$.
+\item Auxiliary space: $O(|V||V-\Sigma|)$.
+\item Side-effects on grammar: Some non-terminals can become non-instantiable.
+\item Change in grammar's size: $|R'| \le |V-\Sigma|\min(|R|, |V|^2)$
+    because each new rule's LHS is a non-terminal and each new rule's RHS is the RHS of some old rule.
+\end{itemize}
+
+\subsubsection{Eliminating unit rules (alternate algorithm)}
+
+This algorithm has a worse time-complexity than the previous algorithm,
+but it is mentioned here for completeness.
+
+\begin{enumerate}
+\item Find $\operatorname{D}(A) = \{B \in V: A \Rightarrow_G^* B\}$ for each $A \in V-\Sigma$.
+    This can be done easily since there are no $e$-rules.
+\item Remove all rules of the form $A \rightarrow_G B$.
+\item For each rule $A \rightarrow_G BC$, add the rule
+    $A \rightarrow_G B_iC_i$ for each $B_i \in \operatorname{D}(B)$ and $C_i \in \operatorname{D}(C)$.
+\item For each rule of the form $A \rightarrow_G BC$, if $A \in \operatorname{D}(S)$,
+    add $S \rightarrow_G BC$.
+\item Add the rule $S \rightarrow_G a$ for all $a \in \Sigma \cap \operatorname{D}(S)$.
+\end{enumerate}
+
+\begin{itemize}
+\item Running time: $O(|V|(|V-\Sigma|^2 + |R||V|))$.
+\item Auxiliary space: $O(|V||V-\Sigma|)$.
+\item Side-effects on grammar: Some non-terminals can become non-instantiable.
+\item Change in grammar's size: $|R'| \le |V-\Sigma||V|^2$.
+\end{itemize}
+
+\subsubsection{Converting to Chomsky normal form}
+
+\begin{itemize}
+\item Running time: $O(|G|^2)$.
+\item Auxiliary space: $O(|G|^2)$.
+\item Change in grammar size: $|V'-\Sigma| \in O(|G|)$, $|R'| \in O(|G|^2)$ and $|G'| \in O(|G|^2)$.
+\end{itemize}
+
+\subsection{CYK Algorithm}
+
+The CYK algorithm takes $(w, G)$ as input and uses dynamic programming to find out whether $w \in L(G)$.
+Here $G = (V, \Sigma, R, S)$ is a grammar in Chomsky-normal form.
+
+Let $R_A = \{\beta \in V^*: (A \rightarrow_G \beta) \in R\}$.
+Therefore, $|R| = \sum_{A \in V-\Sigma} |R_A|$.
+
+Let $f(A, i, j) = (A \Rightarrow_G^* w[i:j])$. Then
+\[ f(A, i, j) = \left\{\begin{array}{cl}
+\textrm{false} & i \ge j
+\\ w[i] \in R_A & j = i+1
+\\ \displaystyle \bigvee\limits_{BC \in R_A} \; \bigvee\limits_{k=i+1}^{j-1}
+    (f(B, i, k) \wedge f(C, k, j)) & j > i+1
+\end{array}\right. \]
+
+$w \in L(G) \iff f(S, 0, |w|)$.
+The CYK algorithm computes $f(A, i, j)$ for all $A \in V-\Sigma$
+and all $0 \le i < j \le n$ using dynamic programming.
+
+Time to compute $f(A, i, j)$ is $\Theta(|R_A|(j-i))$
+if sub-problem solutions are already available.
+Time to compute $f$ for all $(A, i, j)$ is therefore $\Theta(|R||w|^3)$.
+
 \end{document}
+
+Also remove non-instantiable or non-reachable non-terminals.
