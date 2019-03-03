@@ -321,6 +321,39 @@ $(u_1, v_1, x_1)_w \vdash_M (u_2, v_2, x_2)_w \iff (u_1, x_1) \gArrowL{G} (u_2, 
 Therefore, every CFG $G$ has an equivalent PDA $M$, its standard non-deterministic top-down parser.
 Also, every step of $M$ can be mapped to a step in an incremental left derivation of the input.
 
+\subsection{Standard non-deterministic bottom-up parser}
+
+\begin{definition}
+Let $G = (V, \Sigma, R, S)$ be a CFG.
+Let $M = (\{s, f\}, \Sigma, V, \Delta, s, \{f\})$ be a PDA
+containing the following transitions:
+\begin{itemize}
+\item `Shift' transitions: $((s, a, e), (s, a))$ for all $a \in \Sigma$.
+\item `Reduce' transitions: $((s, e, \beta^R), (s, A))$ for all $A \garrow{G} \beta \in R$.
+\item `Final' transition: $((s, e, S), (f, e))$.
+\end{itemize}
+Then $M$ is a standard non-deterministic bottom-up parser for $G$.
+\end{definition}
+
+Denote by $(u, v, x)_w$ the configuration of $M$ on input $w$ when it is at state $s$,
+has read input $u$, has input $v$ remaining to be read and contains $x$ on the stack.
+
+\begin{theorem}
+$(u_1, v_1, x_1)_w \vdash_M (u_2, v_2, x_2)_w \iff (x_2^R, v_2) \gArrowR{G} (x_1^R, v_1)$.
+\end{theorem}
+\begin{theorem}$L(M) = L(G)$.\end{theorem}
+\begin{proof}
+\begin{align*}
+& w \in L(G)
+\\ &\iff (S, e) \gArrowR{G}^* (e, w)
+\\ &\iff (e, w, e)_w \vdash_M^* (w, e, S)_w
+\\ &\iff w \in L(M)
+\end{align*}
+\end{proof}
+
+Therefore, every CFG $G$ has an equivalent PDA $M$, its standard non-deterministic bottom-up parser.
+Also, every step of $M$ can be mapped to a reverse-step in an incremental right derivation of the input.
+
 \subsection{Simple PDA}
 
 A PDA $M$ is simple iff all of the following are true:
