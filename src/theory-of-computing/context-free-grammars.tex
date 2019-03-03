@@ -235,12 +235,12 @@ $w \in L(M) \iff (\exists f \in F, (s, w, e) \vdash_M (f, e, e))$.
 
 \section{Pushdown automata and context-free grammars}
 
-\subsection{Incremental derivation}
+\subsection{Incremental left derivation}
 
 \begin{definition}
 Let $G = (V, \Sigma, R, S)$ be a grammar.\\
 For $u_1, u_2 \in \Sigma^*$, $A \in V$ and $v_1, v_2 \in V^*$,
-$(u_1, Av_1) \gArrow{G} (u_2, v_2)$\\
+$(u_1, Av_1) \gArrowL{G} (u_2, v_2)$\\
 $\iff \begin{cases}
 u_2 = u_1A \wedge v_2 = v_1 & \textrm{ if } A \in \Sigma\\
 u_2 = u_1 \wedge
@@ -248,23 +248,23 @@ u_2 = u_1 \wedge
 & \textrm{ if } A \in V - \Sigma \end{cases}$
 \end{definition}
 
-For $x \in V^*$ and $w \in \Sigma^*$, if $(e, v) \gArrow{G}^* (w, e)$,
-then the sequence of $\gArrow{G}$ operations
-is called an incremental derivation of $w$ from $v$.
+For $v \in V^*$ and $w \in \Sigma^*$, if $(e, v) \gArrowL{G}^* (w, e)$,
+then the sequence of $\gArrowL{G}$ operations
+is called an incremental left derivation of $w$ from $v$.
 
 \begin{lemma}
-$((u_1, v_1) \gArrow{G} (u_2, v_2)) \implies (u_1v_1 = u_2v_2 \vee u_1v_1 \gArrowL{G} u_2v_2)$
+$((u_1, v_1) \gArrowL{G} (u_2, v_2)) \implies (u_1v_1 = u_2v_2 \vee u_1v_1 \gArrowL{G} u_2v_2)$
 \end{lemma}
 \begin{lemma}
 For $x \in \Sigma^*$, $A \in V-\Sigma$ and $y, \beta \in V^*$,\\
-$xAy \gArrowL{G} x\beta y \implies (x, Ay) \gArrow{G} (x, \beta y)$.
+$xAy \gArrowL{G} x\beta y \implies (x, Ay) \gArrowL{G} (x, \beta y)$.
 \end{lemma}
 \begin{theorem}
 For $w \in \Sigma^*$,
-$(\gamma \gArrow{G}^* w) \iff ((e, \gamma) \gArrow{G}^* (w, e))$.
+$(\gamma \gArrow{G}^* w) \iff ((e, \gamma) \gArrowL{G}^* (w, e))$.
 \end{theorem}
-Therefore, $w \in L(G)$ iff an incremental derivation of $w$ exists from $S$,
-i.e. $(e, S) \gArrow{G}^* (w, e)$.
+Therefore, $w \in L(G)$ iff an incremental left derivation of $w$ exists from $S$,
+i.e. $(e, S) \gArrowL{G}^* (w, e)$.
 
 \subsection{Context-free grammar to pushdown automaton}
 
@@ -281,13 +281,13 @@ Denote by $(f, u, v, x)_w$ the configuration of $M$ on input $w$ when it is at s
 has read input $u$, has input $v$ remaining to be read and contains $x$ on the stack.
 
 \begin{theorem}
-$(f, u_1, v_1, x_1)_w \vdash_M (f, u_2, v_2, x_2)_w \iff (u_1, x_1) \gArrow{G} (u_2, x_2)$.
+$(f, u_1, v_1, x_1)_w \vdash_M (f, u_2, v_2, x_2)_w \iff (u_1, x_1) \gArrowL{G} (u_2, x_2)$.
 \end{theorem}
 \begin{theorem}$L(M) = L(G)$.\end{theorem}
 \begin{proof}
 \begin{align*}
 & w \in L(G)
-\\ &\iff (e, S) \gArrow{G}^* (w, e)
+\\ &\iff (e, S) \gArrowL{G}^* (w, e)
 \\ &\iff (f, e, w, S)_w \vdash_M^* (f, w, e, e)_w
 \\ &\iff w \in L(M)
 \end{align*}
