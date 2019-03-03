@@ -260,19 +260,25 @@ i.e. $(e, S) \Rightarrow_G^* (w, e)$.
 
 Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
 Let $M = (\{s, f\}, \Sigma, V, \Delta, s, \{f\})$ be a pushdown automaton.
+$\Delta$ contains the following transitions:
+\begin{itemize}
+\item $((s, e, e), (f, S))$
+\item $((f, a, a), (f, e))$ for all $a \in \Sigma$.
+\item $((f, e, A), (f, \beta))$ for all $A \rightarrow_G \beta \in R$.
+\end{itemize}
 
 Denote by $(f, u, v, x)_w$ the configuration of $M$ on input $w$ when it is at state $f$,
 has read input $u$, has input $v$ remaining to be read and contains $x$ on the stack.
 
 \begin{theorem}
-$(f, u_1, v_1, x)_w \vdash_M (f, u_2, v_2, x)_w \iff (u_1, x_1) \Rightarrow_G (u_2, x_2)$.
+$(f, u_1, v_1, x_1)_w \vdash_M (f, u_2, v_2, x_2)_w \iff (u_1, x_1) \Rightarrow_G (u_2, x_2)$.
 \end{theorem}
 \begin{theorem}$L(M) = L(G)$.\end{theorem}
 \begin{proof}
 \begin{align*}
 & w \in L(G)
 \\ &\iff (e, S) \Rightarrow_G^* (w, e)
-\\ &\iff (f, e, w, S)_w \vdash_M (f, w, e, e)_w
+\\ &\iff (f, e, w, S)_w \vdash_M^* (f, w, e, e)_w
 \\ &\iff w \in L(M)
 \end{align*}
 \end{proof}
