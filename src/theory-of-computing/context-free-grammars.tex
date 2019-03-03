@@ -21,7 +21,7 @@
 \subsection{Definition}
 
 \begin{definition}
-A context-free grammar $G$ is a quadruple $(V, \Sigma, R, S)$ where
+A context-free grammar (CFG) $G$ is a quadruple $(V, \Sigma, R, S)$ where
 \begin{itemize}
 \item $V$ is an alphabet.
 \item $\Sigma \subset V$ is the set of terminals.
@@ -61,7 +61,7 @@ $\iff (\exists x, w \in V^*, \exists y \in \Sigma^*, \exists A \in V - \Sigma,
 \begin{definition}
 For $u \in V^*, L_G(u) = \{w \in \Sigma^*: u \gArrow{G}^* w \}$.
 $L(G) = L_G(S)$.
-If $L = L(G)$, $G$ generates $L$ and $L$ is a context-free language.
+If $L = L(G)$, $G$ generates $L$ and $L$ is a context-free language (CFL).
 \end{definition}
 \begin{theorem}
 For $w \in \Sigma^*$ and $x \in V^*$, $x \gArrow{G}^* w \iff x \Rightarrow _G^{L*} w$.
@@ -204,7 +204,7 @@ A language for which all grammars are ambiguous is `inherently ambiguous'.
 \section{Pushdown Automata}
 
 \begin{definition}
-A pushdown automaton $M$ is a tuple $(K, \Sigma, \Gamma, \Delta, s, F)$ where
+A pushdown automaton (PDA) $M$ is a tuple $(K, \Sigma, \Gamma, \Delta, s, F)$ where
 \begin{itemize}
 \item $K$ is the set of states.
 \item $\Sigma$ is the input alphabet.
@@ -220,7 +220,7 @@ A pushdown automaton $M$ is a tuple $(K, \Sigma, \Gamma, \Delta, s, F)$ where
 \end{itemize}
 \end{definition}
 \begin{definition}
-A configuration of a pushdown automaton $M$ is an element $(q, w, x) \in (K \times \Sigma^* \times \Gamma^*)$
+A configuration of a PDA $M$ is an element $(q, w, x) \in (K \times \Sigma^* \times \Gamma^*)$
 which means that $M$ is in state $q$, input $w$ is remaining to be read and the stack content is $x$
 (left-to-right in $x$ means top-to-bottom in stack).
 \end{definition}
@@ -233,7 +233,7 @@ $\vdash_M^*$ is the reflexive-transitive closure of $\vdash_M$.
 $w \in L(M) \iff (\exists f \in F, (s, w, e) \vdash_M (f, e, e))$.
 \end{definition}
 
-\section{Pushdown automata and context-free grammars}
+\section{PDAs and CFGs}
 
 \subsection{Incremental left derivation}
 
@@ -290,9 +290,9 @@ $(\gamma \gArrow{G}^* w) \iff ((\gamma, e) \gArrowR{G}^* (e, w))$.
 
 \subsection{Context-free grammar to pushdown automaton}
 
-Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
-Let $M = (\{s, f\}, \Sigma, V, \Delta, s, \{f\})$ be a pushdown automaton.
-$\Delta$ contains the following transitions:
+Let $G = (V, \Sigma, R, S)$ be a CFG.
+Let $M = (\{s, f\}, \Sigma, V, \Delta, s, \{f\})$ be a PDA
+containing the following transitions:
 \begin{itemize}
 \item $((s, e, e), (f, S))$
 \item $((f, a, a), (f, e))$ for all $a \in \Sigma$.
@@ -315,9 +315,9 @@ $(f, u_1, v_1, x_1)_w \vdash_M (f, u_2, v_2, x_2)_w \iff (u_1, x_1) \gArrowL{G} 
 \end{align*}
 \end{proof}
 
-\subsection{Simple pushdown automata}
+\subsection{Simple PDA}
 
-A pushdown automaton $M$ is simple iff all of the following are true:
+A PDA $M$ is simple iff all of the following are true:
 \begin{itemize}
 \item There is no transition to the start state.
     There is a single transition from the start state
@@ -329,12 +329,12 @@ A pushdown automaton $M$ is simple iff all of the following are true:
 \item Every transition (except the one from the start state) consults the stack.
 \end{itemize}
 
-This implies that in a simple pushdown automaton,
+This implies that in a simple PDA,
 the start state always has to push a single symbol to the stack.
 We call it the `bottom marker' and denote it by $Z$.
 Also, $Z$ is always present in the stack except at the start state or the final state.
 
-A pushdown automaton $M = (Q, \Sigma, \Gamma, \Delta, s, F)$
+A PDA $M = (Q, \Sigma, \Gamma, \Delta, s, F)$
 can always be transformed to be simple. This is how:
 \begin{itemize}
 \item Introduce a new stack symbol $Z$.
@@ -346,9 +346,9 @@ can always be transformed to be simple. This is how:
 \item Replace $((p, a, e), (q, b))$ by the transitions $((p, a, c), (q, cb))$ for every $c \in \Sigma$.
 \end{itemize}
 
-\subsection{Pushdown automaton to context-free grammar}
+\subsection{PDA to CFG}
 
-Let $M = (Q, \Sigma, \Gamma \cup \{Z\}, \Delta, s, \{f\})$ be a simple pushdown automaton.\\
+Let $M = (Q, \Sigma, \Gamma \cup \{Z\}, \Delta, s, \{f\})$ be a simple PDA.\\
 Let $((s,e,e), (s',Z)) \in \Delta$ and $((f',e,Z), (f,e)) \in \Delta$.
 
 Let $G = (V, \Sigma, R, S)$ where
@@ -380,7 +380,7 @@ $\langle p, A, q \rangle \gArrow{G}^* x \iff (p, A, x) \vdash_M^* (q, e, e)$
 \section{Closure properties}
 
 Let $G_1 = (V_1, \Sigma_1, R_1, S_1)$ and $G_2 = (V_2, \Sigma_2, R_2, S_2)$
-be context-free grammars. Since renaming non-terminals does not affect a grammar,
+be CFGs. Since renaming non-terminals does not affect a grammar,
 we can assume that $V_1 - \Sigma_1$ and $V_2 - \Sigma_2$ are disjoint.
 
 $L(G_1) \cup L(G_2)$
@@ -395,11 +395,11 @@ $L(G_1)^* = L((V_1 \cup \{S\}, \Sigma_1,
 R_1 \cup \{S \rightarrow e | S_1S \}, S))$
 
 \begin{theorem}
-Intersection of a regular language with a context-free language is context-free.
+Intersection of a regular language with a CFL is context-free.
 \end{theorem}
-A pushdown automaton for the intersection can be obtained by taking the
+A PDA for the intersection can be obtained by taking the
 cross product of the states of the DFA of the regular language
-and the states of the pushdown automaton of the context-free language.
+and the states of the PDA of the CFL.
 
 \section{Pumping Theorem}
 
@@ -407,11 +407,11 @@ and the states of the pushdown automaton of the context-free language.
 The fanout of a grammar $G$, denoted as $\phi(G)$, is the maximum RHS length in its rules.
 \end{definition}
 \begin{lemma}
-Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
+Let $G = (V, \Sigma, R, S)$ be a CFG.
 For $w \in L(G)$, $|w| > \phi(G)^h$ implies that the parse tree of $w$ has height greater than $h$.
 \end{lemma}
 \begin{theorem}[Pumping theorem]
-Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
+Let $G = (V, \Sigma, R, S)$ be a CFG.
 Then $\forall w \in L(G), |w| > \phi(G)^{|V - \Sigma|} \implies$\\
 $(\exists u, v, x, y, z \in \Sigma^*, w = uvxyz \wedge vy \neq e \wedge$\\
 $(\forall i \ge 0, uv^nxy^nz \in L(G)))$.
@@ -437,16 +437,16 @@ Then $L$ is context-free iff $L$ is regular.
 \end{theorem}
 
 \begin{theorem}
-Context-free languages are not closed under intersection or complementation.
+CFLs are not closed under intersection or complementation.
 \end{theorem}
 \begin{proof}
 $L_1 = \{a^mb^nc^n: m, n \ge 0\}$ and $L_2 = \{a^mb^mc^n: m, n \ge 0\}$ are context-free.
 But $L_1 \cap L_2 = \{a^nb^nc^n: n \ge 0\}$ is not context-free.
-Complementation cannot be closed under context-free languages,
+Complementation cannot be closed under CFLs,
 because $L_1 \cap L_2 = \overline{\overline{L_1} \cup \overline{L_2}}$.
 \end{proof}
 
-\section{Algorithms for context-free grammars}
+\section{Algorithms for CFGs}
 
 \subsection{Finding erasable non-terminals}
 
@@ -623,18 +623,18 @@ Time to compute $f$ for all $(A, i, j)$ is therefore $\Theta(|R||w|^3)$.
 
 % TODO: Also remove non-instantiable or non-reachable non-terminals.
 
-\section{Deterministic Pushdown Automata}
+\section{Deterministic PDA}
 
 \begin{definition}
 Two strings are \emph{consistent} iff one is a prefix of the other.
 \end{definition}
 \begin{definition}
-For a pushdown automaton, two transitions $((p, a_1, \beta_1), (q_1, \gamma_1))$
+For a PDA, two transitions $((p, a_1, \beta_1), (q_1, \gamma_1))$
 and $((p, a_2, \beta_2), (q_2, \gamma_2))$ are \emph{compatible} iff
 $a_1$ and $a_2$ are consistent and $\beta_1$ and $\beta_2$ are consistent.
 \end{definition}
 \begin{definition}
-A pushdown automaton is \emph{deterministic} iff no two of its transitions are compatible.
+A PDA is \emph{deterministic} iff no two of its transitions are compatible.
 \end{definition}
 \begin{definition}
 A language $L$ is deterministic context-free iff there is a DPDA $M$
@@ -695,10 +695,10 @@ Steps to convert a simple DPDA $M$ into an equivalent simple DPDA $M'$ without d
 \end{itemize}
 
 If $M$ has no dead-end configurations, $L(\overline{M}) = \overline{L(M)}$.
-Therefore, deterministic context-free languages are closed under complementation.
+Therefore, deterministic CFLs are closed under complementation.
 
 \begin{theorem}
-Let $L = \{a^mb^nc^p: m \neq n \vee n \neq p\}$. Then $L$ is context free but not deterministic context-free.
+Let $L = \{a^mb^nc^p: m \neq n \vee n \neq p\}$. Then $L$ is context-free but not deterministic context-free.
 \end{theorem}
 \begin{proof}
 $L' = \overline{L}\cap a^*b^*c^* = \{a^nb^nc^n: n \ge 0\}$ is known to not be context-free.
