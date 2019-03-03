@@ -782,10 +782,10 @@ It does this by sometimes outputting a rule when following a transition.
 These rules, taken in order, form the rules applied in a leftmost derivation of $w$.
 \end{definition}
 
-\subsection{Single look-ahead parser}
+\subsection{LL(1) top-down parser}
 
 \begin{definition}
-For grammar $G = (V, \Sigma, R, S)$, a single look-ahead parser is a DPDA
+For grammar $G = (V, \Sigma, R, S)$, an LL(1) top-down parser is a DPDA
 $M = (\{p, q\}\cup\{q_a: a \in \Sigma \cup \{\$\}\}, \Sigma, V, \Delta, p, \{q_{\$}\})$
 such that $\Delta$ has the following transitions:
 \begin{itemize}
@@ -799,8 +799,8 @@ For $M$ to be deterministic, for transitions $((q_a, e, A), (q_a, \beta_1))$
 and $((q_b, e, A), (q_b, \beta_2))$, $a \neq b$.
 \end{definition}
 
-Not all grammars have a single look-ahead parser.
-But it is sometimes possible to transform a grammar so that it has a single look-ahead parser.
+Not all grammars have an LL(1) top-down parser.
+But it is sometimes possible to transform a grammar so that it has an LL(1) top-down parser.
 We now mention two heuristic rules for such transformations.
 
 \subsubsection{Heuristic transformation rules}
@@ -815,4 +815,82 @@ for $i \ge 1$ and $j \ge 1$,
 transform them to rules $A \rightarrow \beta_jB$, $B \rightarrow e$ and $B \rightarrow \alpha_iB$
 for $i \ge 1$ and $j \ge 1$.
 
+\subsection{First and Follow}
+
+Let $G = (V, \Sigma, R, S)$ be a CFG.
+
+\begin{definition}
+$\operatorname{first}: V^* \mapsto \Sigma \cup \{e\}$ is a function where
+\[ \operatorname{first}(\alpha) =
+\{ a \in \Sigma: \exists u \in \Sigma^*, \alpha \gArrow{G}^* au \}
+\cup \{e \textrm{ if } \exists u \in \Sigma^*, \alpha \gArrow{G}^* e \} \]
+\end{definition}
+
+\begin{theorem}
+\[ \forall a \in \Sigma \cup \{e\}, \operatorname{first}(a) = \{a\} \]
+\[ \operatorname{first}(A\gamma) = (\operatorname{first}(A) - \{e\}) \cup \begin{cases}
+\{\} & \textrm{ if } e \not\in \operatorname{first}(A) \\
+\operatorname{first}(\gamma) & \textrm{ if } e \in \operatorname{first}(A)
+\end{cases} \]
+\[ \operatorname{first}(A) = \bigcup_{A \garrow{G} \beta} \operatorname{first}(\beta) \]
+\end{theorem}
+
+The above theorem can be used to find $\operatorname{first}$ for any string in $V^*$.
+This isn't an algorithm, but an algorithm exists but I won't mention it here.
+
+\begin{definition}
+$\operatorname{follow}: V - \Sigma \mapsto \Sigma \cup \{\$\}$ is a function where
+\[ \operatorname{follow}(A) = \{a \in \Sigma: \exists x, y \in V^*, S \gArrow{G}^* xAay \}
+\cup \{\$ \textrm{ if } \exists x \in V^*, S \gArrow{G}^* xA \} \]
+\end{definition}
+
+\begin{theorem}
+\[ \$ \in \operatorname{follow}(S) \]
+\[ (A \garrow{G} xBy) \implies \]
+\[ \left( (\operatorname{first}(y) - \{e\}) \cup \begin{cases}
+\{\} & \textrm{if } e \not\in \operatorname{first}(y)
+\\ \operatorname{follow}(A) & \textrm{if } e \in \operatorname{first}(y)
+\end{cases} \right) \subseteq \operatorname{follow}(B)\]
+\end{theorem}
+
+A closure-like algorithm can find $\operatorname{follow}$ for all non-terminals.
+
+\subsection{LL(1) grammar}
+
+A CFG is LL(1) iff it has an LL(1) top-down parser.
+
+\begin{theorem}
+A CFG $G = (V, \Sigma, R, S)$ is LL(1) iff all of the following conditions hold for every
+pair of distinct transitions $A \garrow{G} \alpha$ and $A \garrow{G} \beta$:
+\begin{itemize}
+\item $\operatorname{first}(\alpha) \cap \operatorname{first}(\beta) = \{\}$.
+\item $e \in \operatorname{first}(\beta) \implies \operatorname{first}(\alpha) \cap \operatorname{follow}(A) = \{\}$.
+\end{itemize}
+\end{theorem}
+
+\begin{definition}
+$\operatorname{P}: ((V-\Sigma) \times \Sigma) \times V^*$ where
+$\operatorname{P}((A, a), \beta)$\\
+$\iff (A \garrow{G} \beta \in R \wedge
+(a \in \operatorname{first}(\beta) \vee (e \in \operatorname{first}(\beta) \wedge a \in \operatorname{follow}(A))))$.
+\end{definition}
+
+\begin{theorem}
+If $G$ is an LL(1) grammar,\\
+$(\operatorname{P}((A, a), \beta) \wedge \operatorname{P}((A, a), \gamma)) \implies \beta = \gamma$.\\
+\end{theorem}
+Therefore, $\operatorname{P}$ can be expressed as function like $(V-\Sigma) \times \Sigma \mapsto V^* \cup \{\bot\}$
+where $P(A, a) = \beta \iff P((A, a), \beta)$ and $P(A, a) = \bot \iff (\forall \beta \in V^*, \overline{P((A, a), \beta)})$.
+
+$P$ is called the parsing table for $G$.
+An LL(1) top-down DPDA
+$M = (\{p, q\}\cup\{q_a: a \in \Sigma \cup \{\$\}\}, \Sigma, V, \Delta, p, \{q_{\$}\})$
+can be made by using the following transitions:
+\begin{itemize}
+\item $((p, e, e), (q, S))$
+\item $((q, a, e), (q_a, e))$ for all $a \in \Sigma \cup \{\$\}$
+\item $((q_a, e, a), (q, e))$ for all $a \in \Sigma \cup \{\$\}$
+\item $((q_a, e, A), (q_a, P(A, a)))$ for all $A \in V-\Sigma$ and $a \in \Sigma$
+    if $P(A, a) \neq \bot$. Output $A \garrow{G} B$ when following this transition.
+\end{itemize}
 \end{document}
