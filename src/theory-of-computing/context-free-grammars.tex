@@ -589,6 +589,130 @@ Time to compute $f(A, i, j)$ is $\Theta(|R_A|(j-i))$
 if sub-problem solutions are already available.
 Time to compute $f$ for all $(A, i, j)$ is therefore $\Theta(|R||w|^3)$.
 
-\end{document}
+% TODO: Also remove non-instantiable or non-reachable non-terminals.
 
-Also remove non-instantiable or non-reachable non-terminals.
+\section{Deterministic Pushdown Automata}
+
+\begin{definition}
+Two strings are \emph{consistent} iff one is a prefix of the other.
+\end{definition}
+\begin{definition}
+For a pushdown automaton, two transitions $((p, a_1, \beta_1), (q_1, \gamma_1))$
+and $((p, a_2, \beta_2), (q_2, \gamma_2))$ are \emph{compatible} iff
+$a_1$ and $a_2$ are consistent and $\beta_1$ and $\beta_2$ are consistent.
+\end{definition}
+\begin{definition}
+A pushdown automaton is \emph{deterministic} iff no two of its transitions are compatible.
+\end{definition}
+\begin{definition}
+A language $L$ is deterministic context-free iff there is a DPDA $M$
+such that $L\$ = L(M)$. Here $\$$ is a symbol which is not in the alphabet of $L$.
+\end{definition}
+
+\begin{theorem}
+\label{halt-properties}
+For every DCFL $L$,
+there is a DPDA with these properties:
+\begin{itemize}
+\item It halts on an input iff it reads the whole input.
+\item It has an empty stack and is not in the starting state iff it has halted.
+\end{itemize}
+\end{theorem}
+From now on we can (and we will) assume (WLOG) that all DPDAs have the above properties.
+
+\subsection{Closure under complementation}
+
+\begin{theorem}
+\label{dpda-complement}
+Let $\overline{M}$ be the DPDA obtained by switching the finalness of states of DPDA $M$.
+Then $w$ halts $\overline{M}$ iff it halts $M$.
+Also, if $w$ halts $M$, $w \in L(\overline{M}) \iff w \in \overline{L(M)}$.
+\end{theorem}
+
+\begin{definition}
+The configuration $(p, w, x)$ is a dead-end iff
+$(p, w, x) \vdash_M^* (q, w', y) \implies (w = w' \wedge |x| \le |y|)$.
+\end{definition}
+
+\begin{theorem}
+DPDA $M$ does not halt on input $w$ iff it has a dead-end configuration.
+\end{theorem}
+
+\begin{theorem}
+Every DPDA has an equivalent simple DPDA.
+\end{theorem}
+
+If $(q, w, x)$ is a dead end in a simple DPDA, then by theorem \ref{halt-properties},
+$w \neq e$ and $x \neq e$.
+\begin{theorem}
+$(q, aw, bx)$ is a dead end iff $(q, a, b)$ is also a dead end.
+\end{theorem}
+
+Let $D \subseteq Q \times \Sigma \times \Gamma$ be the set of all dead-end triples.
+This is a well-defined and finite set.
+
+Steps to convert a simple DPDA $M$ into an equivalent simple DPDA $M'$ without dead-ends:
+\begin{itemize}
+\item For all $(q, a, b) \in D$, remove from $\Delta$ all transitions compatible with $(q, a, b)$.
+\item Add 2 non-final states $r$ and $r'$.
+\item For all $(q, a, b) \in D$, add the transition $((q, a, b), (r, e))$.
+\item Add the transitions $((r, a, e), (r, e))$ for all $a \in \Sigma$.
+\item Add the transition $((r, \$, e), (r', e))$.
+\item Add the transitions $((r', e, b), (r', e))$ for all $b \in \Gamma$
+    (by the way, $\Gamma$ includes the bottom-marker).
+\end{itemize}
+
+If $M$ has no dead-end configurations, $L(\overline{M}) = \overline{L(M)}$.
+Therefore, deterministic context-free languages are closed under complementation.
+
+\begin{theorem}
+Let $L = \{a^mb^nc^p: m \neq n \vee n \neq p\}$. Then $L$ is context free but not deterministic context-free.
+\end{theorem}
+\begin{proof}
+$L' = \overline{L}\cap a^*b^*c^* = \{a^nb^nc^n: n \ge 0\}$ is known to not be context-free.
+If $L$ was DCFL, $\overline{L}$ would be a DCFL and so $L'$ would be a CFL.
+\end{proof}
+
+\section{Deterministic Parsing}
+
+\begin{definition}
+For a grammar $G$, a deterministic parser $M$ is a DPDA which can
+identify whether $w \in L(G)$ and construct a parse-tree for $w$ in $G$.
+It does this by sometimes outputting a rule when following a transition.
+These rules, taken in order, form the rules applied in a leftmost derivation of $w$.
+\end{definition}
+
+\subsection{Single look-ahead parser}
+
+\begin{definition}
+For grammar $G = (V, \Sigma, R, S)$, a single look-ahead parser is a DPDA
+$M = (\{p, q\}\cup\{q_a: a \in \Sigma \cup \{\$\}\}, \Sigma, V, \Delta, p, \{q_{\$}\})$
+such that $\Delta$ has the following transitions:
+\begin{itemize}
+\item $((p, e, e), (q, S))$
+\item $((q, a, e), (q_a, e))$ for all $a \in \Sigma \cup \{\$\}$
+\item $((q_a, e, a), (q, e))$ for all $a \in \Sigma \cup \{\$\}$
+\item $((q_a, e, A), (q_a, \beta))$ for all $A \rightarrow_G B \in R$ for some $a \in \Sigma \cup \{\$\}$.
+    Output $A \rightarrow_G B$ when following this transition.
+\end{itemize}
+For $M$ to be deterministic, for transitions $((q_a, e, A), (q_a, \beta_1))$
+and $((q_b, e, A), (q_b, \beta_2))$, $a \neq b$.
+\end{definition}
+
+Not all grammars have a single look-ahead parser.
+But it is sometimes possible to transform a grammar so that it has a single look-ahead parser.
+We now mention two heuristic rules for such transformations.
+
+\subsubsection{Heuristic transformation rules}
+
+\paragraph{Left factoring.}
+If there are rules $A \rightarrow \alpha\beta_i$ for multiple $i$,
+transform them to rules $A \rightarrow \alpha B$ and $B \rightarrow \beta_i$ for all $i$.
+
+\paragraph{Removing left recursion.}
+If there are rules $A \rightarrow A\alpha_i$ and $A \rightarrow \beta_j$
+for $i \ge 1$ and $j \ge 1$,
+transform them to rules $A \rightarrow \beta_jB$, $B \rightarrow e$ and $B \rightarrow \alpha_iB$
+for $i \ge 1$ and $j \ge 1$.
+
+\end{document}
