@@ -660,7 +660,36 @@ Time to compute $f(A, i, j)$ is $\Theta(|R_A|(j-i))$
 if sub-problem solutions are already available.
 Time to compute $f$ for all $(A, i, j)$ is therefore $\Theta(|R||w|^3)$.
 
-% TODO: Also remove non-instantiable or non-reachable non-terminals.
+\subsection{Removing non-productive symbols}
+
+\begin{definition}
+For the CFG $G = (V, \Sigma, R, S)$, $A \in V$ is productive iff
+$\exists w \in \Sigma^*, A \gArrow{G}^* w$.
+\end{definition}
+
+\begin{algorithm}[H]
+\caption{Finding all productive non-terminals in $G = (V, \Sigma, R, S)$}
+\label{algo-productive-non-terminals}
+\begin{algorithmic}
+\State $P = \{\}$
+\Comment{Implement as a bitset on $V - \Sigma$.}
+\Do
+    \State $P' = P$
+    \For{$A \garrow{G} \beta \in R$ where $A \not\in P$}
+        \If{$\beta \in (P \cup \Sigma)^*$}
+            \State $P.\operatorname{add}(A)$
+        \EndIf
+    \EndFor
+\doWhile{$P' \neq P$}
+\end{algorithmic}
+\end{algorithm}
+
+Running time: $O(|V-\Sigma||G|)$.
+Auxiliary space: $\Theta(|V-\Sigma|)$.
+
+To remove non-productive symbols from $G$, remove all rules which
+have a non-productive symbol on the LHS or in the RHS.
+This will not change the language of $G$.
 
 \section{Deterministic PDA}
 
