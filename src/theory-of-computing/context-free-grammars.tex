@@ -266,6 +266,28 @@ $(\gamma \gArrow{G}^* w) \iff ((e, \gamma) \gArrowL{G}^* (w, e))$.
 Therefore, $w \in L(G)$ iff an incremental left derivation of $w$ exists from $S$,
 i.e. $(e, S) \gArrowL{G}^* (w, e)$.
 
+\subsection{Incremental right derivation}
+
+\begin{definition}
+Let $G = (V, \Sigma, R, S)$ be a grammar.\\
+For $u_1, u_2 \in V^*$, $A \in V$ and $v_1, v_2 \in \Sigma^*$,
+$(u_1A, v_1) \gArrowR{G} (u_2, v_2)$\\
+$\iff \begin{cases}
+u_2 = u_1 \wedge v_2 = Av_1 & \textrm{ if } A \in \Sigma\\
+v_2 = v_1 \wedge
+(\exists \beta \in V^*, A \garrow{G} \beta \wedge u_2 = u_1\beta)
+& \textrm{ if } A \in V - \Sigma \end{cases}$
+\end{definition}
+
+For $v \in V^*$ and $w \in \Sigma^*$, if $(v, e) \gArrowR{G}^* (e, w)$,
+then the sequence of $\gArrowR{G}$ operations
+is called an incremental right derivation of $w$ from $v$.
+
+\begin{theorem}
+For $w \in \Sigma^*$,
+$(\gamma \gArrow{G}^* w) \iff ((\gamma, e) \gArrowR{G}^* (e, w))$.
+\end{theorem}
+
 \subsection{Context-free grammar to pushdown automaton}
 
 Let $G = (V, \Sigma, R, S)$ be a context-free grammar.
