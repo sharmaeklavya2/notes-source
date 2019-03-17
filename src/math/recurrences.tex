@@ -1,0 +1,196 @@
+\input{header.tex}
+
+\title{Recurrence Relations}
+
+\newcommand*{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand*{\ceil}[1]{\left\lceil #1 \right\rceil}
+
+\begin{document}
+
+\maketitle
+
+\initAfterBeginDocument{}
+
+\section{Divide in half and Conquer}
+
+We will look at recurrence relations of the form:
+\[ f(n) = 2f\left(\floor{\frac{n}{2}}\right) + g(n) \]
+\[ f(n) = 2f\left(\ceil{\frac{n}{2}}\right) + g(n) \]
+\[ f(n) = f\left(\floor{\frac{n}{2}}\right) + f\left(\ceil{\frac{n}{2}}\right) + g(n) \]
+
+Here $f$ and $g$ are functions from $\mathbb{N}$ to $\mathbb{N}$ ($\mathbb{N} = \{0, 1, \ldots\}$).
+We define the recurrence relations only for $n \ge 2$.
+Therefore, $f(0)$ and $f(1)$ are boundary values.
+(The recurrence relations can be made to hold true for $n=0$ and $n=1$ as well,
+for example, by setting $f(0) = f(1) = g(0) = g(1) = 0$).
+
+We will assume that $g$ is non-negative and monotonic and $0 \le f(0) \le f(1)$.
+
+We will find an exact closed-form solution for $f$ and simple lower and upper bounds on $f$.
+
+\subsection{Mathematical background}
+
+\begin{lemma}
+\[ \forall a, b \in \mathbb{N}, \ceil{\frac{a}{b}} = \floor{\frac{a-1}{b}} + 1 \]
+\end{lemma}
+\begin{definition}$\lg{x} = \log_2(x)$\end{definition}
+\begin{lemma} $n \in \mathbb{N}$
+\[\forall n \ge 1, \floor{\lg n} = \ceil{\lg(n+1)} - 1 \]
+\end{lemma}
+
+\begin{lemma} $n, k \in \mathbb{N}$
+\[ \frac{n}{2^k} \in \left[1, 2\right) \iff k = \floor{\lg n} \]
+\[ \frac{n}{2^k} \in \left(\frac{1}{2}, 1\right] \iff k = \ceil{\lg n} \]
+\end{lemma}
+
+\begin{lemma} $n \in \mathbb{N}$
+\begin{align*}
+2^{\floor{\lg n}} &\in \left[ \frac{n+1}{2}, n \right] & 2^{\ceil{\lg n}} &\in \left[ n, 2(n-1) \right]
+\end{align*}
+\end{lemma}
+
+\subsection[Type 1]{Type 1: $f(n) = 2f\left(\floor{\frac{n}{2}}\right) + g(n)$}
+
+\begin{theorem}[Monotonicity] $i \le j \implies f(i) \le f(j)$ \end{theorem}
+\begin{proof} Use induction and monotonicity of $g$:
+\[ f(n)
+= 2f\left(\floor{\frac{n}{2}}\right) + g(n)
+\ge 2f\left(\floor{\frac{n-1}{2}}\right) + g(n-1)
+= f(n-1) \]
+\end{proof}
+
+\begin{theorem} $\forall k \ge 0$:
+\[ f(n) = 2^k f\left(\floor{\frac{n}{2^k}}\right)
+    + \sum_{i=0}^{k-1} 2^i g\left(\floor{\frac{n}{2^i}}\right) \]
+\end{theorem}
+
+Set $k = \floor{\lg n}$ in the above theorem to get
+\[ f(n) = 2^{\floor{\lg n}}f(1) + \sum_{i=0}^{\floor{\lg n}-1} 2^i g\left( \floor{\frac{n}{2^i}} \right) \]
+
+\subsection[Type 2]{Type 2: $f(n) = 2f\left(\ceil{\frac{n}{2}}\right) + g(n)$}
+
+\begin{theorem}[Monotonicity] $i \le j \implies f(i) \le f(j)$ \end{theorem}
+\begin{proof} Use induction and monotonicity of $g$ \end{proof}
+
+\begin{theorem} $\forall k \ge 0$:
+\[ f(n) = 2^k f\left(\ceil{\frac{n}{2^k}}\right)
+    + \sum_{i=0}^{k-1} 2^i g\left(\ceil{\frac{n}{2^i}}\right) \]
+\end{theorem}
+
+
+Set $k = \ceil{\lg n}$ in the above theorem to get
+\[ f(n) = 2^{\ceil{\lg n}}f(1) + \sum_{i=0}^{\ceil{\lg n}-1} 2^i g\left( \ceil{\frac{n}{2^i}} \right) \]
+
+\subsection[Type 3]{Type 3: $f(n) = f\left(\floor{\frac{n}{2}}\right) + f\left(\ceil{\frac{n}{2}}\right) + g(n)$}
+
+\begin{theorem}[Monotonicity] $i \le j \implies f(i) \le f(j)$ \end{theorem}
+\begin{proof} Use induction and monotonicity of $g$ \end{proof}
+
+We will also look at a special instance of this recurrence
+where $g(n) = n-1$ and $f(1) = 0$.
+(This is the recurrence for the number of comparisons in merge sort)
+
+\subsubsection{Weak bounds}
+
+Let
+\[ f_l(n) = 2f_l\left(\floor{\frac{n}{2}}\right) + g(n) \]
+\[ f_u(n) = 2f_u\left(\ceil{\frac{n}{2}}\right) + g(n) \]
+where $f_l(0) = f(0) = f_u(0)$ and $f_l(1) = f(1) = f_u(1)$.
+
+\begin{theorem}$\forall n \ge 0, f_l(n) \le f(n) \le f_u(n)$\end{theorem}
+\begin{proof} Use induction and monotonicity of $f$:
+\[ f(n) - f_l(n) = 2\left[ f\left(\floor{\frac{n}{2}}\right) - f_l\left(\floor{\frac{n}{2}}\right) \right]
+  + \left[ f\left(\ceil{\frac{n}{2}}\right) - f\left(\floor{\frac{n}{2}}\right) \right] \]
+\[ f_u(n) - f(n) = 2\left[ f_u\left(\ceil{\frac{n}{2}}\right) - f\left(\ceil{\frac{n}{2}}\right) \right]
+  + \left[ f\left(\ceil{\frac{n}{2}}\right) - f\left(\floor{\frac{n}{2}}\right) \right] \]
+\end{proof}
+
+For $g(n) = n-1$ and $f(1) = 0$, we get
+\begin{align*}
+f_l(n) &= \sum_{i=0}^{\floor{\lg n}-1} 2^i \left( \floor{\frac{n}{2^i}} - 1 \right)
+\\ &= \sum_{i=0}^{\floor{\lg n}-1} 2^i \left( \ceil{\frac{n+1}{2^i}} - 2 \right)
+\\ &\ge \sum_{i=0}^{\floor{\lg n}-1} 2^i \left( \frac{n+1}{2^i} - 2 \right)
+\\ &= \floor{\lg n}(n+1) - 2^{\floor{\lg n}+1} + 2
+\\ &\ge \floor{\lg n}(n+1) - 2n + 2
+\end{align*}
+\begin{align*}
+f_u(n) &= \sum_{i=0}^{\ceil{\lg n}-1} 2^i \left( \ceil{\frac{n}{2^i}} - 1 \right)
+\\ &= \sum_{i=0}^{\ceil{\lg n}-1} 2^i \left( \floor{\frac{n-1}{2^i}} \right)
+\\ &\le \sum_{i=0}^{\ceil{\lg n}-1} 2^i \left( \frac{n-1}{2^i} \right)
+\\ &= \ceil{\lg n}(n-1)
+\end{align*}
+
+Therefore, $\floor{\lg n}(n+1) - 2n + 2 \le f(n) \le \ceil{\lg n}(n-1)$.
+
+\subsubsection{Exact solution}
+
+The exact solution is based on \cite{hwang:recurrence}.
+This approach requires the recurrence to hold at $n=0$ and $n=1$.
+Therefore, $f(0) = -g(0) = -g(1)$.
+
+Extend the domain of $f$ and $g$ by linear interpolation:
+\[ f(x) = (1-\{x\})f(\floor{x}) + \{x\}f(\floor{x}+1) \]
+\[ g(x) = (1-\{x\})g(\floor{x}) + \{x\}g(\floor{x}+1) \]
+where $\{x\} = x - \floor{x}$.
+
+\begin{theorem}
+$\forall x \ge 0, f(x) = 2f(\frac{x}{2}) + g(x)$
+\end{theorem}
+\begin{proof}
+Let $n = \floor{x}$ and $h = \{x\}$.
+\begin{align*}
+f(x) &= (1-h)f(n) + hf(n+1)
+\\ &= (1-h)\left(f\left( \floor{\frac{n}{2}} \right) + f\left( \ceil{\frac{n}{2}} \right) + g(n)\right)
+\\ &+ h\left(f\left( \floor{\frac{n+1}{2}} \right) + f\left( \ceil{\frac{n+1}{2}} \right) + g(n+1)\right)
+\\ &= g(x) + (1-h)\left(f\left( \floor{\frac{n}{2}} \right) + f\left( \ceil{\frac{n}{2}} \right)\right)
+\\ &+ h\left(f\left( \ceil{\frac{n}{2}} \right) + f\left( \floor{\frac{n}{2}+1} \right)\right)
+\\ &= g(x) + f\left(\floor{\frac{n}{2}} + h\right) + f\left( \ceil{\frac{n}{2}} \right)
+\end{align*}
+\[ \floor{\frac{x}{2}} = \floor{\frac{n+h}{2}} = \floor{\frac{n}{2}} \]
+\[ \left\{\frac{x}{2}\right\} = \frac{n+h}{2} - \floor{\frac{n}{2}} = \frac{(n\%2) + h}{2} \]
+where `$\%$' is the remainder operator $\left(n\%k = n - k\floor{\frac{n}{k}}\right)$.
+\[ 1 - \left\{\frac{x}{2}\right\} = 1 - \frac{(n\%2) + h}{2} = \frac{(1-n\%2) + (1-h)}{2} \]
+\begin{align*}
+2f\left(\frac{x}{2}\right)
+&= 2\left(1-\left\{\frac{x}{2}\right\}\right)f\left(\floor{\frac{x}{2}}\right)
++ 2\left\{\frac{x}{2}\right\}f\left(\floor{\frac{x}{2}} + 1\right)
+\\ &= ((1-n\%2) + (1-h))f\left(\floor{\frac{n}{2}}\right) + (n\%2 + h)f\left(\floor{\frac{n}{2}} + 1\right)
+\\ &= f\left(\floor{\frac{n}{2}} + h\right)
++ (1-n\%2)f\left(\floor{\frac{n}{2}}\right) + (n\%2)f\left(\floor{\frac{n}{2}} + 1\right)
+\\ &= f\left(\floor{\frac{n}{2}} + h\right)
++ \begin{cases}f\left(\floor{\frac{n}{2}}\right) & n\%2 = 0
+\\ f\left(\floor{\frac{n}{2}} + 1\right) & n\%2 = 1 \end{cases}
+\\ &= f\left(\floor{\frac{n}{2}} + h\right) + f\left(\ceil{\frac{n}{2}}\right)
+\\ &= f(x) - g(x)
+\end{align*}
+\end{proof}
+
+\begin{theorem}
+\[ f(n) = 2^kf\left(\frac{n}{2^k}\right) + \sum_{i=0}^{k-1} 2^i g\left(\frac{n}{2^i}\right) \]
+\end{theorem}
+
+Let's consider the special instance of this recurrence:
+\[ g(n) = \begin{cases}n-1 & n \ge 1 \\ 0 & n = 0 \end{cases} \]
+Also assume $f(1) = 0$. Therefore, $f(0) = f(1) = g(0) = g(1) = 0$.
+
+After linear interpolation, we get
+\[ g(x) = \begin{cases}x-1 & x \ge 1 \\ 0 & 0 \le x \le 1 \end{cases} \]
+and $f(x) = 0$ when $0 \le x \le 1$.
+
+\[ k = \floor{\lg n} + 1
+\implies \frac{n}{2^k} \in \left[\frac{1}{2}, 1\right)
+\implies f\left(\frac{n}{2^k}\right) = 0 \]
+\begin{align*}
+f(n) &= \sum_{i=0}^{\floor{\lg n}} 2^i \left( \frac{n}{2^i} - 1 \right)
+\\ &= n(\floor{\lg n} + 1) - 2^{\floor{\lg n} + 1} + 1
+\\ &\in n\floor{\lg n} - [0, n-1]
+\end{align*}
+\[ k = \ceil{\lg n}
+\implies \frac{n}{2^k} \in \left(\frac{1}{2}, 1\right]
+\implies f\left(\frac{n}{2^k}\right) = 0 \]
+\[ f(n) = \sum_{i=0}^{\ceil{\lg n}-1} 2^i \left( \frac{n}{2^i} - 1 \right)
+= n\ceil{\lg n} - 2^{\ceil{\lg n}} + 1 \]
+
+\addMyBib{}
+
+\end{document}
