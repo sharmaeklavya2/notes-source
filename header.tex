@@ -6,6 +6,7 @@
 \usepackage{xcolor}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{url}
 
 \hypersetup{
     colorlinks,
@@ -19,12 +20,22 @@
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
 
-\newcommand{\initAfterBeginDocument}{
-\maketitle
+\newcommand{\initFromContents}{
 \tableofcontents
 \newpage
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5em}
+}
+
+\newcommand{\initAfterBeginDocument}{
+\maketitle
+\initFromContents{}
+}
+
+\newcommand{\addMyBib}{
+\Urlmuskip=0mu plus 1mu\relax  % break long URLs
+\bibliographystyle{plainurl}
+\bibliography{bibdb}
 }
 
 \date{}
