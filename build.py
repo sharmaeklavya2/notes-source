@@ -10,13 +10,41 @@ import subprocess
 
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--verbose', action='store_true', default=False)
-parser.add_argument('--clean', action='store_true', default=False,
+parser.add_argument('--no-clean', action='store_false', dest='clean', default=True,
     help="Remove temporary files from output directory")
+parser.add_argument('--force', action='store_true', default=False,
+    help="Build even if source was not updated")
+parser.add_argument('--dryrun', action='store_true', default=False,
+    help="Only print commands; do not run them")
 ARGS = parser.parse_args(None if __name__ == '__main__' else [])
 
 
-TRASH_EXTS = ['.aux', '.log', '.out', '.toc']
+TRASH_EXTS = ['.aux', '.log', '.out', '.toc', '.bbl', '.blg']
+BIBDB_PATH = 'bibdb.bib'
+DRYRUN_PROMPT = '$ '
+
+
+def is_source_updated(source, dest):
+    source_mtime = os.path.getmtime(source)
+    try:
+        dest_mtime = os.path.getmtime(dest)
+    except OSError:
+        return True
+    return dest_mtime <= source_mtime
+
+
+def run(cmd, **kwargs):
+    if ARGS.dryrun:
+        print(DRYRUN_PROMPT + ' '.join(cmd))
+    else:
+        return subprocess.call(cmd, **kwargs)
+
+
+def run_check(cmd, **kwargs):
+    if ARGS.dryrun:
+        print(DRYRUN_PROMPT + ' '.join(cmd))
+    else:
+        return subprocess.check_call(cmd, **kwargs)
 
 
 def process_tex_file(ifpath, odpath):
@@ -26,21 +54,35 @@ def process_tex_file(ifpath, odpath):
     odpath: Path to output directory.
     """
 
-    if ARGS.verbose:
-        print('process_tex_file({}, {})'.format(repr(ifpath), repr(odpath)))
+    name = os.path.splitext(os.path.basename(ifpath))[0]
+    aux_path = pjoin(odpath, name + '.aux')
+    pdf_path = pjoin(odpath, name + '.pdf')
 
-    os.makedirs(odpath, exist_ok=True)
-    for i in range(2):
-        retcode = subprocess.call(['pdflatex', '-interaction=batchmode',
-            '-output-directory=' + odpath, ifpath], stdout=subprocess.DEVNULL)
-        if retcode != 0:
+    if not (ARGS.force or is_source_updated(ifpath, pdf_path)):
+        print(' Skipped ' + ifpath)
+    else:
+        print('Building ' + ifpath)
+
+        os.makedirs(odpath, exist_ok=True)
+        pdflatex_args = ['pdflatex', '-interaction=batchmode', '-output-directory=' + odpath, ifpath]
+
+        try:
+            run_check(pdflatex_args, stdout=subprocess.DEVNULL)
+            run(['bibtex', aux_path], stdout=subprocess.DEVNULL)
+            run_check(pdflatex_args, stdout=subprocess.DEVNULL)
+            run_check(pdflatex_args, stdout=subprocess.DEVNULL)
+        except subprocess.CalledProcessError as e:
+            print(e, file=sys.stderr)
             return False
 
     if ARGS.clean:
-        name = os.path.splitext(os.path.basename(ifpath))[0]
         for ext in TRASH_EXTS:
+            fpath = pjoin(odpath, name + ext)
+            if ARGS.dryrun:
+                if os.path.exists(fpath):
+                    print(DRYRUN_PROMPT + 'rm ' + fpath)
             try:
-                os.remove(pjoin(odpath, name + ext))
+                os.remove(fpath)
             except FileNotFoundError:
                 pass
 
