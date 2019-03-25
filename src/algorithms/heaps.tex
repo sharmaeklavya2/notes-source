@@ -1,0 +1,159 @@
+\input{header.tex}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{Heaps}
+
+\begin{document}
+
+\initAfterBeginDocument{}
+
+\section{Almost-complete trees}
+
+\subsection{Definition}
+
+A $d$-ary almost-complete tree is a rooted tree such that:
+\begin{itemize}
+\item Every vertex has at most $d$ children.
+\item The tree is completely filled on all levels, except possibly the lowest,
+    which is filled from the left up to a point.
+\end{itemize}
+
+Unless $d$ is explicitly specific, it is taken to be 2 (binary tree).
+
+The size of an almost-complete tree is the number of vertices in it.
+
+\subsection{Indexing}
+
+Every vertex in an almost-complete tree of size $n$ can be indexed by
+a unique integer from $0$ to $n-1$ by using a left-to-right level-ordered indexing.
+
+Index 0 is the root.
+The vertex at index $i$ has its parent at index $\floor{\frac{i-1}{d}} = \ceil{\frac{i}{d}}-1$.
+This means that the vertex at $i$ has $di+j$ as a child for all $1 \le j \le d$,
+except if $di+j \ge n$, in which case $i$ does not have a $j^{\textrm{th}}$ child.
+
+\subsection{Height}
+
+Let there be a $d$-ary almost-complete tree of size $n$ and height $h$.
+Let $x$ be the number of nodes in the last level. Therefore, $1 \le x \le d^h$.
+\[ n = 1 + d + d^2 + \ldots + d^{h-1} + x = \frac{d^h-1}{d-1} + x \]
+\begin{theorem}$h = \floor{\log_d (n(d-1))}$\end{theorem}
+
+\section{Heaps}
+
+\subsection{Definition}
+
+Let $T$ be a rooted tree where every vertex has a value associated with it.
+A vertex $v \in T$ is said to follow the max-heap property iff
+its value is greater than or equal to the value of all its children.
+
+A max-heap is a rooted tree where every vertex follows the max-heap property.
+
+Similarly, in a min-heap, the value of a vertex is always less than or equal to
+the value of all of its children.
+
+Heaps typically use almost-complete trees.
+This makes it possible to specify the vertex values as an array $A$
+such that $A[i]$ is the value of the vertex with index $i$.
+
+\subsection{Max-heapify}
+
+The procedure $\texttt{max\_heapify}(A, i, n)$ takes as input
+an array $A$ of size $n$ representing a $d$-ary almost-complete tree
+and an integer $0 \le i < n$ where
+the subtrees rooted at children of vertex $i$ are max-heaps.
+\texttt{max\_heapify} makes changes to $A$ to make the subtree rooted at $i$ a max-heap.
+
+If $i$ is a leaf node, \texttt{max\_heapify} does nothing.
+Otherwise it finds out the largest child of $i$. Let it be $j$.
+If the value of $j$ is greater than the value of $i$,
+it swaps the values of $i$ and $j$ and then calls $\texttt{max\_heapify}(A, j, n)$.
+
+The time taken by \texttt{max\_heapify} is proportional to the number of comparisons performed.
+\begin{theorem}
+\texttt{\upshape max\_heapify} performs at most $dh(A, i, n)$ comparisons,
+where $h(A, i, n)$ is the height of vertex $i$
+(i.e. the length of the longest path from $i$ to a leaf).
+\end{theorem}
+
+\subsection{Building a max heap}
+
+The procedure $\texttt{build\_max\_heap}(A, i, n)$ takes an array $A$ of size $n$
+and modifies it so that the subtree rooted at $i$ is a heap.
+It does this by calling $\texttt{build\_max\_heap}(A, j, n)$ for every child $j$
+and then calling $\texttt{max\_heapify}(A, i, n)$.
+
+Therefore, time taken by \texttt{build\_max\_heap} is proportional to the number of comparisons
+and the number of comparisons is upper bounded by $dH$, where $H$ is the sum of heights of all vertices.
+
+Let the heap have size $n$, height $h$ and $x$ nodes in the last layer.
+
+There are $h+1$ layers in the heap.
+If the last layer is removed, there would be $d^i$ vertices at depth $i$
+and they would all have height $h-1-i$.
+Adding back the last layer will increase by 1 the height of all ancestors
+of the vertices in the last layer. Therefore,
+\[ H = \underbrace{\left( \sum_{i=0}^{h-1} (h-1-i)d^i \right)}_{H_1}
+    + \underbrace{\left( \sum_{i=1}^h \ceil{\frac{x}{2^i}} \right)}_{H_2} \]
+\[ (d-1)H_1 = \frac{d^h-1}{d-1} - h = n-x-h \]
+\[ H_2 = \sum_{i=1}^h \ceil{\frac{x}{d^i}}
+\ge \sum_{i=1}^h \frac{x}{d^i}
+= \frac{x(1-d^{-h})}{d-1}
+\ge \frac{x-1}{d-1} \]
+\begin{align*}
+H_2 &= \sum_{i=1}^h \ceil{\frac{x}{d^i}}
+= \sum_{i=1}^h \left( 1 + \floor{\frac{x-1}{d^i}} \right)
+\\ &\le h + \sum_{i=1}^h \frac{x-1}{d^i}
+= h + \frac{(x-1)(1-d^{-h})}{d-1}
+\le h + \frac{x-1}{d-1}
+\end{align*}
+\[ H \in \frac{(n-1) + h[-1, d-2]}{d-1} \]
+
+Therefore, number of comparisons to build $d$-ary max-heap
+\[ \le dH \le \left(1 + \frac{1}{d-1}\right)(n-1)
++ \left(d-1 - \frac{1}{d-1}\right)\floor{\frac{\lg n + \lg (d-1)}{\lg d}} \]
+
+Number of comparisons to build a binary max-heap $\le 2(n-1)$.
+
+\subsection{Heapsort}
+
+\begin{algorithm}[H]
+\caption{$\texttt{heapsort}(A, n)$}
+\label{algo-heapsort}
+\begin{algorithmic}
+\State $\texttt{build\_max\_heap}(A, 0, n)$.
+\For{$i$ from $n$ to $2$}
+    \State Swap $A[0]$ and $A[i-1]$.
+    \State $\texttt{max\_heapify}(A, 0, i-1)$.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+Number of comparisons
+\[ \le dH + \sum_{i=1}^{n-1} d\floor{\log_d (i(d-1))}
+\le dH + \frac{d}{\lg d} \left(\lg((n-1)!) + (n-1)\lg(d-1)\right) \]
+For large $n$, this is minimized at $d = 3$.
+
+With a binary heap, total number of comparisons for heapsort
+\[ \le 2(n-1 + \floor{\lg((n-1)!)}) \le 2n\lg n - 2(\lg e - 1)n - \lg n + \lg\pi - \frac{5}{6} \]
+
+\subsection{Push}
+
+To push a value into a max-heap array $A$, append it to the end of the array
+and then keep swapping with parent while it's greater than parent.
+
+Time taken is proportional to number of comparisons.
+Number of comparisons is upper bounded by height of new tree
+$= \floor{\lg_d((n+1)(d-1))}$.
+
+\subsection{Pop}
+
+To pop a value from a max-heap of size $n$, swap $A[0]$ and $A[n-1]$ and call
+$\texttt{max\_heapify}(A, 0, n-1)$.
+
+Time taken is proportional to number of comparisons.
+Number of comparisons is upper bounded by $d\floor{\lg_d((n-1)(d-1))}$.
+
+\end{document}
