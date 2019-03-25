@@ -16,4 +16,5 @@ __pycache__/
 *~
 *.sw[po]
 Thumbs.db
+.DS_Store
 Desktop.ini
