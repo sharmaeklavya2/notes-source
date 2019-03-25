@@ -1,0 +1,116 @@
+\input{header.tex}
+
+\title{Bounds on Selection}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document analyzes lower and upper bounds on the worst-case number of comparisons required for selection,
+i.e. finding the $k^{\textrm{th}}$-smallest element in an array of $n$ elements.
+\end{abstract}
+
+\initFromContents{}
+
+\section{General lower bound}
+
+There must be at least $n-1$ comparisons [proof needed].
+
+\section{Specific algorithms}
+
+\subsection{Sort and select}
+
+First sort the array, then return the $k^{\textrm{th}}$ element.
+
+Sorting has a lower bound of $\ceil{\lg(n!)}$ comparisons.
+It can be upper bounded by considering specific sorting algorithms.
+All efficient algorithms use $\Theta(n\lg n)$ comparisons.
+
+\subsection{Build heap and pop}
+
+Build a min-heap of all elements and pop $k$ times.
+
+A binary min-heap of size $n$ can be built using at most $2(n-1)$ comparisons and an item can be
+popped from it using at most $2\floor{\lg (n-1)}$ comparisons \cite{eku-notes-heaps}.
+
+Therefore, number of comparisons to select the $k^{\textrm{th}}$-smallest element is upper bounded by
+\[ 2\left( n-1 + \sum_{i=1}^k \floor{\lg(n-i)} \right)
+\le 2(n-1 + k\floor{\lg(n-1)}) \]
+
+\subsection{Maintain heap and pop}
+
+Build a max-heap of first $k$ elements.
+For each of the rest of the elements, compare it with the heap top.
+Replace top by new element and repair heap.
+The heap top at the end of this process is the $k^{\textrm{th}}$-smallest element.
+
+A binary max-heap of size $k$ can be built using at most $2(k-1)$ comparisons and top can be replaced
+using at most $2\floor{\lg k}$ comparisons \cite{eku-notes-heaps}.
+
+Therefore, number of comparisons to select the $k^{\textrm{th}}$-smallest element is upper bounded by
+\[ 2((n-k)\floor{\lg k} + (k-1)) \]
+
+Although this is not as efficient as the previous algorithm,
+it has the advantage of being an online streaming algorithm.
+
+\subsection{Randomized quick-select}
+
+This algorithms partitions the array using a random pivot
+and then recursively selects from one of the partitions.
+
+Let $f(n)$ be the expected number of comparisons required to select from $n$ elements.
+$f(0) = f(1) = 0$.
+
+Partitioning the array can be done using $n-1$ comparisons.
+
+\begin{align*}
+f(n) &\le (n-1) + \frac{1}{n} \sum_{i=1}^n \max(f(i-1), f(n-i))
+\\ &\le (n-1) + \frac{2}{n} \sum_{i=\floor{\frac{n}{2}}}^{n-1} T(i)
+\end{align*}
+
+We will prove using mathematical induction that $f(n) \le 4n$.
+Since $f(0) = 0$, $d \ge 0$.
+
+As the induction hypothesis, assume $f(i)$ for all $0 \le i \le n-1$.
+\begin{align*}
+& f(n) \le (n-1) + \frac{2}{n} \sum_{i=\floor{\frac{n}{2}}}^{n-1} T(i)
+\\ &\le (n-1) + \frac{2}{n} \sum_{i=\floor{\frac{n}{2}}}^{n-1} 4i
+\\ &= (n-1) + \frac{4}{n} \left( n(n-1) -
+\floor{\frac{n}{2}}\left(\floor{\frac{n}{2}}-1\right) \right)
+\\ &\le (n-1) + \frac{4}{n} \left( n(n-1) -
+\frac{n}{2}\left(\frac{n}{2}-1\right) \right)
+\\ &= 4n - 3 \le 4n
+\end{align*}
+
+Therefore, randomized quick-select performs at most $4n$ expected comparisons
+in the worst case.
+
+\subsection{Median-of-medians quick-select}
+
+Median-of-medians quick-select (MoMQS) is a deterministic variant of quick-select which uses
+quick-select recursively to decide a good pivot for partitioning.
+This guarantees worst-case linear time complexity.
+
+Let $f(n)$ be the worst-case number of comparisons needed to run MoMQS on $n$ elements.
+$f(0) = f(1) = 0$.
+
+Steps in MoMQS:
+\begin{enumerate}
+\item Split array into sub-arrays of length 5 or less such that at most 1 sub-array has length less than 5.
+\item Find median of each of those subarrays of length 5.
+    It takes at most 6 comparisons \cite{selection-comparisons-table} to find each median.
+\item Find the median of these $\ceil{\frac{n}{5}}$ medians. This takes $f(\ceil{\frac{n}{5}})$ comparisons.
+\item Partition the array about the median of medians. This takes $n-1$ comparisons.
+\item Recurse into the appropriate partition. It can be proven that the larger part of
+    the array has size at most around $\frac{7n}{10}$. Therefore at most $\frac{7n}{10}$ comparisons are required.
+\end{enumerate}
+
+Therefore, a rough recurrence relation for $f$ is:
+\[ f(n) \approx \frac{6n}{5} + f\left(\frac{n}{5}\right) + (n-1) + f\left(\frac{7n}{10}\right) \]
+
+It can be verified that $f(n) \le 22n$.
+
+\addMyBib{}
+
+\end{document}
