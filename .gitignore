@@ -9,7 +9,6 @@ output/
 *.out
 *.toc
 *.pdf
-/bibdb.bib
 
 *.pyc
 __pycache__/
