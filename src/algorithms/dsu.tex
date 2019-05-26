@@ -1,0 +1,179 @@
+\input{header.tex}
+
+\usepackage{listings}
+\input{lstparams.tex}
+\lstset{language=Python}
+
+\title{Disjoint-set Union}
+
+\begin{document}
+
+\initAfterBeginDocument{}
+
+All (pseudo-)code in this document is based on the python programming language.
+
+\section{Problem}
+
+In the Disjoint-set Union (DSU) problem, we are given a set $S$ of $n$ singleton sets,
+i.e. $S = \{\{i\}: 0 \le i < n\}$.
+
+We have to perform $m$ operations on $S$.
+Each operation can modify $S$ while maintaining these 2 invariants:
+\begin{enumerate}
+\item All elements of $S$ are sets.
+\item Every integer from 0 to n-1 lies in exactly one set in $S$.
+\end{enumerate}
+
+Also, for every set $X \in S$, one of the elements of $X$ will be known as the `representative of $X$',
+denoted as $\operatorname{repr}(X)$.
+
+\paragraph*{Types of operations allowed}
+\begin{enumerate}
+\item \texttt{find(x)}: If $x \in X$, return $\operatorname{repr}(X)$.
+\item \texttt{union(x, y)}: Let $x \in X$ and $y \in Y$.
+Then remove $X$ and $Y$ from $S$ and add $X \cup Y$ to $S$.
+\end{enumerate}
+
+\texttt{union(x, y)} is the only operation which can modify $S$.
+It is easy to see that \texttt{union(x, y)} maintains the 2 invariants.
+
+\section{Forest algorithm}
+
+The `forest algorithm' for DSU maintains a forest $F = (V, E)$ of rooted trees
+where $V = \{i \in \mathbb{Z}: 0 \le i < n\}$.
+Each tree in $F$ corresponds to a set in $S$.
+The representative of a set is the root of the corresponding tree.
+
+The forest is stored by keeping track of the parent of each vertex
+in an array \texttt{parent} of size $n$.
+If a vertex $x$ has no parent, then \texttt{parent[x] = x}.
+The algorithm (optionally) maintains 2 additional arrays \texttt{rank} and \texttt{size}.
+\texttt{rank[i]} is an upper-bound on the height of vertex $i$
+and \texttt{size[i]} is the size of the subtree rooted at vertex $i$.
+Initially \texttt{parent[i] = i}, \texttt{rank[i] = 0} and \texttt{size[i] = 1} for all $0 \le i < n$.
+
+This algorithm offers 2 hyperparameters.
+These are optional optimizations for speeding up DSU.
+\begin{enumerate}
+\item \texttt{union\_by}: can be \texttt{None}, \texttt{rank} or \texttt{size}.
+\item \texttt{compress\_path}: can be \texttt{False} or \texttt{True}.
+\end{enumerate}
+
+This is how \texttt{find} and \texttt{union} are implemented:
+\begin{lstlisting}
+def find(x):
+    if parent[x] == x:
+        return x
+    else:
+        r = find(parent[x])
+        if compress_path:
+            parent[x] = r
+        return r
+
+def link(x, y):
+    parent[y] = x
+    size[x] += size[y]
+    rank[x] = max(rank[x], rank[y] + 1)
+
+def union(x, y):
+    x = find(x)
+    y = find(y)
+    if union_by is not None and union_by[x] < union_by[y]:
+        x, y = y, x
+
+    link(x, y)
+    return x != y
+\end{lstlisting}
+
+\subsection{Performance with no optimizations}
+
+Consider the following operations:
+\begin{lstlisting}
+for i in range(1, n):
+    union(i, i-1)
+for i in range(1, m - n):
+    find(0)
+\end{lstlisting}
+
+When \texttt{union\_by} is \texttt{None}, \texttt{union(x, y)}
+makes the tree of $y$ a subtree of $x$.
+Therefore, after all the \texttt{union} operations, the forest will be a single chain from 0 to $n-1$.
+If \texttt{compress\_path} is \texttt{False}, each \texttt{find(0)} operation will take $\Theta(n)$ time.
+Each $\texttt{union}$ operation takes $\Theta(1)$ time.
+Therefore, total time taken is $\Theta((m-n)n)$.
+
+\subsection{\texttt{rank} upper-bounds height}
+
+For a tree $T$, let $h(T)$ denote its height, $n(T)$ denote the number of nodes in it
+and $r(T) = \operatorname{rank}(\operatorname{repr}(T))$.
+
+\begin{theorem} $h(T) \le r(T)$ throughout the algorithm. \end{theorem}
+\begin{proof}
+Initially, $h(T) = r(T) = 0$ for every tree $T$.
+
+In a \texttt{find} operation, the height of a tree can only reduce
+(it can reduce if \texttt{compress\_path} is \texttt{True},
+otherwise it doesn't change).
+
+Suppose \texttt{link(x, y)} is called and $x \in X$ and $y \in Y$.
+Then $Y$ is made a subtree of $X$. Let the resulting tree be $Z$.
+Suppose $h(X) \le r(X)$ and $h(Y) \le r(Y)$.
+\[ h(Z) = \max(h(X), h(Y) + 1) \le \max(r(X), r(Y) + 1) = r(Z) \]
+
+Since $h(T) \le r(T)$ is initially true and remains true across
+\texttt{find} and \texttt{union} operations, $h(T) \le r(T)$
+is true for all trees across the entire DSU algorithm.
+\end{proof}
+
+\subsection{Performance when \texttt{union\_by} is not \texttt{None}}
+
+\begin{theorem}
+\textup{\texttt{union\_by}} $\neq$ \textup{\texttt{None}} $\implies \forall T, r(T) \le \lg n(T)$.
+\end{theorem}
+\begin{proof}
+Initially, $\forall T, r(T) = 0 = \lg 1 = \lg n(T)$.
+
+\texttt{find} operations affect neither $r$ nor $n$.
+
+Suppose \texttt{link(x, y)} is called and $x \in X$ and $y \in Y$.
+Then $Y$ is made a subtree of $X$. Let the resulting tree be $Z$.
+Suppose $r(X) \le \lg n(X)$ and $r(Y) \le \lg n(Y)$.
+$r(Z) = \max(r(X), 1 + r(Y))$ and $n(Z) = n(X) + n(Y)$.
+
+\paragraph{Case 1: \texttt{union\_by = size}} \mbox{}\\
+\texttt{union\_by = size} $\implies n(Y) \le n(X)$.
+\begin{align*}
+r(Z) &= \max(r(X), r(Y) + 1)
+\\ &\le \max(\lg n(X), \lg n(Y) + 1)
+\\ &\le \max(\lg n(X), \lg(2n(Y)))
+\\ &\le \lg\max(n(X), 2n(Y))
+\end{align*}
+$n(X) \le n(X) + n(Y)$ and
+$n(Y) \le n(X) \Rightarrow 2n(Y) \le n(X) + n(Y)$.
+\[\implies r(Z) \le \lg\max(n(X), 2n(Y)) \le \lg(n(X) + n(Y)) = \lg n(Z) \]
+
+\paragraph{Case 2: \texttt{union\_by = rank}} \mbox{}\\
+\texttt{union\_by = rank} $\implies r(Y) \le r(X)$.
+
+\textbf{Case 2a: $r(Y) < r(X)$}\\
+\[ r(Z) = \max(r(X), 1 + r(Y)) = h(X) \]
+\[ \le \lg n(X) \le \lg n(X) + n(Y) \le \lg n(Z) \]
+
+\textbf{Case 2b: $r(Y) = r(X)$}
+\begin{align*}
+& r(Z) = \max(r(X), 1 + r(Y)) = 1 + r(Y) = 1 + r(X)
+\\ &\Rightarrow r(Z) \le 1 + \lg n(Y) \wedge r(Z) \le 1 + \lg n(X)
+\\ &\Rightarrow r(Z) \le 1 + \min(\lg n(Y), \lg n(X))
+\\ &\Rightarrow r(Z) \le \lg(2\min(n(X), n(Y)))
+\\ &\Rightarrow r(Z) \le \lg(n(X) + n(Y)) = \lg n(Z)
+\end{align*}
+
+For both cases 1 and 2, $r(Z) \le \lg n(Z)$.
+Therefore, \texttt{union} preserves the invariant $\forall T, r(T) \le \lg n(T)$.
+\end{proof}
+
+This means that any tree can have height at most $\lg n$.
+Therefore, \texttt{find} and \texttt{union} have a worst-case time complexity of $O(\lg n)$
+and \texttt{link} has a worst-case time complexity of $O(1)$.
+
+\end{document}
