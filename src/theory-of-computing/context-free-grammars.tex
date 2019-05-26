@@ -572,8 +572,8 @@ Since $|R'| = \Theta(|G'|)$, we will use $|R'|$ as a measure of grammar size in 
 \subsubsection[Eliminating e-rules]{Eliminating $e$-rules}
 
 \begin{enumerate}
-\item Remove all rules of the form $A \gArrow{G} e$.
 \item Find $\mathcal{E}$, the set of erasable non-terminals.
+\item Remove all rules of the form $A \gArrow{G} e$.
 \item For every rule $A \garrow{G} BC$,
     if $B \in \mathcal{E}$ then add the rule $A \garrow{G} C$
     and if $C \in \mathcal{E}$ then add the rule $A \garrow{G} B$.
