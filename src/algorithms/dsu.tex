@@ -176,4 +176,111 @@ This means that any tree can have height at most $\lg n$.
 Therefore, \texttt{find} and \texttt{union} have a worst-case time complexity of $O(\lg n)$
 and \texttt{link} has a worst-case time complexity of $O(1)$.
 
+\subsection{Lower bound on time when \texttt{compress\_path} is \texttt{False}}
+
+When there is no path compression, we can lower bound the worst-case time complexity of \texttt{find}.
+
+Consider these union operations:
+\begin{lstlisting}
+for i in range(int(log2(n))):
+    for j in range(0, n, 1 << (i+1)):
+        union(j, j + (1 << i))
+\end{lstlisting}
+The body of the outer loop is called a round.
+There are $\floor{\lg n}$ rounds.
+
+Number of union operations:
+\[ \sum_{i=1}^{\floor{\lg n}} \floor{\frac{n}{2^i}}
+\le n \sum_{i=1}^{\floor{\lg n}} \frac{1}{2^i}
+\le n \left( 1 - 2^{\floor{\lg n}} \right)
+\le n - 1 \]
+
+\begin{theorem} After $i$ rounds, there are $\floor{\frac{n}{2^i}}$ trees with height $i$ and size $2^i$. \end{theorem}
+\begin{proof}[Proof by induction]
+
+Initially there are $n$ trees of height 0 and size 1, so this is true for $i=0$.
+
+Assume the theorem is true for some $i$ (induction hypothesis).
+Just before the $(i+1)^{\textrm{th}}$ round, there are $\floor{\frac{n}{2^i}}$ trees
+of height $i$ and size $2^i$.
+We can pair them up (if there are odd number of trees, leave the last one unpaired).
+When we union them, we get $\floor{\frac{n}{2^{i+1}}}$ trees with height $i+1$ and size $2^{i+1}$
+(this doesn't depend on the value of \texttt{union\_by}).
+
+Therefore, the theorem is true by mathematical induction.
+\end{proof}
+
+\begin{theorem} \[ \floor{\frac{n}{2^{\floor{\lg n}}}} = 1 \] \end{theorem}
+
+Therefore, after $\floor{\lg n}$ rounds, there is one tree of height $\floor{\lg n}$.
+Therefore, worst-case time complexity of \texttt{find} is $\Omega(\lg n)$.
+
+\subsection{Both union-by-rank and path-compression}
+
+\subsubsection{Alt-Ackermann function}
+
+\begin{definition}
+For $j \ge 0$ and $k \ge 0$,
+\[ A_k(j) = \begin{cases} j + 1 & k = 0 \\ A_{k-1}^{(j+1)}(j) & k \ge 1 \end{cases} \]
+Here $A_k^{(0)}(j) = j$ and $A_k^{(i)}(j) = A_k(A_k^{(i-1)}(j))$.
+\end{definition}
+
+\begin{theorem} $A_k(0) = 1$ \end{theorem}
+\begin{theorem} $A_1(j) = 2j+1$ \end{theorem}
+\begin{theorem} $A_2(j) = 2^{j+1}(j+1) - 1$ \end{theorem}
+\begin{theorem} $A_3(1) = 2047$ \end{theorem}
+\begin{theorem} $A_k(j)$ is a non-decreasing function of $k$ and $j$. \end{theorem}
+\begin{theorem} $A_4(1)$ is way too large. \end{theorem}
+\begin{proof}
+\begin{align*}
+& A_4(1)
+\\ &= A_3(A_3(1))
+\\ &= A_3(2047)
+\\ &= A_2^{(2048)}(2047)
+\\ &\ge A_2^{(2)}(2047)
+\\ &= A_2(A_2(2047))
+\\ &= A_2(2^{2048} \times 2048 - 1)
+\\ &= 2^{\left( 2^{2059} - 1 \right)}\left( 2^{2059} \right) - 1
+\\ &> 2^{2^{2059}}
+\\ &> 16^{16^{514}}
+\end{align*}
+\end{proof}
+
+\begin{definition} $\alpha(n) = \min(\{k: A_k(1) \ge n\})$ \end{definition}
+\begin{theorem} $p < \alpha(n) \le q \iff A_p(1) < n \le A_q(1)$ \end{theorem}
+
+\subsubsection{level and iter}
+
+Let $F$ be a DSU forest with $n$ nodes.
+For a node $x$, let $x.p$ be its parent and $x.rank$ be its rank.
+\begin{theorem} $x \neq x.p \implies x.rank < x.p.rank$ \end{theorem}
+\begin{theorem} $x.rank \le \floor{\lg n} \le n-1$ \end{theorem}
+
+We can partition the set of nodes into 3 parts:
+\begin{itemize}
+\item root nodes: $\{x: x = x.p \}$.
+\item leaf nodes: $\{x: x.rank = 0\}$.
+\item internal nodes: non-root and non-leaf nodes.
+\end{itemize}
+
+level and iter are functions which map an internal node $x$ to an integer.
+
+\begin{definition} $\operatorname{level}(x) = \max(\{k: A_k(x.rank) \le x.p.rank \})$ \end{definition}
+\begin{theorem} $k \le \operatorname{level}(x) \iff A_k(x.rank) \le x.p.rank$ \end{theorem}
+\begin{theorem} $0 \le \operatorname{level}(x) < \alpha(\floor{\lg n}+1) \le \alpha(n)$ \end{theorem}
+\begin{definition} $\operatorname{iter}(x) = \max(\{i: A_{\operatorname{level}(x)}^{(i)}(x.rank) \le x.p.rank \})$ \end{definition}
+\begin{theorem} $i \le \operatorname{iter}(x) \iff A_{\operatorname{level}(x)}^{(i)}(x.rank) \le x.p.rank \})$ \end{theorem}
+\begin{theorem} $1 \le \operatorname{iter}(x) \le x.rank$ \end{theorem}
+
+\subsubsection{Potential function}
+
+\begin{definition}For a node $x$, the potential function $\phi(x)$ is given by
+\[ \phi(x) = \begin{cases} \alpha(n) \cdot x.rank & x \textrm{ is a root or leaf node}
+\\ (\alpha(n) - \operatorname{level}(x)) \cdot x.rank - \operatorname{iter}(x) & \textrm{otherwise}
+\end{cases} \] \end{definition}
+
+\begin{theorem} $x$ is an internal node $\implies 0 \le \phi(x) < \alpha(n) \cdot x.rank$. \end{theorem}
+
+To be continued $\ldots$
+
 \end{document}
