@@ -1,0 +1,136 @@
+\input{header.tex}
+
+\title{Introduction to Cryptography}
+
+\begin{document}
+
+\initAfterBeginDocument{}
+
+\textbf{Cryptography}: The study of mathematical techniques for securing
+digital information, systems, and distributed computations against adversarial attacks.
+
+Unlike modern cryptography, classical cryptography was based on ad-hoc techniques and lacked rigor.
+
+\section{Private-key encryption}
+
+Alice and Bob want to communicate over a public channel,
+but want to keep their communication private from an eavesdropper.
+Alice and Bob share a secret key $k$.
+
+A private-key encryption scheme is the tuple
+$(\mathcal{M}, \mathcal{K}, \mathcal{C}, \mathsf{Gen}, e, d)$ where:
+
+\begin{itemize}
+\item $\mathcal{M}$ is a set called `message space'.
+\item $\mathcal{K}$ is a set called `key space'.
+\item $\mathcal{C}$ is a set called `cipher space'.
+\item The key-generation algorithm $\mathsf{Gen}$ is a probabilistic algorithm
+that samples an item from $\mathcal{K}$.
+\item The encryption algorithm: For $k \in \mathcal{K}$,
+  $e_k: \mathcal{M} \mapsto \mathcal{C}$.
+\item The decryption algorithm: For $k \in \mathcal{K}$, $d_k = e_k^{-1}$.
+\end{itemize}
+
+
+\section{Kerckhoffs' Principle}
+
+Kerckhoffs says that the key must be secret, but the encryption scheme should be public.
+
+Disadvantages of requiring the encryption scheme to be secret:
+
+\begin{itemize}
+\item Every pair of users will need a new algorithm.
+\item If the algorithm is leaked or lost, a new one will have to be invented.
+\item An algorithm which hasn't undergone public scrutiny is insecure.
+\end{itemize}
+
+
+\section{Historical ciphers}
+
+All historical ciphers discussed here operate on strings of English characters.
+We denote the characters by $\Sigma = \mathbb{Z}_{26}$.
+$\mathcal{M} = \mathcal{C} = \Sigma^*$.
+
+\subsection{Caesar Cipher}
+
+\begin{itemize}
+\item $\mathcal{K} = \{\}$
+\item $e_k(x)[i] = (x[i]+3)\%26$
+\item $d_k(x)[i] = (x[i]-3)\%26$
+\end{itemize}
+
+Trivial to break, since there is no key.
+
+\subsection{Shift Cipher}
+
+\begin{itemize}
+\item $\mathcal{K} = \mathbb{Z}_{26}$; $|\mathcal{K}| = 26$.
+\item $e_k(x)[i] = (x[i]+k)\%26$
+\item $d_k(x)[i] = (x[i]-k)\%26$
+\end{itemize}
+
+Easy to break by brute force since key space is small.
+Frequency analysis will make it easier to guess which key to start with.
+
+\subsection{Mono-alphabetic Substitution Cipher}
+
+\begin{itemize}
+\item $\mathcal{K} \in S_{\Sigma}$ ($\mathcal{K}$ is a permutation of $\Sigma$);
+  $|\mathcal{K}| = 26! \approx 4.03 \times 10^{26}$.
+\item $e_k(x)[i] = k(x[i])$
+\item $e_d(x)[i] = k^{-1}(x[i])$
+\end{itemize}
+
+Can be broken using frequency analysis of the message space.
+
+\subsection{Vigen\`ere Cipher}
+
+Also known as Poly-alphabetic shift cipher.
+
+\begin{itemize}
+\item $\mathcal{K} = \Sigma^*$.
+\item $e_k(x)[i] = (x[i] + k[i\%|k|])\%26$.
+\item $d_k(x)[i] = (x[i] - k[i\%|k|])\%26$.
+\end{itemize}
+
+If the key length is known, it can be broken using frequency analysis of every stream.
+For the cipher-text $c$ and key-length $l$, the $i^{\textrm{th}}$ stream is the sequence
+$\texttt{c[i::l]}$ (python slice notation).
+
+The key length can also be guessed using frequency analysis,
+like Kasisiki's method or using mean-square-frequency.
+
+\section{Definition of security}
+
+To mathematically prove that a cryptographic protocol is secure,
+we have to formally define what we mean by security.
+
+There can be multiple definitions of security depending on the application and environment.
+Before developing a cryptographic solution to a problem, we must
+choose the definition of security that is most relevant to the application.
+
+A security definition has 2 components: a security guarantee and a threat model.
+
+\textbf{Security guarantee for secure communication}:
+Regardless of any information an attacker already has,
+a ciphertext should leak no additional information about the underlying plaintext.
+
+\subsection{Standard threat models for secure communication}
+
+\begin{itemize}
+\item \textbf{Ciphertext-only attack}:
+Given $S_C = \{e_k(m): m \in S_M\}$ find out something about $S_M$.
+
+\item \textbf{Known-plaintext attack}:
+Given $T = \{(m, e_k(m)): m \in S\}$ and $S_C = \{e_k(m): m \in S_M\}$ find out something about $S_M$.
+
+\item \textbf{Chosen-plaintext attack}:
+Given $S_C = \{e_k(m): m \in S_M\}$ and black-box access to $e_k$,
+find out something about $S_M$.
+
+\item \textbf{Chosen-ciphertext attack}:
+Given $S_C = \{e_k(m): m \in S_M\}$ and black-box access to $e_k$ and $d_k$,
+find out something about $S_M$. The attacker is not allowed to feed elements of $S_C$ to $d_k$.
+\end{itemize}
+
+\end{document}
