@@ -11,7 +11,7 @@ import subprocess
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--no-clean', action='store_false', dest='clean', default=True,
-    help="Remove temporary files from output directory")
+    help="Do not remove temporary files from output directory")
 parser.add_argument('--force', action='store_true', default=False,
     help="Build even if source was not updated")
 parser.add_argument('--dryrun', action='store_true', default=False,
