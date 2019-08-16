@@ -1,0 +1,98 @@
+\input{header.tex}
+
+\title{CMO Lecture 1 notes}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\textbf{Central Problem of the course}:
+Given an objective function $f: \mathbb{R}^d \mapsto \mathbb{R}$
+and a constraint set $S \subseteq \mathbb{R}^d$,
+find $x^* = \operatorname{argmin}_{x \in S} f(x)$ and $f^* = f(x^*)$.
+
+Example: for $\min_{x \in \mathbb{R}} (x-t)^2$, $x^* = t$ and $f^* = 0$.
+
+\tableofcontents
+
+\section{Template of algorithm}
+
+\begin{itemize}
+\item Pick $x \in S$.
+\item While $x$ is not optimal, pick another $x \in S$ such that $f(x)$ decreases.
+\end{itemize}
+
+\section{Preliminaries}
+
+\[ \|x\| = \sqrt{x^Tx} = \sqrt{\sum_{i=1}^d x_i^2} \]
+
+\subsection{Metric space}
+
+For any set $S$ (we'll usually consider $S = \mathbb{R}^d$),
+$D: S \times S \mapsto \mathbb{R}$ is a distance function
+iff all of the following are true:
+\begin{itemize}
+\item $D(x, y) = 0 \iff x = y$.
+\item $D(x, y) \ge 0$.
+\item Symmetry: $D(x, y) = D(y, x)$.
+\item Triangle inequality: $D(x, y) + D(y, z) \ge D(x, z)$.
+\end{itemize}
+
+\begin{theorem}$D(x, y) = \|x - y\|$ is a distance function.\end{theorem}
+\begin{theorem}$D(x, y) = \sum_{i=1}^d |x_i - y_i|$ is a distance function.\end{theorem}
+
+\subsection{Neighborhood function and Open sets}
+
+\begin{definition} For $r > 0$ and $x \in \mathbb{R}^d$, $N_r(x) = \{z: D(x, z) < r\}$
+is called a neighborhood of $x$ of radius $r$. \end{definition}
+
+\begin{definition} $x \in \mathbb{R}^d$ is an interior point of $S$ iff
+$\exists r > 0, N_r(x) \subseteq S$. \end{definition}
+
+\begin{definition}Let $x, y \in \mathbb{R}$.\begin{itemize}
+\item $(x, y) = \{z: x < z < y\}$.
+\item $(x, y] = \{z: x < z \le y\}$.
+\item $[x, y) = \{z: x \le z < y\}$.
+\item $[x, y] = \{z: x \le z \le y\}$.
+\end{itemize}\end{definition}
+
+\begin{definition} $S$ is an open set iff $\forall x \in S$,
+$x$ is an interior point of $S$. \end{definition}
+
+\begin{example} $(0, 1)$ is an open set but $[0, 1)$ is not. \end{example}
+
+\begin{definition} $x \in \mathbb{R}^d$ is a limit point of $S$ iff
+$N_r(x) \cap S \neq \phi$. \end{definition}
+
+\begin{example} $0, \frac{1}{2}, 1$ are 3 of the limit points of $(0, 1]$. \end{example}
+
+\begin{definition} Closure of a set $S$ is the set of all limit points of $S$. \end{definition}
+
+\begin{definition} A set $S$ is closed iff all limit points of $S$ lie in $S$. \end{definition}
+
+\begin{example} $[0, 1]$ is a closed set. \end{example}
+
+\subsection{Limit and Bounds}
+
+\begin{definition} Let $[x_i]_{i \in \mathbb{N}}$ be an infinite sequence
+where $x \in \mathbb{R}^d$. Then
+\[ \lim_{i \rightarrow \infty} x_i = x
+\iff \forall \epsilon > 0, \exists n, \forall i \ge n, \|x - x_i\| < \epsilon \]
+\end{definition}
+
+\begin{definition} $S \subseteq \mathbb{R}^d$ is a bounded set
+iff $\exists M, \forall x \in S, \|x\| \le M$. \end{definition}
+
+\begin{definition} For $x_i \in \mathbb{R}$, $M$ is an upper bound of $[x_i]_{i \in \mathbb{N}}$
+iff $\forall i, x_i \le M$. A sequence with an upper bound is called an upper-bounded sequence.
+\end{definition}
+
+\begin{definition} $g$ is a least upper bound (LUB) (of $[x_i]_{i \in \mathbb{N}}$) iff
+$g$ is an upper bound and for every upper bound $h$, $g \le h$. \end{definition}
+
+\begin{example} For $x_i = 1-\frac{1}{i}$, LUB is 1. \end{example}
+
+\begin{theorem} A monotonic bounded sequence has a limit. \end{theorem}
+
+\end{document}
