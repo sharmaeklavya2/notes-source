@@ -119,18 +119,18 @@ a ciphertext should leak no additional information about the underlying plaintex
 
 \begin{itemize}
 \item \textbf{Ciphertext-only attack}:
-Given $S_C = \{e_k(m): m \in S_M\}$ find out something about $S_M$.
+Given $c = e_k(m)$ find out something about $m$.
 
 \item \textbf{Known-plaintext attack}:
-Given $T = \{(m, e_k(m)): m \in S\}$ and $S_C = \{e_k(m): m \in S_M\}$ find out something about $S_M$.
+Given $T = \{(m, e_k(m)): m \in S\}$ and $c = e_k(m)$ find out something about $m$.
 
 \item \textbf{Chosen-plaintext attack}:
-Given $S_C = \{e_k(m): m \in S_M\}$ and black-box access to $e_k$,
-find out something about $S_M$.
+Given $c = e_k(m)$ and black-box access to $e_k$,
+find out something about $m$.
 
 \item \textbf{Chosen-ciphertext attack}:
-Given $S_C = \{e_k(m): m \in S_M\}$ and black-box access to $e_k$ and $d_k$,
-find out something about $S_M$. The attacker is not allowed to feed elements of $S_C$ to $d_k$.
+Given $c = e_k(m)$ and black-box access to $e_k$ and $d_k$,
+find out something about $m$. The attacker is not allowed to feed $c$ to $d_k$.
 \end{itemize}
 
 \end{document}
