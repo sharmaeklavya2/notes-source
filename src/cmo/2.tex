@@ -1,0 +1,60 @@
+\input{header.tex}
+
+\title{CMO Lecture 2 notes}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\section{Continuity}
+
+\begin{definition}
+\[ \lim_{x\rightarrow p} f(x) = q \iff \forall \epsilon > 0, \exists \delta > 0,
+\forall x \in N_{\delta}(p), f(x) \in N_{\epsilon}(q) \]
+\end{definition}
+
+\begin{definition}
+$f$ is continuous at $x$ $\iff \lim_{x\rightarrow p} f(x) = f(p)$.
+$f$ is continuous over $S \iff f$ is continuous at all points $x \in S$.
+\end{definition}
+
+\begin{theorem}
+Let $S \subseteq \mathbb{R}^d$ be closed and bounded.
+Let $f(S) = \{f(x): x \in S\}$.
+Let $f$ be continuous over $S$.
+Then $f(S)$ is closed and bounded.
+\end{theorem}
+
+For optimization problems, $x^*$ is guaranteed to exist iff
+$f$ is continuous and $S$ is closed and bounded.
+Henceforth, we will assume $S$ to be closed and bounded
+and assume functions to be continuous.
+
+Let $g(x) = f(x) - f(p)$. Then $g(p) = 0$.
+
+\section{Asymptotics}
+
+\[ a(x) \in o(b(x)) \iff \lim_{x \rightarrow x_0} \left| \frac{a(x)}{b(x)} \right| \]
+
+For example, at $x=0$, $x^3 \in o(x^2)$.
+
+If $f$ is continuous at $x=p$, $f(x) = f(p) + o(1)$.
+
+\section{Taylor Series}
+
+Let $f: [a,b] \mapsto \mathbb{R}$.
+Let $x, y \in [a, b]$.
+
+Suppose $f$ is differentiable only once.
+Then $f(y) = f(x) + f'(z)(y-x)$, for some $z \in (x, y)$.
+
+Suppose $f$ is differentiable $k$ times. Then for some $z \in (x, y)$,
+\[ f(y) = \sum_{i=0}^{k-1}f^{(i)}(x)\frac{(y-x)^i}{i!} + f^{(k)}(z)\frac{(y-x)^i}{k!} \]
+
+When $f^{(k)}$ is continuous,
+\[ f(y) = \sum_{i=0}^k f^{(i)}(x)\frac{(y-x)^i}{i!} + o(1)\frac{(y-x)^k}{k!} \]
+
+Therefore, we can ignore the last term if $x$ is close to $y$.
+
+\end{document}
