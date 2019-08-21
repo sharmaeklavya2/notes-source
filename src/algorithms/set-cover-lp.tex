@@ -1,0 +1,205 @@
+\input{header.tex}
+
+\title{Set Cover using Linear Programming}
+
+\begin{document}
+
+\maketitle
+
+Let $[n] = \{1, 2, \ldots, n\}$.
+In the set cover problem, we are given $m$ sets: $S_i \subseteq [n]$.
+$I$ is a feasible solution to the set cover problem iff $\bigcup_{j \in I} S_j = [n]$.
+We are also given $m$ positive weights $w \in \mathbb{R}^m$.
+$I$ is an optimal solution solution iff $I$ is a feasible solution and $\sum_{i \in I} w_i$ is minimum.
+
+This article looks at this problem in a way similar to the book
+`The Design of Approximation Algorithms' by Williamson and Shmoys,
+but with different terminology/notation.
+
+\tableofcontents
+\initMinimal{}
+
+\section{Mathematical Preliminaries}
+
+\subsection{Element-wise relational operators on vectors}
+
+\begin{definition}
+For a vector $z \in \{0, 1\}^n$,
+$\operatorname{all}(x) \iff (\forall i \in [n], x_i = 1)$.
+\end{definition}
+
+\begin{definition}
+Let $x, y \in \mathbb{R}^n$. Then $x < y \in \{0, 1\}^n$, where $(x < y)_i = x_i < y_i$.
+Other relational operators $(>, \le, \ge, ==, \neq)$ are defined analogously.
+\end{definition}
+
+\begin{definition}
+Let $\alpha \in \mathbb{R}$ and $x \in \mathbb{R}^n$.
+Then $x < \alpha \in \{0, 1\}^n$, where $(x < \alpha)_i = x_i < \alpha$.
+Other relational operators $(>, \le, \ge, ==, \neq)$ are defined analogously.
+\end{definition}
+
+\begin{theorem}[Exercise]\label{rel-vec-thm-1}
+Let $x \in \mathbb{R}^n$ and $\alpha \in \mathbb{R}$.
+\[ (\operatorname{all}(x \ge 0) \wedge (p = (x \ge \alpha))) \implies \operatorname{all}(x \ge \alpha p) \]
+\end{theorem}
+
+\begin{theorem}[Exercise]\label{rel-vec-thm-2}
+\[ x^T(x==y) = y^T(x==y) \]
+\end{theorem}
+
+\begin{theorem}[Exercise]\label{rel-vec-thm-3}
+\[ (\operatorname{all}(x \ge 0) \wedge \operatorname{all}(a \le b)) \implies a^Tx \le b^Tx \]
+\end{theorem}
+
+\begin{corollary}[Exercise]\label{rel-vec-thm-4}
+\[ (\operatorname{all}(A \ge 0) \wedge \operatorname{all}(x \le y)) \implies Ax \le Ay \]
+\end{corollary}
+
+\subsection{Linear Programming}
+
+An optimization problem is a 4-tuple (direction, variable, objective, constraint)
+where direction is either min or max.
+
+A linear program is an optimization problem of one of these forms:
+\begin{itemize}
+\item $(\textrm{min}, x, c^Tx, \operatorname{all}(x \ge 0) \wedge \operatorname{all}(Ax \ge b))$
+\item $(\textrm{max}, x, c^Tx, \operatorname{all}(x \ge 0) \wedge \operatorname{all}(Ax \le b))$
+\end{itemize}
+Here $x, b, c$ are vectors and $A$ is a matrix.
+If entries of $x$ are restricted to be integers, then the program is an integer linear program.
+
+$\operatorname{argopt}(\textrm{LP})$ is the value of the variable
+which optimizes the objective of the linear program LP.
+$\operatorname{opt}(\textrm{LP})$ is the optimal objective value of the linear program LP.
+
+\begin{definition}
+These 2 programs are duals of each other:
+\begin{itemize}
+\item $(\textrm{min}, x, c^Tx, \operatorname{all}(x \ge 0) \wedge \operatorname{all}(Ax \ge b))$
+\item $(\textrm{max}, x, b^Ty, \operatorname{all}(y \ge 0) \wedge \operatorname{all}(A^Ty \le c))$
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Weak duality]
+If $x$ is a feasible solution to
+$(\textrm{min}, x, c^Tx, \operatorname{all}(x \ge 0) \wedge \operatorname{all}(Ax \ge b))$
+and $y$ is a feasible solution to its dual, then $b^Ty \le y^TAx \le c^Tx$.
+\end{theorem}
+\begin{proof}
+(Using theorem \ref{rel-vec-thm-3})
+\[ b^Ty = y^Tb \le y^T(Ax) = (A^Ty)^Tx \le c^Tx \]
+\end{proof}
+
+\begin{theorem}[Strong duality]
+If LP is the linear program
+$(\textrm{min}, x, c^Tx, \operatorname{all}(x \ge 0) \wedge \operatorname{all}(Ax \ge b))$
+and DLP is its dual, then $\operatorname{opt}(\textrm{LP}) = \operatorname{opt}(\textrm{DLP})$.
+\end{theorem}
+\begin{proof} Look it up in a textbook. It's too long to write here. \end{proof}
+
+\section{Formulation as ILP}
+
+Denote a solution $I$ by the vector $z \in \{0, 1\}^m$, where
+$z_j = \begin{cases} 1 & j \in I \\ 0 & j \not\in I \end{cases}$.
+
+Let $A$ be an $n$ by $m$ matrix where $A[i, j] = i \in S_j$.
+
+Number of sets in $I$ which cover $i$
+\[ = |\{ j: i \in S_j \wedge j \in I \}| = |\{j: A[i, j]z_j = 1\}| = \sum_{j=1}^m A[i, j]z_j = (Az)_i \]
+Therefore, $z$ is a feasible solution iff $\operatorname{all}(Az \ge 1)$.
+
+The set cover problem is described by the ILP
+$(\textrm{min}, z, w^Tz, \operatorname{all}(z > 0) \wedge \operatorname{all}(Az \ge 1))$.
+We don't need to specify the constraint $z \ge 1$ because
+the optimal solution cannot have an integer entry greater than 1.
+This is because if an entry is greater than 1,
+reducing it to 1 will continue to respect constraints and will decrease the objective.
+
+Denote by ILP the integer programming problem above.
+Let RLP be the relaxed version of the ILP (i.e. with the integral constraint removed).
+Let DLP be the dual of RLP.
+\[ (\mathbf{1}^T A)_j
+= \sum_{i=1}^n A[i, j]
+= |S_j| \]
+
+Let $T_i = \{j: i \in S_j\}$, so $T_i$ are the indices of the sets which $i$ belongs to.
+Therefore, $A[i, j] = 1 \iff j \in T_i$.
+Let $\deg(i) = |T_i|$.
+Let $f = \max_{i \in [n]} \deg(i)$.
+\[ (\mathbf{1}^T A^T)_i
+= \sum_{j=1}^m A[i, j]
+= \deg(i) \]
+
+\section{Approximation algorithms}
+
+\subsection{Algorithm 1}
+
+Let $z^* = \operatorname{argopt}(\textrm{ILP})$.
+Let $x^* = \operatorname{argopt}(\textrm{RLP})$.
+
+Since ILP is more constrained, $w^Tx^* \le w^Tz^*$.
+
+Let $s = (x \ge \frac{1}{f})$.
+
+\begin{theorem}
+$s$ is a feasible solution to ILP.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& \operatorname{all}(Ax^* \ge 1)
+\\ &\Rightarrow (Ax^*)_i = \sum_{j=1}^m A[i, j]x^*_j = \sum_{j \in T_i} x^*_j \ge 1
+\\ &\Rightarrow \exists j \in T_i, x^*_j \ge \frac{1}{|T_i|} \ge \frac{1}{f}
+\\ &\Rightarrow \exists j \in T_i, s_j = 1
+\\ &\Rightarrow \exists j \in T_i, s_j = 1
+\\ &\Rightarrow \sum_{j \in T_i} s_j \ge 1
+\\ &\Rightarrow \sum_{j=1}^m A[i, j]s_j \ge 1
+\\ &\Rightarrow (As)_i \ge 1
+\\ &\Rightarrow \operatorname{all}(As \ge 1)
+\end{align*}
+Since $s$ satisfies the ILP constraints, it is a feasible solution to ILP.
+\end{proof}
+Since $s$ is a feasible solution to ILP but not necessarily optimal, $w^Tz^* \le w^Ts$.
+
+\begin{theorem}
+$s$ is an $f$-approximate solution to ILP.
+\end{theorem}
+\begin{proof}
+By theorem \ref{rel-vec-thm-1}, we get $\operatorname{all}(s \le fx^*)$.
+By theorem \ref{rel-vec-thm-3}, we get $w^Ts \le fw^Tx^* \le fw^Tz^*$.
+\end{proof}
+
+\subsection{Algorithm 2}
+
+DLP = $(\textrm{max}, y, 1^Ty, \operatorname{all}(y \ge 0) \wedge \operatorname{all}(A^Ty \le w))$.
+
+Let $y^* = \operatorname{argopt}(\textrm{DLP})$.
+Let $t = (A^Ty == w)$.
+
+\begin{theorem}
+$t$ is a feasible solution to ILP.
+\end{theorem}
+\begin{proof}
+To be done
+\end{proof}
+
+\begin{theorem}
+$t$ is an $f$-approximate solution to ILP.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& w^Tt
+\\ &= (A^Ty^* == w)^Tw
+\\ &= (A^Ty^* == w)^T(A^Ty^*) \tag{theorem \ref{rel-vec-thm-2}}
+\\ &= t^T(A^Ty^*)
+\\ &\le 1^T(A^Ty^*) \tag{theorem \ref{rel-vec-thm-3}}
+\\ &= (1^TA^T)y^*
+\\ &= [\deg(i)]_{i=1}^n y^*
+\\ &\le f 1^Ty^*
+\\ &= f \operatorname{opt}(DLP)
+\\ &\le f \operatorname{opt}(RLP) \tag{strong duality}
+\\ &\le f \operatorname{opt}(ILP)
+\end{align*}
+\end{proof}
+
+\end{document}
