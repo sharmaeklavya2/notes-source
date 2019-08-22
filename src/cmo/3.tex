@@ -1,0 +1,38 @@
+\input{header.tex}
+
+\title{CMO Lecture 3 notes}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+$C^k$ is the set of all functions which are $k$-times differentiable
+and whose $k^{\textrm{th}}$ derivative is continuous.
+
+\[ \nabla(f)(x) = \left[ \frac{\partial f(x)}{\partial x_i} \right]_{i=1}^d \]
+
+Multivariate $C^1$ means $\nabla(f)$ exists and all components are continuous.
+
+$g(t) = f(x + tu)$. Here $g: \mathbb{R} \mapsto \mathbb{R}$.
+
+\textbf{Homework}: Prove that $\frac{dg(t)}{dt} = (\nabla f(x+tu))^Tu$.
+
+\begin{theorem} $f \in C^1 \implies g \in C^1$ \end{theorem}
+
+$u = y - x$. $g(0) = f(x)$. $g(1) = f(y)$.
+
+$g(t) = g(0) + g'(0)t + o(t)$.
+
+$f(y) = f(x) + \nabla(f(x))^T(y-x) + o(\|y-x\|)$.
+
+\[ \operatorname{Hess}(f)(x) = \left[ \frac{\partial^2 f(x)}{\partial x_i \partial x_j} \right]_{i, j \in [n]} \]
+
+\textbf{Homework}: Prove that $g^{(2)}(t) = u^T H(f)(x+tu) u$.
+
+When hessian is continuous, it is also symmetric.
+
+$x^*$ is a local minimum of $f$ iff
+$\exists r > 0, \forall x' \in S \cap N_r(x^*), f(x^*) \le f(x')$.
+
+\end{document}
