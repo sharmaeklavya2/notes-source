@@ -1,0 +1,148 @@
+\input{header.tex}
+
+\title{Greedy Algorithm for max-weight Independent Subset of Matroid}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\tableofcontents
+
+\section{Preliminaries}
+
+For $x \not\in X$, denote $X \cup \{x\}$ by $X + x$.
+
+Let $M = (S, I)$ be a matroid.
+For $X \subseteq S$, the basis of $X$ is a subset $B$ of $X$
+such that $B \in I$ and $\forall x \in X, B + x \not\in I$.
+
+All bases of $X$ have the same size (by the exchange axiom).
+This size is called the rank of $X$, denoted by $r(X)$.
+
+\begin{theorem}
+If $A \subseteq X$ and $A \in I$, then $|A| \le r(X)$.
+\end{theorem}
+
+\begin{theorem}
+For $e \not\in X$, $r(X) \le r(X+e) \le r(X) + 1$.
+\end{theorem}
+\begin{proof}
+Let $A$ be a basis of $X$. So $A \in I$ and $|A| = r(X)$.
+Since $A \subseteq X+e$ and $A \in I$, $|A| \le r(X+e)$.
+Therefore, $r(X) \le r(X+e)$.
+
+Let $B$ be a basis of $X+e$. So $B \in I$ and $r(X+e) = |B|$.
+
+If $e \not\in B$, then $B \in I$ and $B \subseteq X$.
+Therefore, $|B| \le r(X) \Rightarrow r(X+e) \le r(X) \Rightarrow r(X+e) = r(X) \le r(X) + 1$.
+
+Suppose $e \in B$. $B \in I \Rightarrow B-e \in I$.
+Since $B-e \in X$, $|B-e| \le r(X) \Rightarrow r(X+e) - 1 \le r(X)$.
+\end{proof}
+
+\begin{theorem}
+\label{rank-p1-basis}
+Let $e \not\in X$. If $r(X+e) = r(X) + 1$, then:
+\begin{itemize}
+\item Every basis of $X+e$ contains $e$.
+\item $B$ is a basis of $X \iff B+e$ is a basis of $X+e$.
+\end{itemize}
+\end{theorem}
+\begin{proof}
+Let $B$ be a basis of $X+e$. Therefore, $r(X+e) = |B|$ and $r(X) = |B|-1$.
+If $e \not\in B$, then $B \subseteq X$.
+Therefore, $|B| \le r(X) \Rightarrow |B| \le |B|-1 \Rightarrow \bot$.
+Therefore, $e \in B$. Therefore, every basis of $X+e$ contains $e$.
+
+Let $A+e$ be a basis of $X+e$ and $B$ be a basis of $X$.
+$|A+e| = r(X+e) = r(X) + 1 = |B| + 1$.
+Since $A \in I$ and $A \subseteq X$ and $|A| = r(X)$, $A$ is a basis of $X$.
+
+By exchange axiom, we can add an element from $A+e$ to $B$ and maintain independence.
+Such an element cannot be from $A$, because $A \subseteq X$ and $B$ is maximal in $X$.
+Therefore, $e$ can be added to $B$ while maintaining independence.
+Therefore, $B+e \in I$ and $|B+e| = |B| + 1 = r(X+e)$.
+Therefore, $B$ is a basis of $X+e$.
+\end{proof}
+
+\section{The Problem}
+
+Let $M = (S, I)$ be a matroid.
+Let $w: S \mapsto \mathbb{R}^+$ be a weight function.
+Overload $w$ for $2^S \mapsto \mathbb{R}$: $w(X) = \sum_{x \in X} w(x)$.
+
+We are given $X \subseteq S$.
+We have to find
+\[ g(X) = \operatorname{argmax}_{Y \subseteq X, Y \in I}(w(Y)) \]
+Also define $f(X) = w(g(X))$.
+
+\begin{theorem}
+There is a greedy algorithm which can find $g(X)$ for all $X \subseteq S$.
+The algorithm starts with $Y = \{\}$.
+It iterates over elements of $X$ in decreasing order of $w$
+and adds element $x$ to $Y$ iff $Y + x \in I$.
+\end{theorem}
+
+\section{Properties of f and g}
+
+\begin{theorem} $X \in I \implies f(X) = w(X)$ \end{theorem}
+
+\begin{theorem}[Monotonicity] $X \subseteq Y \implies f(X) \le f(Y)$ \end{theorem}
+\begin{proof} $g(X) \subseteq X \subseteq Y$.
+Since $f$ is the weight of the optimal subset, $f(X) \le f(Y)$ \end{proof}
+
+\begin{theorem} $g(X) = B \implies B$ is a basis of $X$ \end{theorem}
+
+\begin{theorem}
+Let $e \not\in X$. $f(X) \le f(X+e) \le f(X) + w(e)$.
+\end{theorem}
+\begin{proof}
+$f(X) \le f(X+e)$ by monotonicity.
+
+Let $B = g(X+e)$. So $B \subseteq X+e$, $B \in I$ and $f(X+e) = w(B)$.
+\begin{itemize}
+\item \textbf{Case 1}: $e \not\in B$:
+
+Therefore, $B \subseteq X \Rightarrow w(B) \le f(X) \Rightarrow f(X+e) \le f(X) \le f(X) + w(e)$.
+
+\item \textbf{Case 2}: $e \in B$:
+
+$B \in I \Rightarrow B-e \in I \Rightarrow f(B-e) = w(B-e) = w(B) - w(e) = f(X+e) - w(e)$
+
+$B-e \subseteq X \Rightarrow f(B-e) \le f(X)$
+$\Rightarrow f(X+e) - w(e) \le f(X)$
+$\Rightarrow f(X+e) \le f(X) + w(e)$
+\end{itemize}
+\end{proof}
+
+\section{Submodularity of f}
+
+To prove that $f$ is submodular, we must prove that
+\[ \forall X \subseteq S, \forall y,e \not\in X, f(X+y+e) - f(X+y) \le f(X+e) - f(X) \]
+
+\subsection[Case 1: r(X+e) = r(X) + 1]{Case 1: $r(X+e) = r(X) + 1$}
+
+Let $B = g(X)$. Then by theorem \ref{rank-p1-basis}, $B+e = g(X+e)$.
+Therefore, $f(X+e) = w(B+e) = w(B) + w(e) = f(X) + w(e)$.
+
+Since $f(X+y-e) \le f(X+y) + w(e)$, we get that
+$f(X+y+e) - f(X+y) \le w(e) = f(X+e) - f(X)$.
+
+\subsection[Case 2: r(X+y) = r(X) + 1]{Case 2: $r(X+y) = r(X) + 1$}
+
+This can be proved similarly to case 1.
+
+\subsection[Case 3: r(X+y) = r(X+e) = r(X) (To be done)]{Case 3: $r(X+y) = r(X+e) = r(X)$ (To be done)}
+
+\begin{theorem} $r(X+y+e) = r(X)$. \end{theorem}
+\begin{proof}[Proof by contradiction]
+Assume $r(X+y+e) = r(X+y) + 1 = r(X+e) + 1$.
+Let $B$ be a basis of $X$.
+Since $r(X) = r(X+y)$, $B$ is also a basis of $X+y$.
+By theorem \ref{rank-p1-basis}, $B+e$ is a basis of $X+y+e$ and $y \in B+e$.
+But $y$ cannot be in $B+e$ if $B$ is a basis of $X$.
+Therefore, our assumption is wrong and $r(X+y+e) = r(X)$.
+\end{proof}
+
+\end{document}
