@@ -1,0 +1,74 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Convex functions}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\begin{definition}[Convex set]
+Let $S \subseteq \mathbb{R}^d$, $S$ is convex iff
+\[ \forall u, v \in S, \forall \alpha \in (0, 1), (1-\alpha)u + \alpha v \in S \]
+\end{definition}
+
+\begin{definition}[Convex function]
+Let $f: S \mapsto \mathbb{R}$, where $S$ is convex. $f$ is convex iff
+\[ \forall \alpha \in (0, 1), \forall u, v \in S,
+f((1-\alpha)u + \alpha v) \le (1-\alpha)f(u) + \alpha f(v) \]
+\end{definition}
+
+\begin{theorem}
+$f$ is convex $\iff \left( \forall u, v \in S, \grad_f(u)^T(v-u) \le f(v) - f(u) \right)$
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& f \textrm{ is convex}
+\\ &\Rightarrow f((1-\alpha)u + \alpha v) \le (1-\alpha)f(u) + \alpha(v)
+\\ &\Rightarrow f(u + \alpha(v-u)) \le f(u) + \alpha(f(v) - f(u))
+\\ &\Rightarrow \frac{1}{\alpha}(f(u + \alpha(v-u)) - f(u)) \le f(v) - f(u)
+\end{align*}
+Let $g(\alpha) = f(u + \alpha(v-u))$.
+\begin{align*}
+& f \textrm{ is convex}
+\\ &\Rightarrow \frac{g(\alpha) - g(0)}{\alpha} \le g(1) - g(0)
+\\ &\Rightarrow \lim_{\alpha \rightarrow 0} \frac{g(\alpha) - g(0)}{\alpha}
+    \le \lim_{\alpha \rightarrow 0} (g(1) - g(0))
+\\ &\Rightarrow g'(0) \le g(1) - g(0)
+\\ &\Rightarrow \grad_f(u)^T(v-u) \le f(v) - f(u)
+\end{align*}
+
+Suppose $\forall u, v \in S, \grad_f(u)^T(v-u) \le f(v) - f(u)$.
+
+For any arbitrarily chosen $x_1$ and $x_2$ ($x_1 \neq x_2$), let $x = (1-\alpha)x_1 + \alpha x_2$.
+Then $x_1 - x = \alpha(x_1 - x_2)$ and $x_2 - x = (1 - \alpha)(x_2 - x_1)$.
+
+Setting $u = x$ and $v = x_1$, we get
+\[ \grad_f(x)^T \alpha(x_1 - x_2) \le f(x_1) - f(x) \]
+Setting $u = x$ and $v = x_2$, we get
+\[ -\grad_f(x)^T (1-\alpha)(x_1 - x_2) \le f(x_2) - f(x) \]
+
+Adding these equations with weights $1-\alpha$ and $\alpha$, we get
+\begin{align*}
+& (1-\alpha)\grad_f(x)^T \alpha(x_1 - x_2) - \alpha\grad_f(x)^T (1-\alpha)(x_1 - x_2)
+\\ & \quad \le (1-\alpha)(f(x_1) - f(x)) + \alpha(f(x_2) - f(x))
+\\ &\Rightarrow 0 \le (1-\alpha)f(x_1) + \alpha f(x_2) - f(x)
+\\ &\Rightarrow f((1-\alpha)x_1 + \alpha x_2) \le (1-\alpha)f(x_1) + \alpha f(x_2)
+\\ &\Rightarrow f \textrm{ is convex}
+\end{align*}
+\end{proof}
+
+\begin{theorem}
+If $f$ is convex, and $x^*$ is a local minimum, then $x^*$ is also a global minimum.
+\end{theorem}
+\begin{proof} For all $x \in \mathbb{R}^d$,
+\[ 0 = f(x^*)^T(x - x^*) \le f(x) - f(x^*) \]
+\end{proof}
+
+\begin{theorem}[Proof omitted]
+Let $f: \mathbb{R}^d \mapsto \mathbb{R}$ and $f \in C^2$.
+Then $f$ is convex iff $\hessian_f$ is positive semi-definite.
+\end{theorem}
+
+\end{document}
