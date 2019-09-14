@@ -1,60 +1,92 @@
 \input{header.tex}
+\input{src/cmo/common.texlib}
 
-\title{CMO Lecture 2 notes}
+\title{CMO 2: Taylor Series}
 
 \begin{document}
 
 \maketitle
 \initMinimal{}
+\tableofcontents
 
-\section{Continuity}
-
-\begin{definition}
-\[ \lim_{x\rightarrow p} f(x) = q \iff \forall \epsilon > 0, \exists \delta > 0,
-\forall x \in N_{\delta}(p), f(x) \in N_{\epsilon}(q) \]
-\end{definition}
-
-\begin{definition}
-$f$ is continuous at $x$ $\iff \lim_{x\rightarrow p} f(x) = f(p)$.
-$f$ is continuous over $S \iff f$ is continuous at all points $x \in S$.
-\end{definition}
-
-\begin{theorem}
-Let $S \subseteq \mathbb{R}^d$ be closed and bounded.
-Let $f(S) = \{f(x): x \in S\}$.
-Let $f$ be continuous over $S$.
-Then $f(S)$ is closed and bounded.
-\end{theorem}
-
-For optimization problems, $x^*$ is guaranteed to exist iff
-$f$ is continuous and $S$ is closed and bounded.
-Henceforth, we will assume $S$ to be closed and bounded
-and assume functions to be continuous.
-
-Let $g(x) = f(x) - f(p)$. Then $g(p) = 0$.
-
-\section{Asymptotics}
-
-\[ a(x) \in o(b(x)) \iff \lim_{x \rightarrow x_0} \left| \frac{a(x)}{b(x)} \right| \]
-
-For example, at $x=0$, $x^3 \in o(x^2)$.
-
-If $f$ is continuous at $x=p$, $f(x) = f(p) + o(1)$.
-
-\section{Taylor Series}
+\section{Univariate Taylor Series}
 
 Let $f: [a,b] \mapsto \mathbb{R}$.
 Let $x, y \in [a, b]$.
 
-Suppose $f$ is differentiable only once.
-Then $f(y) = f(x) + f'(z)(y-x)$, for some $z \in (x, y)$.
-
 Suppose $f$ is differentiable $k$ times. Then for some $z \in (x, y)$,
 \[ f(y) = \sum_{i=0}^{k-1}f^{(i)}(x)\frac{(y-x)^i}{i!} + f^{(k)}(z)\frac{(y-x)^k}{k!} \]
 
-When $f^{(k)}$ is continuous,
+$C^k$ is the set of all functions which are $k$-times differentiable
+and whose $k^{\textrm{th}}$ derivative is continuous.
+
+When $f^{(k)} \in C^k$,
 \[ f(y) = \sum_{i=0}^k f^{(i)}(x)\frac{(y-x)^i}{i!} + o(1)\frac{(y-x)^k}{k!} \]
 
 Therefore, we can ignore the last term if $x$ is close to $y$.
+
+\section{Multivariate Calculus}
+
+\begin{definition} Let $f: \mathbb{R}^m \mapsto \mathbb{R}^n$ be a function and $y = f(x)$.
+Then the Jacobian of $y$ w.r.t. $x$ is an $n$ by $m$ matrix where
+\[ \left(\frac{\partial y}{\partial x}\right)_{i, j} = \frac{\partial y_i}{\partial x_j} \]
+\end{definition}
+
+\begin{theorem}[Chain rule]
+\label{thm:chain-rule}
+Let $y = f(x)$ and $z = g(y)$. Then
+\[ \frac{\partial z}{\partial x}
+= \left( \frac{\partial z}{\partial y} \right) \left( \frac{\partial y}{\partial x} \right) \]
+\end{theorem}
+
+\begin{definition} For $f: \mathbb{R}^d \mapsto \mathbb{R}$,
+the gradient of $f$, denoted as $\grad_f$, is a $d$-dimensional vector defined as
+\[ \grad_f(x) = \left[ \frac{\partial f(x)}{\partial x_i} \right]_{i=1}^d \]
+\end{definition}
+
+For multivariate functions, $f \in C^1$ iff $\grad_f$ exists and all components are continuous.
+Note that \href{https://calculus.subwiki.org/wiki/Derivative_of_differentiable_function_need_not_be_continuous}
+{differentiability does not imply $C_1$}.
+
+\begin{definition} For $f: \mathbb{R}^d \mapsto \mathbb{R}$, the hessian of $f$,
+denoted as $\hessian_f$, is a $d$ by $d$ matrix defined as
+\[ \hessian_f(x)_{i, j} = \frac{\partial^2 f(x)}{\partial x_i \partial x_j} \]
+\end{definition}
+
+For multivariate function, $f \in C^2$ iff $\hessian_f$ exists and all its entries are continuous.
+
+\begin{theorem}[Proof omitted]
+When $f \in C^2$, $\hessian_f$ is symmetric.
+\end{theorem}
+
+\section{Multivariate Taylor Series}
+
+Let $g(t) = f(x + tu)$, where $t \in \mathbb{R}$ and $x, u \in \mathbb{R}^d$.
+
+\begin{theorem}
+\[ g'(t) = \grad_f(x+tu)^Tu \tag{when $f \in C^1$, by chain rule} \]
+\[ g''(t) = u^T \hessian_f(x+tu) u \tag{when $f \in C^2$} \]
+\end{theorem}
+
+\begin{theorem} $f \in C^1 \implies g \in C^1$ \end{theorem}
+
+\begin{theorem} If $f \in C^1$ and $y$ is close to $x$,
+\[ f(y) = f(x) + \grad_f(x)^T(y-x) + o(\|y-x\|) \]
+\end{theorem}
+\begin{proof}
+Let $g(t) = f(x+tu)$ and let $u = y - x$ be small.
+By applying univariate Taylor series on $g$ at 0, we get
+\begin{align*}
+& g(1) = g(0) + g'(\alpha) \textrm{, where } \alpha \in [0, 1]
+\\ &\Rightarrow f(x+u) = f(x) + \grad_f(x + \alpha u)^Tu
+\\ &\Rightarrow f(x+u) = f(x) + (\grad_f(x) + o(1))^Tu  \tag{$\grad_f$ is continuous and $u$ is small}
+\\ &\Rightarrow f(y) = f(x) + \grad_f(x)^T(y-x) + o(\|y-x\|)
+\end{align*}
+\end{proof}
+
+\begin{theorem} If $f \in C^2$ and $y$ is close to $x$,
+\[ f(y) = f(x) + \grad_f(x)^T(y-x) + \frac{1}{2}(y-x)^T\hessian_f(x)(y-x) + o(\|y-x\|^2) \]
+\end{theorem}
+\begin{proof}Similar to previous theorem.\end{proof}
 
 \end{document}

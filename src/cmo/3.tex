@@ -1,38 +1,128 @@
 \input{header.tex}
+\input{src/cmo/common.texlib}
 
-\title{CMO Lecture 3 notes}
+\title{CMO: Existence and Characterization of Minimum}
 
 \begin{document}
 
 \maketitle
 \initMinimal{}
 
-$C^k$ is the set of all functions which are $k$-times differentiable
-and whose $k^{\textrm{th}}$ derivative is continuous.
+Let $S \subseteq \mathbb{R}^d$ and $f: S \mapsto \mathbb{R}$.
+\\ $x^*$ is a local minimum $\iff \exists r > 0, \forall x \in N_r(x^*) \cap S, f(x^*) \le f(x)$.
 
-\[ \nabla(f)(x) = \left[ \frac{\partial f(x)}{\partial x_i} \right]_{i=1}^d \]
+We'll restrict our analysis in 2 ways:
+\begin{itemize}
+\item We'll only consider functions for which a global minimum exists.
+Here we'll discuss a sufficient condition for that.
+\item We'll only try to find a local minimum, since finding global minimum is difficult.
+\end{itemize}
 
-Multivariate $C^1$ means $\nabla(f)$ exists and all components are continuous.
+\section{Necessary condition for local minimum of univariate function}
 
-$g(t) = f(x + tu)$. Here $g: \mathbb{R} \mapsto \mathbb{R}$.
+\begin{theorem}
+If $f: \mathbb{R} \mapsto \mathbb{R}$ is differentiable,
+then $x^*$ is the local minimum of $f \implies f'(x^*) = 0$.
+\end{theorem}
+\begin{proof}
+Let
+\[ h(t) = \frac{f(t) - f(x^*)}{t - x^*} \]
+Then $f'(x^*) = \lim_{t \rightarrow x^*} h(t)$.
 
-\textbf{Homework}: Prove that $\frac{dg(t)}{dt} = (\nabla f(x+tu))^Tu$.
+Suppose $x^*$ is a local minimum in $(x-r, x+r)$.
+Then for $t \in (x-r, x)$, $h(t) \le 0$ and for $t \in (x, x+r)$, $h(t) \ge 0$.
+Therefore, left derivative of $f$ at $x^*$ is non-positive
+and right derivative of $f$ at $x^*$ is non-negative.
+Since $f$ is differentiable, left and right derivatives are equal.
+Therefore, $f'(x^*) = 0$.
+\end{proof}
 
-\begin{theorem} $f \in C^1 \implies g \in C^1$ \end{theorem}
+\begin{theorem} Let $f$ be a $C^2$ function and $x^*$ be a local minimum.
+Then $f''(x^*) \ge 0$. \end{theorem}
+\begin{proof}
+Using Taylor series near $x^*$, we get
+\[ f(x) = f(x^*) + (x-x^*)f'(x^*) + \frac{1}{2}(x-x^*)^2f''(x^*) + o((x-x^*)^2) \]
+\[ \implies 0 \le f(x) - f(x^*) = \frac{1}{2}(x-x^*)^2f''(x^*) + o((x-x^*)^2) \]
+For this to hold true for all $x$ near $x^*$, $f''(x^*) \ge 0$.
+\end{proof}
 
-$u = y - x$. $g(0) = f(x)$. $g(1) = f(y)$.
+\section{Characterization of functions which have a minimum}
 
-$g(t) = g(0) + g'(0)t + o(t)$.
+Consider a function from $\mathbb{R}^d$ to $\mathbb{R}$.
+Global minimum exists iff $f$ is lower-bounded.
 
-$f(y) = f(x) + \nabla(f(x))^T(y-x) + o(\|y-x\|)$.
+\begin{definition}
+\[ \lim_{\|x\| \rightarrow \infty} f(x) = \infty
+\iff \forall F > 0, \exists M > 0, \forall x \in \mathbb{R}^d,
+(\|x\| > M \implies f(x) \ge F) \]
+If $\lim_{\|x\| \rightarrow \infty} f(x) = \infty$, then $f$ is called a \textbf{coercive} function.
+\end{definition}
 
-\[ \operatorname{Hess}(f)(x) = \left[ \frac{\partial^2 f(x)}{\partial x_i \partial x_j} \right]_{i, j \in [n]} \]
+\begin{theorem}[Weierstrass' theorem]
+If a continuous function's domain is closed and bounded,
+the function has a global minimum and maximum.
+\end{theorem}
 
-\textbf{Homework}: Prove that $g^{(2)}(t) = u^T H(f)(x+tu) u$.
+\begin{theorem}
+\[ \lim_{\|x\| \rightarrow \infty} f(x) = \infty \wedge f \textrm{ is continuous }
+\implies f \textrm{ has global minimum} \]
+\end{theorem}
+\begin{proof}
+Consider $F = f(0)$.
+Let $S_1 = \{x: \|x\| > M \}$ and $S_2 = \{x: \|x\| \le M \}$.
 
-When hessian is continuous, it is also symmetric.
+Since $f$ is coercive, $\forall x \in S_1, f(0) \le f(x)$.
+By Weierstrass' theorem, a global minimum exists in $S_2$. Let it be $x^*$.
+Therefore, $f(x^*) \le f(0)$.
+Therefore, $x^*$ is a global minimum of $\mathbb{R}^d$.
+\end{proof}
 
-$x^*$ is a local minimum of $f$ iff
-$\exists r > 0, \forall x' \in S \cap N_r(x^*), f(x^*) \le f(x')$.
+\section{Sufficient condition for local minimum of univariate function}
+
+\begin{theorem}
+$f'(x_0) = 0 \wedge f''(x_0) > 0 \implies x_0 \textrm{ is local minimum}$.
+\end{theorem}
+\begin{proof}
+\[ f(x) - f(x_0) = \frac{1}{2}(x-x^*)^2f''(x^*) + o((x-x^*)^2) \]
+In the neighborhood of $x_0$, the small-o term is negligible,
+so the $f''(x^*)$ makes $f(x) - f(x_0)$ positive.
+Therefore, $x_0$ is a local minimum in that neighborhood.
+\end{proof}
+
+\section{Necessary condition for local minimum of multivariate function}
+
+\begin{theorem} Let $f: \mathbb{R}^d \mapsto \mathbb{R}$ be a differentiable function.
+Let $x^*$ be a local minimum of $f$. Then $\grad_f(x^*) = 0$.
+\end{theorem}
+\begin{proof}
+Let $u \in \mathbb{R}^d$ and $t \in \mathbb{R}$.
+\[ x^* + tu \in N_r(x^*) \iff \|tu\| < r \iff |t| \le \frac{r}{\|u\|} \iff t \in N_{\frac{r}{\|u\|}}(0) \]
+Let $g(t) = f(x^* + tu)$.
+\begin{align*}
+& x^* \textrm{ is local minimum of } f
+\\ &\Rightarrow \forall x \in N_r(x^*), f(x^*) \le f(x)
+\\ &\Rightarrow \forall t \in N_{\frac{r}{\|u\|}}(0), f(x^*) \le f(x^* + tu)
+\\ &\Rightarrow \forall t \in N_{\frac{r}{\|u\|}}(0), g(0) \le g(t)
+\\ &\Rightarrow g \textrm{ has local minimum at } 0
+\\ &\Rightarrow g'(0) = 0
+\\ &\Rightarrow \grad_f(x^*)^Tu = 0
+\end{align*}
+Since this is true for all $u \in \mathbb{R}^d$, $\grad_f(x^*) = 0$.
+\end{proof}
+
+\begin{theorem} Let $f: \mathbb{R}^d \mapsto \mathbb{R}$ be a differentiable function.
+Let $x^*$ be a local minimum of $f$. Then $\hessian_f(x^*)$ is positive semi-definite.
+\end{theorem}
+\begin{proof}
+Similar to above proof. Use the fact that if $g$ has a local minimum at 0, then $g''(0) \ge 0$.
+\end{proof}
+
+\section{Sufficient condition for local minimum of multivariate function}
+
+\begin{theorem} Let $f: \mathbb{R}^d \mapsto \mathbb{R}$ be a differentiable function.
+Let $\grad_f(x_0) = 0$ and $\hessian_f(x_0)$ be positive definite.
+Then $x_0$ is a local minimum of $f$.
+\end{theorem}
+\begin{proof} Proof follows directly from Taylor series. \end{proof}
 
 \end{document}

@@ -1,0 +1,17 @@
+\usepackage{xparse}
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforesecskip}{1pt}
+
+\NewDocumentCommand{\grad}{e{_^}}{%
+  \mathop{}\!% \mathop for good spacing before \nabla
+  \nabla
+  \IfValueT{#1}{_{\!#1}}% tuck in the subscript
+  \IfValueT{#2}{^{#2}}% possible superscript
+}
+
+\NewDocumentCommand{\hessian}{e{_^}}{%
+  \operatorname{H}
+  \IfValueT{#1}{_{\!#1}}% tuck in the subscript
+  \IfValueT{#2}{^{#2}}% possible superscript
+}
+

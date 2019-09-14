@@ -1,33 +1,40 @@
 \input{header.tex}
+\input{src/cmo/common.texlib}
 
-\title{CMO Lecture 1 notes}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\title{CMO 1: Preliminaries}
 
 \begin{document}
 
 \maketitle
 \initMinimal{}
 
-\textbf{Central Problem of the course}:
+\tableofcontents
+
+\section{Central problem and algorithm template}
+
+\textbf{Central Problem of the course `Computational Methods of Optimization'}:
 Given an objective function $f: \mathbb{R}^d \mapsto \mathbb{R}$
 and a constraint set $S \subseteq \mathbb{R}^d$,
 find $x^* = \operatorname{argmin}_{x \in S} f(x)$ and $f^* = f(x^*)$.
 
 Example: for $\min_{x \in \mathbb{R}} (x-t)^2$, $x^* = t$ and $f^* = 0$.
 
-\tableofcontents
+All algorithms we develop to find $x^*$ will follow this template:
+\begin{algorithm}[H]
+\label{algo:template}
+\begin{algorithmic}
+\State Pick $x \in S$.
+\While{$x$ is not optimal}
+    \State Pick another $x \in S$ such that $f(x)$ decreases.
+\EndWhile
+\State \Return $x$
+\end{algorithmic}
+\end{algorithm}
 
-\section{Template of algorithm}
-
-\begin{itemize}
-\item Pick $x \in S$.
-\item While $x$ is not optimal, pick another $x \in S$ such that $f(x)$ decreases.
-\end{itemize}
-
-\section{Preliminaries}
-
-\[ \|x\| = \sqrt{x^Tx} = \sqrt{\sum_{i=1}^d x_i^2} \]
-
-\subsection{Metric space}
+\section{Metric space}
 
 For any set $S$ (we'll usually consider $S = \mathbb{R}^d$),
 $D: S \times S \mapsto \mathbb{R}$ is a distance function
@@ -39,10 +46,12 @@ iff all of the following are true:
 \item Triangle inequality: $D(x, y) + D(y, z) \ge D(x, z)$.
 \end{itemize}
 
-\begin{theorem}$D(x, y) = \|x - y\|$ is a distance function.\end{theorem}
+\begin{theorem}$D(x, y) = \|x - y\|$ is a distance function. Here
+\[ \|x\| = \sqrt{x^Tx} = \sqrt{\sum_{i=1}^d x_i^2} \]
+\end{theorem}
 \begin{theorem}$D(x, y) = \sum_{i=1}^d |x_i - y_i|$ is a distance function.\end{theorem}
 
-\subsection{Neighborhood function and Open sets}
+\section{Neighborhood function and Open sets}
 
 \begin{definition} For $r > 0$ and $x \in \mathbb{R}^d$, $N_r(x) = \{z: D(x, z) < r\}$
 is called a neighborhood of $x$ of radius $r$. \end{definition}
@@ -73,7 +82,7 @@ $N_r(x) \cap S \neq \phi$. \end{definition}
 
 \begin{example} $[0, 1]$ is a closed set. \end{example}
 
-\subsection{Limit and Bounds}
+\section{Limit and Bounds}
 
 \begin{definition} Let $[x_i]_{i \in \mathbb{N}}$ be an infinite sequence
 where $x \in \mathbb{R}^d$. Then
@@ -94,5 +103,37 @@ $g$ is an upper bound and for every upper bound $h$, $g \le h$. \end{definition}
 \begin{example} For $x_i = 1-\frac{1}{i}$, LUB is 1. \end{example}
 
 \begin{theorem} A monotonic bounded sequence has a limit. \end{theorem}
+
+\section{Continuity}
+
+\begin{definition}
+\[ \lim_{x\rightarrow p} f(x) = q \iff \forall \epsilon > 0, \exists \delta > 0,
+\forall x \in N_{\delta}(p), f(x) \in N_{\epsilon}(q) \]
+\end{definition}
+
+\begin{definition}
+$f$ is continuous at $x$ $\iff \lim_{x\rightarrow p} f(x) = f(p)$.
+$f$ is continuous over $S \iff f$ is continuous at all points $x \in S$.
+\end{definition}
+
+\begin{theorem}
+Let $S \subseteq \mathbb{R}^d$ be closed and bounded.
+Let $f(S) = \{f(x): x \in S\}$.
+Let $f$ be continuous over $S$.
+Then $f(S)$ is closed and bounded.
+\end{theorem}
+
+For optimization problems, $x^*$ is guaranteed to exist iff
+$f$ is continuous and $S$ is closed and bounded.
+Henceforth, we will assume $S$ to be closed and bounded
+and assume functions to be continuous.
+
+\section{Asymptotics}
+
+\[ a(x) \in o(b(x)) \iff \lim_{x \rightarrow x_0} \left| \frac{a(x)}{b(x)} \right| = 0\]
+
+For example, at $x=0$, $x^3 \in o(x^2)$.
+
+If $f$ is continuous at $x=p$, $f(x) = f(p) + o(1)$.
 
 \end{document}
