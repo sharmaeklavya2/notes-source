@@ -1,0 +1,89 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Minimizing a quadratic function}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+In many search algorithms, given the current point $x$,
+we choose the next point as $x + \alpha u$, where
+$u$ is a descent direction (i.e. $\grad_f(x)^T u \le 0$) and $\alpha > 0$.
+
+The strategy of choosing $\alpha$ as $\operatorname{argmin}_{\alpha > 0} f(x + \alpha u)$,
+is called \textbf{exact line search}.
+
+\section{Quadratic function}
+
+\[ f(x) = \frac{1}{2}x^TQx - d^Tx \]
+where $Q$ is symmetric and positive definite.
+\[ \grad_f(x) = Qx - d \]
+\[ \hessian_f(x) = Q \]
+
+Since the hessian is positive definite, $f$ is convex.
+So a local minimum is also a global minimum.
+
+Define $x^* = Q^{-1}d$ ($Q^{-1}$ exists because $Q$ is positive definite).
+We find that $x^*$ is a local minimum because it satisfies the sufficient conditions for it.
+\[ f(x^*) = - \frac{1}{2}x^{*^T} Q x^* \]
+
+Although we have a closed form solution for $x^*$,
+this is sometimes not usable, since finding $Q^{-1}$ takes $O(d^3)$ time,
+which can be too much if $Q$ is large.
+
+We will therefore explore descent-based methods to compute $x^*$.
+
+\section{Descent-based minimization of quadratic function}
+
+Let $u = \grad_f(x) \neq 0$. Therefore, $u = Q(x - x^*)$.
+
+Let $g(\alpha) = f(x - \alpha u)$.
+\[ g'(\alpha) = - u^T \grad_f(x - \alpha u)
+= - u^T Q (x - \alpha u - x^*) = u^T (\alpha Q u - u) \]
+Setting $g'(\alpha)$ to 0, we get
+\[ \alpha^* = \frac{\|u\|^2}{u^TQu} \]
+Since $Q$ is positive definite, $\alpha^* > 0$.
+
+$g''(\alpha) = u^TQu > 0$, so $\alpha^*$ is a local minimum of $g$.
+Since $g''(\alpha) > 0$ for all $\alpha$, $g$ is convex, so $\alpha^*$ is a global minimum of $g$.
+
+Apply Taylor series to find $f(x - \alpha^*u)$ around $x$,
+\begin{align*}
+& f(x - \alpha^* u) = f(x) + \grad_f(x)^T(-\alpha^*u) + \frac{1}{2}(-\alpha^*u)^T \hessian_f(x) (-\alpha^*u)
+\\ &\implies f(x) - f(x - \alpha^* u) = \alpha^* \grad_f(x)^T u - \frac{(\alpha^*)^2}{2}u^T Q u
+\\ & \quad = \left( \frac{\|u\|^2}{u^T Q u} \right) \|u\|^2
+- \frac{1}{2}\left( \frac{\|u\|^2}{u^T Q u} \right)^2 u^T Q u
+\\ & \quad = \frac{1}{2} \frac{\|u\|^4}{u^T Q u}
+\end{align*}
+
+Apply Taylor series to find $f(x)$ around $x^*$,
+\begin{align*}
+& f(x) = f(x^*) + \grad_f(x^*)^T (x - x^*) + \frac{1}{2} (x-x^*)^T \hessian_f (x - x^*)
+\\ &\implies f(x) - f(x^*) = \frac{1}{2} (x-x^*)^T Q (x - x^*) = \frac{u^T Q^{-1} u}{2}
+\end{align*}
+
+Before we can analyze the convergence of a descent-based algorithm to minimize $f$,
+we must look at an important result -- Kantorovich's inequality.
+
+\begin{theorem}[Kantorovich's inequality]
+Let $Q$ be a symmetric positive definite matrix.
+Let $\lambda_1$ and $\lambda_d$ be its maximum and minimum eigenvalues respectively. Then
+\[ \frac{\|u\|^4}{(u^TQu)(u^TQ^{-1}u)} \ge \frac{4\lambda_1\lambda_d}{(\lambda_1 + \lambda_d)^2} \]
+\end{theorem}
+
+Let $x^{(k+1)} = x^{(k)} - \alpha u$.
+Let $E(x) = f(x) - f(x^*)$. Then
+\begin{align*}
+& \frac{E(x^{(k+1)})}{E(x^{(k)})}
+\\ &= 1 - \frac{f(x^{(i)}) - f(x^{(i+1)})}{f(x^{(i)}) - f(x^*)}
+\\ &= 1 - \frac{\|u\|^4}{(u^TQu)(u^TQ^{-1}u)}
+\\ &\le 1 - \frac{4\lambda_1\lambda_d}{(\lambda_1 + \lambda_d)^2} \tag{by Kantorovich's inequality}
+\\ &\le \left(\frac{\lambda_1 - \lambda_d}{\lambda_1 + \lambda_d} \right)^2
+\end{align*}
+
+Therefore, $E$ linearly converges to 0.
+We know that linear convergence is very fast, so this is a good descent method.
+
+\end{document}

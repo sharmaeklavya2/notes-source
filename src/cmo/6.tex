@@ -1,0 +1,76 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Minimizing a function with bounded hessian}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\textbf{Objective}: Minimize a $C^2$ function $f: \mathbb{R}^d \mapsto \mathbb{R}$
+for which $AI - \hessian_f(x)$ and $\hessian_f(x) - aI$ are
+positive semi-definite for all $x \in \mathbb{R}^d$ ($0 < a \le A$).
+
+The trick we'll use is to lower-bound and upper-bound $f$.
+
+Let $u = \grad_f(x^{(i)})$. Let
+\[ f_l(x) = f(x^{(i)}) + u^T(x - x^{(i)}) + \frac{a}{2}\|x - x^{(i)}\|^2 \]
+\[ f_h(x) = f(x^{(i)}) + u^T(x - x^{(i)}) + \frac{A}{2}\|x - x^{(i)}\|^2 \]
+By using Taylor series on $f$ at $x^{(i)}$, we get that
+$\forall x \in \mathbb{R}^d, f_l(x) \le f(x) \le f_h(x)$.
+
+\begin{lemma}
+\label{thm:lower-min}
+\[ f_l^* = \min_x f_l(x) = f(x^{(i)}) - \frac{\|u\|^2}{2a} \]
+\end{lemma}
+\begin{proof}[Proof sketch] Set $\grad_{f_l}(x) = 0$ and solve for $x$. \end{proof}
+
+\begin{lemma}
+\label{thm:min-comp}
+Let $h_1$ and $h_2$ be 2 functions
+such that $\forall x \in \mathbb{R}^d, h_1(x) \le h_2(x)$.
+Let $h_1^* = \min_x h_1(x)$
+and $h_2^* = \min_x h_2(x)$.
+Then $h_1* \le h_2^*$.
+\end{lemma}
+\begin{proof}
+Let $x_2 = \operatorname{argmin}_x h_2(x)$.
+Then $h_1^* \le h_1(x_2) \le h_2(x_2) = h_2^*$.
+\end{proof}
+
+Let $x^* = \operatorname{argmin}_x f(x)$.
+Let $E(x) = f(x) - f(x^*)$.
+
+\begin{lemma}
+\[ E(x^{(i)}) \le \frac{\|u\|^2}{2a} \]
+\end{lemma}
+\begin{proof}[Proof sketch]
+By lemma \ref{thm:min-comp}, $f_l^* \le f(x^*)$.
+Now use lemma \ref{thm:lower-min} to substitute $f_l^*$.
+\end{proof}
+
+Let $x^{(i+1)} = x^{(i)} - \frac{u}{A}$.
+(It can be proven that $x^{(i+1)}$ minimizes $f_h$, but we're not interested in that fact.)
+
+\begin{lemma}
+\[ E(x^{(i)}) - E(x^{(i+1)}) \ge \frac{\|u\|^2}{2A} \]
+\end{lemma}
+\begin{proof}
+\begin{align*}
+f(x^{(i+1)}) &\le f_h(x^{(i+1)})  \tag{$f_h$ upper-bounds $f$}
+\\ &= f(x^{(i)}) + u^T(x^{(i+1)} - x^{(i)}) + \frac{A}{2}\|x^{(i+1)} - x^{(i)}\|^2
+\\ &= f(x^{(i)}) - \frac{\|u\|^2}{A} + \frac{A}{2}\frac{\|u\|^2}{A^2}
+\\ &= f(x^{(i)}) - \frac{\|u\|^2}{2A}
+\end{align*}
+\[ \implies E(x^{(i)}) - E(x^{(i+1)}) = f(x^{(i)}) - f(x^{(i+1)}) \ge \frac{\|u\|^2}{2A} \]
+\end{proof}
+
+Therefore,
+\[ \frac{E(x^{(i+1)})}{E(x^{(i)})}
+= 1 - \frac{E(x^{(i)}) - E(x^{(i+1)})}{E(x^{(i)})}
+\le 1 - \frac{a}{A} \]
+
+This proves the convergence of our algorithm.
+
+\end{document}
