@@ -1,0 +1,79 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Coordinate Descent}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\textbf{Objective}: Minimize $f(x) = \frac{1}{2}x^TQx - b^Tx$,
+where $Q$ is symmetric and positive definite.
+$Q$ also has a large size. So large that it's stored on secondary/network storage.
+
+Let $x^* = \operatorname{argmin}_x f(x)$.
+\[ \grad_f(x) = Qx - b = Q(x - x^*) \]
+\[ f(x^*) = -\frac{{x^*}^TQx^*}{2} \]
+
+Let $g(\alpha) = f(x^{(i)} + \alpha u)$ where $u$ is a descent direction.
+i.e. $\grad_f(x^{(i)})^Tu < 0$.
+\[ g'(0) = \grad_f(x^{(i)})^Tu \]
+\[ g''(0) = u^TQu \]
+
+Now we'll use exact line search to find out the step size.
+\begin{theorem}
+Let $\alpha^* = \operatorname{argmin}_{\alpha} g(\alpha)$. Then
+\[ \alpha^* = - \frac{g'(0)}{g''(0)} > 0 \]
+\[ g(\alpha^*) = f(x^{(i)}) - \frac{g'(0)^2}{2g''(0)} = f(x^{(i)}) - \frac{(\grad_f(x^{(i)})^Tu)^2}{2u^TQu} \]
+\end{theorem}
+\begin{proof}
+By Taylor series,
+\[ g(\alpha) = g(0) + \alpha g'(0) + \frac{\alpha^2}{2} g''(0) \]
+\[ g'(\alpha) = g'(0) + \alpha g''(0) \]
+By the necessary condition for local minimum,
+\[ g(\alpha^*) = 0 \implies \alpha^* = - \frac{g'(0)}{g''(0)} \]
+\end{proof}
+
+\begin{theorem}
+\[ f(x^{(i)}) - f(x^*) = \frac{\grad_f(x^{(i)})^T Q^{-1} \grad_f(x^{(i)})}{2} \]
+\end{theorem}
+\begin{proof}[Proof sketch] Let $v = x^{(i)} - x^*$.
+Replace $x^{(i)}$ by $x^* + v$ in $f(x^{(i)}) - f(x^*)$.
+The rest is algebraic manipulation.
+\end{proof}
+
+Let $E(x) = f(x) - f(x^*)$.
+Let $\lambda_1 \le \lambda_2 \le \ldots \le \lambda_d$ be the eigenvalues of $Q$.
+\begin{align*}
+\Delta &= \frac{E(x^{(i)}) - E(x^{(i+1)})}{E(x^{(i)})}
+\\ &= \frac{f(x^{(i)}) - f(x^{(i+1)})}{f(x^{(i)}) - f(x^*)}
+\\ &= \frac{g(0) - g(\alpha^*)}{f(x^{(i)}) - f(x^*)}
+\\ &= \frac{(\grad_f(x^{(i)})^Tu)^2}{2u^TQu} \frac{2}{\grad_f(x^{(i)})^T Q^{-1} \grad_f(x^{(i)})}
+\\ &= \frac{(\grad_f(x^{(i)})^Tu)^2}{(u^TQu)\left(\grad_f(x^{(i)})^T Q^{-1} \grad_f(x^{(i)})\right)}
+\\ &= \frac{(\grad_f(x^{(i)})^Tu)^2}{\left( [\lambda_d, \lambda_1]\|u\|^2 \right)
+    \left( \left[\frac{1}{\lambda_1}, \frac{1}{\lambda_d}\right]\|\grad_f(x^{(i)})\|^2 \right)}
+    \tag{Cauchy-Schwarz inequality}
+\\ &\ge \frac{\lambda_d}{\lambda_1} \frac{(\grad_f(x^{(i)})^Tu)^2}{\|u\|^2 \|\grad_f(x^{(i)})\|^2}
+\end{align*}
+
+To prove linear convergence, we must come up with $u$
+such that $\Delta$ is lower-bounded by a positive constant
+(because $\frac{E(x^{(i+1)})}{E(x^{(i)})} = 1 - \Delta$).
+
+Let $e_j$ be the $j^{\textrm{th}}$ column of the identity matrix.
+In coordinate-descent, we choose $u$ to be $e_j$ or $-e_j$ for some $j$.
+This has the advantage of being computationally lightweight.
+For example, $u^TQu = Q_{j,j}$, which takes $O(1)$ time instead of $O(d^2)$.
+
+Let $g = \grad_f(x^{(i)})$. Let $g_j$ be the $j^{\textrm{th}}$ coordinate of $g$.
+For $u$ to be a descent direction, we'll choose $u = -\operatorname{sgn}(g_j)e_j$.
+Therefore, $g^Tu = -\operatorname{sgn}(g_j) g^Te_j = -|g_j| < 0$.
+
+Also, we'll choose the $j$ which has the highest value of $|g_j|$.
+Therefore,
+\[ \|g\|^2 = \sum_{k=1}^d |g_k|^2 \le d |g_j|^2 \]
+\[ \Delta \ge \frac{\lambda_d}{\lambda_1} \frac{(\grad_f(x^{(i)})^Tu)^2}{\|u\|^2 \|\grad_f(x^{(i)})\|^2}
+= \frac{\lambda_d}{\lambda_1} \frac{|g_j|^2}{\|g\|^2} \ge \frac{\lambda_d}{d\lambda_1} \]
+
+\end{document}
