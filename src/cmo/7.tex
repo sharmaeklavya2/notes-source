@@ -1,0 +1,139 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Goldstein and Wolfe optimization}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\begin{definition}
+$C^1_L$ is the subset of $C^1$ functions for which
+\[ \| \grad_f(x) - \grad_f(z) \| \le L\|x-z\| \]
+This is called the Lipschitz condition.
+\end{definition}
+
+\textbf{Objective}: Minimize a lower-bounded $C^1_L$ function $f: \mathbb{R}^d \mapsto \mathbb{R}$.
+
+\section{Goldstein and Wolfe conditions}
+
+Let $u$ be a direction of decrease at $x^{(i)}$ (i.e. $\grad_f(x^{(i)})^Tu < 0$).
+Our descent algorithm will repeatedly choose a direction of descent
+(not necessarily steepest descent) and move in that direction with magnitude $\alpha$.
+
+Unlike the previous algorithms we saw, we'll not necessarily pick $\alpha$
+as $\operatorname{argmin}_{\alpha > 0} f(x + \alpha u)$.
+This is called \textbf{inexact line search}.
+But this doesn't mean we can pick $\alpha$ arbitrarily.
+We still have to be smart about picking $\alpha$ to guarantee (quick) convergence.
+There are 2 famous ways of picking $\alpha$: by the Goldstein conditions
+and the Wolfe conditions.
+
+Let $g(\alpha) = f(x^{(i)} + \alpha u)$.
+Therefore, $g'(0) = \grad_f(x^{(i)})^Tu < 0$.
+Also, $g$ is lower bounded because $f$ is lower-bounded.
+
+Draw a line which passes through $(0, g(0))$ with slope $m_1 g'(0)$, where $0 < m_1 < 1$
+(note that the slope is negative).
+Let $h_1(\alpha) = g(0) + m_1 g'(0) \alpha$ be that line.
+Let $t(\alpha) = h_1(\alpha) - g(\alpha)$.
+
+\begin{lemma}
+$t$ has a positive zero. Let $\overline{\alpha}_1$ be the smallest positive zero.
+Then $t$ is positive in the interval $(0, \overline{\alpha}_1)$. Formally,
+\[ \exists \overline{\alpha}_1 > 0, (t(\overline{\alpha}_1) = 0 \wedge
+(\forall \alpha \in (0, \overline{\alpha}_1), t(\alpha) > 0)) \]
+\end{lemma}
+\begin{proof}
+Let $f^*$ be the minimum value of $f$.
+\[ h_1(\alpha) - g(\alpha) < 0 \Leftarrow h_1(\alpha) - f^* < 0 \iff \alpha > \frac{f^* - g(0)}{m_1g'(0)} > 0 \]
+Therefore, there is an $\alpha$ for which $t(\alpha) < 0$.
+
+Since $g \in C^1$, by Taylor series, we get that for very small positive $\alpha$,
+\[ g(\alpha) = g(0) + g'(0)\alpha + \alpha o(1) \]
+\[ \implies t(\alpha) = \alpha( (1-m_1)(-g'(0)) + o(1) ) > 0 \]
+Therefore, there is an $\alpha$ for which $t(\alpha) > 0$.
+
+Since $g$ is continuous, by the intermediate value theorem,
+there must be an $\overline{\alpha}_1 > 0$ for which $t(\overline{\alpha}_1) = 0$.
+Without loss of generality, assume that $\overline{\alpha}_1$ is the smallest positive zero of $t$.
+Since $t(\alpha) > 0$ for small positive $\alpha$,
+$t(\alpha) > 0$ for all $\alpha \in (0, \overline{\alpha}_1)$.
+\end{proof}
+
+In our descent algorithm, if we choose $\alpha$ from the interval $(0, \overline{\alpha}_1)$,
+then $g(0) = h_1(0) > h_1(\alpha) > g(\alpha)$. This means that
+$f(x^{(i)}) > f(x^{(i)} + \alpha u)$, which is what we required.
+
+However, the decrease may be too small, especially if $\alpha$ is very close to 0.
+To counteract this, we'll impose another condition on $\alpha$.
+We have 2 choices here.
+
+\subsection{Goldstein condition}
+
+Let $h_2(\alpha) = g(0) + m_2 g'(0) \alpha$, where $0 < m_1 < m_2 < 1$.
+Therefore, $h_2 - g$ has a smallest positive zero $\overline{\alpha}_2$.
+Also, $\overline{\alpha}_2 < \overline{\alpha}_1$.
+We'll chose $\alpha$ from the interval $(\overline{\alpha}_2, \overline{\alpha_1})$.
+This is called the Goldstein condition for choosing $\alpha$.
+
+\subsection{Wolfe condition}
+
+Choose an $\alpha \in (0, \overline{\alpha}_1)$
+such that $g'(\alpha) \ge m_3g'(0)$, where $m_3 \in (0, 1)$.
+This is called the Wolfe condition.
+
+\begin{theorem}
+If $m_3 \ge m_1$, it's possible to satisfy the Wolfe condition.
+\end{theorem}
+\begin{proof}
+Suppose we choose $\widehat{\alpha} \in (0, \overline{\alpha}_1)$.
+Since $g$ is differentiable, by mean value theorem, we get
+\[ \exists \alpha \in [\widehat{\alpha}, \overline{\alpha}_1],
+    g'(\alpha)(\overline{\alpha}_1 - \widehat{\alpha}) = g(\overline{\alpha}_1) - g(\widehat{\alpha}) \]
+Combine the above result with $g(\widehat{\alpha}) < h_1(\widehat{\alpha})$
+and $g(\overline{\alpha}) = h_1(\overline{\alpha})$ to get $g'(\alpha) > g'(0)m_1$.
+
+If we choose $m_3 \ge m_1$, then $g'(0)m_3 \le g'(0)m_1 < g'(\alpha)$.
+Therefore, the Wolfe condition is satisfied for some
+$\alpha \in (0, \overline{\alpha}_1)$.
+\end{proof}
+
+\section{Convergence of Wolfe condition}
+
+\begin{align*}
+& g'(\alpha) \ge m_3g'(0) \tag{by Wolfe condition}
+\\ &\Rightarrow \grad_f(x^{(i)} + \alpha u)^T u \ge m_3 \grad_f(x^{(i)})^T u
+\\ &\Rightarrow \left(\grad_f(x^{(i)} + \alpha u) - \grad_f(x^{(i)})\right)^T u \ge -(1-m_3) \grad_f(x^{(i)})^T u
+    \tag{subtract $\grad_f(x^{(i)})^T u$ from both sides}
+\\ &\Rightarrow \left\| \grad_f(x^{(i)} + \alpha u) - \grad_f(x^{(i)}) \right\| \ge -(1-m_3) \grad_f(x^{(i)})^T u
+    \tag{both sides were +ve. Apply Cauchy-Schwarz inequality}
+\\ &\Rightarrow L\alpha\|u\|^2 \ge -(1-m_3) \grad_f(x^{(i)})^T u
+    \tag{Lipschitz condition}
+\\ &\Rightarrow \alpha \ge \frac{-(1-m_3)\grad_f(x^{(i)})^T u}{L\|u\|^2}
+\end{align*}
+
+\begin{align*}
+& g(\alpha) < h_1(\alpha) = g(0) + m_1 g'(0) \alpha
+\\ &\Rightarrow f(x^{(i+1)}) < f(x^{(i)}) + m_1 \grad_f(x^{(i)})^T u \alpha
+\\ &\Rightarrow f(x^{(i)}) - f(x^{(i+1)})
+    > \frac{m_1(1-m_3)}{L} \left(\frac{\grad_f(x^{(i)})^Tu}{\|u\|}\right)^2
+\end{align*}
+
+Let $\grad_f(x^{(i)})^T u = -\cos\theta_i \left\|\grad_f(x^{(i)})\right\|\|u\|$.
+We'll impose another constraint: we'll choose $u$ to not just be the descent direction,
+but also in a way that $\cos\theta_i$ is lower-bounded by a positive constant.
+\[ f(x^{(i)}) - f(x^{(i+1)}) \ge \frac{m_1(1-m_3)}{L} \cos^2\theta_i \|\grad_f(x^{(i)})\|^2 \]
+Summing $i$ from $0$ to $T-1$, we get
+\[ \forall T, f(x^{(i)}) - f^* \ge f(x^{(0)}) - f(x^{(T)})
+\ge \frac{m_1(1-m_3)}{L} \sum_{i=0}^{T-1} \cos^2\theta_i \left\| \grad_f(x^{(i)}) \right\|^2 \]
+
+$\therefore \sum_{i=0}^{\infty} \cos^2\theta_i \left\| \grad_f(x^{(i)}) \right\|^2$
+is a convergent series. So for $i \rightarrow \infty$, $\grad_f(x^{(i)}) \rightarrow 0$.
+
+Therefore, for $i \rightarrow \infty$, $x^{(i)}$ approaches a stationary point.
+Therefore, the descent algorithm which uses Wolfe condition converges to a stationary point,
+which would hopefully be a local minimum.
+
+\end{document}
