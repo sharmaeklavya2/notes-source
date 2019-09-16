@@ -16,6 +16,8 @@ This is called the Lipschitz condition.
 
 \textbf{Objective}: Minimize a lower-bounded $C^1_L$ function $f: \mathbb{R}^d \mapsto \mathbb{R}$.
 
+\tableofcontents
+
 \section{Goldstein and Wolfe conditions}
 
 Let $u$ be a direction of decrease at $x^{(i)}$ (i.e. $\grad_f(x^{(i)})^Tu < 0$).
@@ -135,5 +137,75 @@ is a convergent series. So for $i \rightarrow \infty$, $\grad_f(x^{(i)}) \righta
 Therefore, for $i \rightarrow \infty$, $x^{(i)}$ approaches a stationary point.
 Therefore, the descent algorithm which uses Wolfe condition converges to a stationary point,
 which would hopefully be a local minimum.
+
+\section{Alternate Characterization of \texorpdfstring{$C^1_L$}{C1L}}
+
+Let $f \in C^1_L$. Let $g(\alpha) = f(x + \alpha(y - x))$.
+Then $g'(\alpha) = \grad_f(x + \alpha(y-x))^T(y-x)$.
+Therefore, $g(0) = f(x)$, $g(1) = f(y)$ and $g'(0) = \grad_f(x)^T(y-x)$.
+\[ \int_0^1 (g'(\alpha) - g'(0))d\alpha = f(y) - f(x) - \grad_f(x)^T(y-x) \]
+
+\begin{align*}
+& \left| f(y) - f(x) - \grad_f(x)^T(y-x) \right|
+\\ &= \left| \int_0^1 (g'(\alpha) - g'(0)) d\alpha \right|
+\\ &\le \int_0^1 |g'(\alpha) - g'(0)| d\alpha
+\\ &= \int_0^1 \left| \left( \grad_f(x + \alpha(y-x)) - \grad_f(x) \right)^T(y-x) \right| d\alpha
+\\ &\le \int_0^1 \left\| \grad_f(x + \alpha(y-x)) - \grad_f(x) \right\| \|y-x\| d\alpha
+    \tag{Cauchy-Schwarz inequality}
+\\ &\le \int_0^1 L\alpha \|y-x\|^2 d\alpha  \tag{Lipschitz condition}
+\\ &= \frac{L}{2} \|y-x\|^2
+\end{align*}
+
+\section{Convergence of Goldstein condition}
+
+Let $u = \grad_f(x^{(i)})$ and $x^{(i+1)} = x^{(i)} - \alpha u$.
+
+Let $g(\alpha) = f(x^{(i)} - \alpha u)$.
+Then $g'(0) = - \grad_f(x^{(i)})^T u = -\|u\|^2$.
+
+$h_1(\alpha) = g(0) + m_1 g'(0) \alpha = f(x^{(i)}) - \alpha m_1 \|u\|^2$.
+Similarly $h_2(\alpha) = f(x^{(i)}) - \alpha m_2 \|u\|^2$.
+
+\begin{align*}
+& h_2(\alpha) \le g(\alpha) \le h_1(\alpha)
+\\ &\Rightarrow f(x^{(i)}) - m_2 \alpha \|u\|^2 \le f(x^{(i+1)}) \le f(x^{(i)}) - m_1 \alpha \|u\|^2
+\\ &\Rightarrow m_1 \alpha \|u\|^2 \le f(x^{(i)}) - f(x^{(i+1)}) \le m_2 \alpha \|u\|^2
+\end{align*}
+
+\begin{align*}
+& f(x^{(i)}) - f(x^{(i+1)}) + \grad_f(x^{(i)})^T(x^{(i+1)} - x^{(i)})
+\\ &\le m_2 \alpha \|u\|^2 + \grad_f(x^{(i)})^T(x^{(i+1)} - x^{(i)})
+\\ &= m_2 \alpha \|u\|^2 - \alpha \|u\|^2
+\\ &= -(1-m_2) \alpha \|u\|^2
+\end{align*}
+
+Therefore, by Lipschitz condition,
+\begin{align*}
+& (1-m_2) \alpha \|u\|^2 \le \frac{L}{2} \|x^{(i+1)} - x^{(i)}\|^2 = \frac{L\alpha^2\|u\|^2}{2}
+\\ &\implies \alpha \ge \frac{2(1-m_2)}{L}
+\\ &\implies \frac{2(1-m_2)m_1}{L}\|u\|^2 \le m_1 \alpha \|u\|^2 \le f(x^{(i)}) - f(x^{(i+1)})
+\\ &\implies \forall T, \frac{2(1-m_2)m_1}{L} \sum_{i=0}^{T-1} \left\|\grad_f(x^{(i)})\right\|^2
+    \le f(x^{(0)}) - f(x^{(T)}) \le f(x^{(0)}) - f^*
+\\ &\implies \forall T, \sum_{i=0}^{T-1} \left\|\grad_f(x^{(i)})\right\|^2
+    \le \frac{(f(x^{(0)}) - f^*)L}{2m_1(1-m_2)}
+\end{align*}
+
+$\therefore \sum_{i=0}^{\infty} \left\| \grad_f(x^{(i)}) \right\|^2$
+is a convergent series. So for $i \rightarrow \infty$, $\grad_f(x^{(i)}) \rightarrow 0$.
+
+Therefore, for $i \rightarrow \infty$, $x^{(i)}$ approaches a stationary point.
+Therefore, the descent algorithm which uses Goldstein condition converges to a stationary point,
+which would hopefully be a local minimum.
+
+\section{Rate of convergence}
+
+When descent direction is $-\grad_f(x^{(i)})$,
+for both the Wolfe condition and the Goldstein condition,
+the sum $\sum_{i=0}^{T-1} \left\| \grad_f(x^{(i)}) \right\|^2$ is upper-bounded.
+Denote the upper bound by $N$.
+
+Let $\delta = \min_i \|\grad_f(x^{(i)})\|$.
+Then $T\delta^2 \le N$. Therefore, $\delta \le \sqrt{\frac{N}{T}}$.
+This tells us how fast $x^{(i)}$ converges to a stationary point.
 
 \end{document}
