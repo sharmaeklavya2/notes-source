@@ -1,0 +1,171 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Conjugate Descent}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\textbf{Objective}: Minimize $f(x) = \frac{1}{2}x^TQx - b^Tx$,
+where $Q$ is symmetric and positive definite.
+
+\tableofcontents
+
+\section{\texorpdfstring{$Q$}{Q}-conjugate vectors}
+
+\begin{definition}
+A set of $d$-dimensional non-0 vectors $U = \{u_0, u_1, \ldots, u_{k-1}\}$ is $Q$-conjugate
+iff $\forall i \neq j, u_i^TQu_j = 0$.
+\end{definition}
+
+\begin{theorem}
+If $U = \{u_0, \ldots, u_{d-1}\}$ is $Q$-conjugate, then $U$ is a basis of $\mathbb{R}^d$.
+\end{theorem}
+\begin{proof}
+Assume $U$ is linearly dependent.
+Then one of the vectors in $U$ can be represented as a linear combination of the other
+(\href{https://sharmaeklavya2.github.io/theoremdep/nodes/linear-algebra/vector-spaces/linindep.html}{proof}).
+Without loss of generality, assume $u_{d-1} = \sum_{i=0}^{d-2} \alpha_i u_i$.
+
+$\forall i \neq d-1$,
+\[ 0 = u_i^TQu_{d-1}
+= u_i^TQ\left(\sum_{j=0}^{d-2} \alpha_j u_j \right)
+= \sum_{j=0}^{d-2} \alpha_j u_i^TQu_j
+= \alpha_i u_i^TQu_i
+\implies \alpha_i = 0 \]
+Hence, $u_{d-1} = 0 \Rightarrow \bot$.
+
+On assuming $U$ to be linearly dependent, we got a contradiction.
+Therefore, $U$ is linearly independent.
+
+Since $|U| = d = \dim(\mathbb{R}^d)$,
+$U$ is a basis of $\mathbb{R}^d$
+(\href{https://sharmaeklavya2.github.io/theoremdep/nodes/linear-algebra/vector-spaces/basis/n-linindep-is-basis.html}{proof}).
+\end{proof}
+
+Since $Q$ is positive definite, $u_i^TQu_i > 0$ for all $i$.
+
+\section{Descent algorithm using \texorpdfstring{$Q$}{Q}-conjugate vectors}
+
+We'll develop a descent algorithm which uses $u_k$ in the $k^{\textrm{th}}$ iteration
+with exact line search. The name of this algorithm will be `Conjugate Gradient Algorithm'.
+
+Let $g(\alpha) = f(x_k + \alpha u_k)$ and $g_k = \grad_f(x_k)^T$
+(sorry for overloading variables; the subscript will help distinguish them though).
+Therefore, $g'(0) = \grad_f(x_k) = g_k$ and $g''(0) = u_k^TQu_k$.
+
+By univariate Taylor series, we get
+\[ g(\alpha) = g(0) + \alpha g'(0) + \frac{\alpha^2}{2} g''(0) \]
+
+Let $\alpha_k^* = \operatorname{argmin}_{\alpha} f(x_k + \alpha u_k)$.
+Therefore, \[ \alpha_k^* = - \frac{g'(0)}{g''(0)} = - \frac{g_k^Tu_k}{u_k^TQu_k} \]
+We'll choose $x_{k+1} = x_k + \alpha_k^*u_k$.
+Therefore, $x_k = x_0 + \sum_{i=0}^{k-1} \alpha_i^* u_i$.
+
+\section{Proof of convergence}
+
+\begin{theorem}
+\label{thm:ug}
+\[ u_j^T g_k = \begin{cases}0 & \textrm{ if } j < k \\ u_j^Tg_0 & \textrm{ if } j \ge k \end{cases} \]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+g_k &= \grad_f(x_k) = Qx_k - b
+\\ &= Q\left(x_0 + \sum_{i=0}^{k-1} \alpha_i^* u_i\right) - b
+\\ &= (Qx_0 - b) + \sum_{i=0}^{k-1} \alpha_i^* Qu_i
+\\ &= g_0 + \sum_{i=0}^{k-1} \alpha_i^* Qu_i
+\end{align*}
+\begin{align*}
+u_j^Tg_k &= u_j^T\left( g_0 + \sum_{i=0}^{k-1} \alpha_i^* Qu_i \right)
+\\ &= u_j^Tg_0 + \sum_{i=0}^{k-1} \alpha_i^* u_j^TQu_i
+\\ &= u_j^Tg_0 + \sum_{i=0}^{k-1} \alpha_i^*
+    \begin{Bmatrix} u_j^TQu_j & i = j \\ 0 & i\neq j \end{Bmatrix}
+\\ &= u_j^Tg_0 + \begin{Bmatrix} \alpha_j^* u_j^TQu_j & j < k \\ 0 & j \ge k \end{Bmatrix}
+\\ &= u_j^Tg_0 - \begin{Bmatrix} u_j^Tg_j & j < k \\ 0 & j \ge k \end{Bmatrix}
+\end{align*}
+When $j = k$, we get $u_k^Tg_k = u_k^Tg_0$. Therefore,
+\begin{align*}
+u_j^Tg_k &= u_j^Tg_0 - \begin{Bmatrix} u_j^Tg_j & j < k \\ 0 & j \ge k \end{Bmatrix}
+\\ &= u_j^Tg_0 - \begin{Bmatrix} u_j^Tg_0 & j < k \\ 0 & j \ge k \end{Bmatrix}
+\\ &= \begin{Bmatrix} 0 & j < k \\ u_j^Tg_0 & j \ge k \end{Bmatrix}
+\end{align*}
+\end{proof}
+
+Let $B_k = \{x_0 + \sum_{i=0}^{k-1} \beta_i u_i : \beta_i \in \mathbb{R} \}$.
+Since $U$ is a basis of $\mathbb{R}^d$, $B_d = \mathbb{R}^d$.
+Therefore, to prove convergence of this algorithm,
+we'll prove that $\forall k, x_k = \operatorname{argmin}_{x \in B_k} f(x)$.
+
+$x_k = x_0 + \sum_{i=0}^{k-1} \alpha_i^* u_i$.
+Let $\alpha^* = [\alpha_0^*, \ldots, \alpha_{k-1}^*]$.
+Let $h(\beta) = f(x_0 + \sum_{i=0}^{k-1} \beta_i u_i)$.
+Then $\min_{x \in B_k} f(x) = \min_{\beta \in \mathbb{R}^k} h(\beta)$.
+Since $h(\alpha^*) = f(x_k)$, if we prove that
+$\alpha^* = \operatorname{argmin}_{\beta \in \mathbb{R}^k} h(\beta)$,
+then $x_k = \operatorname{argmin}_{x \in B_k} f(x)$.
+
+\begin{theorem} $h(\beta)$ is a convex function. \end{theorem}
+\begin{proof}
+Let $U = [u_0, u_1, \ldots, u_{k-1}]$ be a $d$ by $k$ matrix. Then
+\[ (U\beta)_j = \sum_{i=0}^{k-1} U[j, i] \beta_i
+= \sum_{i=0}^{k-1} (u_i)_j \beta_i = \left( \sum_{i=0}^{k-1} u_i \beta_i \right)_j \]
+\[ \implies h(\beta) = f\left(x_0 + \sum_{i=0}^{k-1} \beta_i u_i \right) = f(x_0 + U\beta) \]
+
+\begin{align*}
+h(\beta) &= f(x_0 + U\beta)
+\\ &= f(x_0) + \grad_f(x_0)^T(U\beta) + \frac{1}{2}(U\beta)^T Q (U\beta) \tag{by Taylor series}
+\\ &= f(x_0) + (\grad_f(x_0)^TU)\beta + \frac{1}{2}\beta^T (U^TQU) \beta
+\end{align*}
+This is a quadratic function in $\beta$.
+It is convex iff $U^TQU$ is positive definite.
+
+By the \href{https://sharmaeklavya2.github.io/theoremdep/nodes/linear-algebra/matrices/stacking/product.html}
+{rules for multiplying stacked matrices}, we get that $(U^TQU)_{i,j} = u_i^TQu_j$.
+Since vectors in $U$ are $Q$-conjugate, $u_i^TQu_j = 0$ when $i \neq j$.
+Therefore, $U^TQU$ is a diagonal matrix.
+Also, $\forall i, u_i^TQu_i > 0$ because $Q$ is positive definite.
+Therefore, all diagonal entries of $U^TQU$ are positive.
+Therefore, $U^TQU$ is positive definite.
+\end{proof}
+
+Since $h(\beta)$ is convex, $\grad_h(\beta) = 0$ is a necessary and sufficient condition for minimum.
+
+For all $j \in [0, k]$
+\[ h(\beta)_j = \frac{\partial f(x_0 + \sum_{i=0}^{k-1} \beta_i u_i)}{\partial \beta_j}
+= u_j^T \grad_f\left(x_0 + \sum_{i=0}^{k-1} \beta_i u_i \right) \]
+\[ h(\alpha^*)_j = u_j^T \grad_f\left(x_0 + \sum_{i=0}^{k-1} \alpha_i^* u_i \right)
+= u_j^T \grad_f(x_k) = u_j^Tg_k = 0 \tag{by theorem \ref{thm:ug}} \]
+
+Therefore, $\alpha^*$ minimizes $h$, so $x_d$ minimizes $f$.
+
+\section{Rate of convergence}
+
+Unlike the previous algorithms, this algorithm:
+\begin{itemize}
+\item Converges exactly (instead of only `approaching' the solution).
+\item Converges very fast -- in exactly $d$ steps.
+\end{itemize}
+
+\section{Choosing \texorpdfstring{$Q$}{Q}-conjugate pairs}
+
+We will find $U$ as follows:
+$u_0 = -g_0$ and $u_{k+1} = -g_{k+1} + \beta_k u_k$.
+We'll choose $\beta_k$ such that $u_k^TQu_{k+1} = 0$.
+\[ 0 = u_k^TQu_{k+1} = -u_k^TQg_{k+1} + \beta_k u_k^TQu_k
+\implies \beta_k = \frac{u_k^TQg_{k+1}}{u_k^TQu_k} \]
+
+\begin{theorem}
+$U$ is $Q$-conjugate.
+\end{theorem}
+\begin{proof}
+Proof can be found in the
+\href{https://www2.isye.gatech.edu/~nemirovs/Lect_OptII.pdf}{
+lecture notes for the course
+`Optimization II - Numerical Methods for Nonlinear Continuous Optimization'}
+by A. Nemirovski, in Theorem 5.4.1, page 95.
+\end{proof}
+
+
+\end{document}
