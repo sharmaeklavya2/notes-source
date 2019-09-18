@@ -21,6 +21,8 @@ ARGS = parser.parse_args(None if __name__ == '__main__' else [])
 
 TRASH_EXTS = ['.aux', '.log', '.out', '.toc', '.bbl', '.blg']
 BIBDB_PATH = 'bibdb.bib'
+HTML_TEMPLATE_PATH = 'template.html'
+CSS_PATH = 'style.css'
 DRYRUN_PROMPT = '$ '
 
 
@@ -48,9 +50,11 @@ def run_check(cmd, **kwargs):
 
 
 global_markdown = None
+global_html_template = None
+global_css = None
 
 
-def get_markdown_instance():
+def get_markdown_and_template():
     global global_markdown
     if global_markdown is None:
         try:
@@ -60,13 +64,23 @@ def get_markdown_instance():
             print('{}: {}'.format(type(e).__name__, str(e)))
             print('WARNING: markdown files will not be processed')
             global_markdown = False
-            return None
         global_markdown = Markdown(extensions=['fenced_code'])
-        return global_markdown
-    elif global_markdown is False:
-        return None
+
+    if global_markdown is False:
+        markdown = None
     else:
-        return global_markdown
+        markdown = global_markdown
+
+    global global_html_template
+    if global_html_template is None:
+        with open(HTML_TEMPLATE_PATH) as fp:
+            global_html_template = fp.read()
+    global global_css
+    if global_css is None:
+        with open(CSS_PATH) as fp:
+            global_css = fp.read().strip()
+
+    return (markdown, global_html_template, global_css)
 
 
 def process_tex_file(ifpath, odpath):
@@ -127,9 +141,14 @@ def process_md_file(ifpath, odpath):
     else:
         print('Building ' + ifpath)
         os.makedirs(odpath, exist_ok=True)
-        markdown = get_markdown_instance()
+        markdown, template, style = get_markdown_and_template()
         if markdown is not None:
-            markdown.convertFile(ifpath, html_path)
+            with open(ifpath) as fp:
+                input = fp.read()
+            body = markdown.convert(input)
+            output = template.format(style=style, body=body)
+            with open(html_path, 'w') as fp:
+                fp.write(output)
 
     return True
 
