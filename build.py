@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Create PDF files for all tex files in src/."""
+"""Build all tex and markdown files in src to PDF and HTML respectively."""
 
 import sys
 import os
@@ -47,6 +47,28 @@ def run_check(cmd, **kwargs):
         return subprocess.check_call(cmd, **kwargs)
 
 
+global_markdown = None
+
+
+def get_markdown_instance():
+    global global_markdown
+    if global_markdown is None:
+        try:
+            from markdown import Markdown
+        except ImportError as e:
+            print('error while importing package markdown:', file=sys.stderr)
+            print('{}: {}'.format(type(e).__name__, str(e)))
+            print('WARNING: markdown files will not be processed')
+            global_markdown = False
+            return None
+        global_markdown = Markdown(extensions=['fenced_code'])
+        return global_markdown
+    elif global_markdown is False:
+        return None
+    else:
+        return global_markdown
+
+
 def process_tex_file(ifpath, odpath):
     """Compile a tex file to a PDF.
 
@@ -64,7 +86,8 @@ def process_tex_file(ifpath, odpath):
         print('Building ' + ifpath)
 
         os.makedirs(odpath, exist_ok=True)
-        pdflatex_args = ['pdflatex', '-interaction=batchmode', '-output-directory=' + odpath, ifpath]
+        pdflatex_args = ['pdflatex', '-interaction=batchmode',
+            '-output-directory=' + odpath, ifpath]
 
         try:
             run_check(pdflatex_args, stdout=subprocess.DEVNULL)
@@ -87,6 +110,42 @@ def process_tex_file(ifpath, odpath):
                 pass
 
     return True
+
+
+def process_md_file(ifpath, odpath):
+    """Compile a markdown file to HTML.
+
+    ifpath: Path to input file.
+    odpath: Path to output directory.
+    """
+
+    name = os.path.splitext(os.path.basename(ifpath))[0]
+    html_path = pjoin(odpath, name + '.html')
+
+    if not (ARGS.force or is_source_updated(ifpath, html_path)):
+        print(' Skipped ' + ifpath)
+    else:
+        print('Building ' + ifpath)
+        os.makedirs(odpath, exist_ok=True)
+        markdown = get_markdown_instance()
+        if markdown is not None:
+            markdown.convertFile(ifpath, html_path)
+
+    return True
+
+
+FUNC_BY_EXT = {
+    '.tex': process_tex_file,
+    '.md': process_md_file,
+}
+
+
+def process_by_ext(ifpath, odpath):
+    ext = os.path.splitext(ifpath)[1]
+    if ext in FUNC_BY_EXT:
+        return FUNC_BY_EXT[ext](ifpath, odpath)
+    else:
+        return True
 
 
 def process_tree(ipath, opath, action, filter=None):
@@ -114,8 +173,7 @@ def process_tree(ipath, opath, action, filter=None):
 
 
 def main():
-    success = process_tree('src', 'output', process_tex_file,
-        (lambda entry: entry.is_dir() or os.path.splitext(entry.name)[1] == '.tex'))
+    success = process_tree('src', 'output', process_by_ext)
     if not success:
         sys.exit(2)
 
