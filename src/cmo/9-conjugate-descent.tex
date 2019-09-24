@@ -167,5 +167,19 @@ lecture notes for the course
 by A. Nemirovski, in Theorem 5.4.1, page 95.
 \end{proof}
 
+\begin{proof}[Proof sketch]
+First induct on $k$ to prove that for all $k$,
+\[ \operatorname{span}(\{g_0, g_1, \ldots, g_k\})
+= \operatorname{span}(\{g_0, Qg_0, \ldots, Q^kg_0\})
+= \operatorname{span}(\{u_0, u_1, \ldots, u_k\}) \]
+This can be done using the facts that $g_{k+1} - g_k = Q(x_{k+1} - x_k) = \alpha_kQu_k$
+and that $v_{k+1} = -g_{k+1} + \beta_k v_k$.
+
+Then induct on $k$ to prove that
+\[ \forall k, \forall i < k, u_k^TQu_i = 0 \]
+To do this, express $v_{k+1}$ as $-g_{k+1} + \beta_k v_k$,
+write $Qv_i$ as a linear combination of $\{v_0, v_1, \ldots, v_{i+1}\}$
+and invoke theorem \ref{thm:ug}.
+\end{proof}
 
 \end{document}
