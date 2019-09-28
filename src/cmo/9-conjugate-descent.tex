@@ -96,7 +96,12 @@ u_j^Tg_k &= u_j^Tg_0 - \begin{Bmatrix} u_j^Tg_j & j < k \\ 0 & j \ge k \end{Bmat
 Let $B_k = \{x_0 + \sum_{i=0}^{k-1} \beta_i u_i : \beta_i \in \mathbb{R} \}$.
 Since $U$ is a basis of $\mathbb{R}^d$, $B_d = \mathbb{R}^d$.
 Therefore, to prove convergence of this algorithm,
-we'll prove that $\forall k, x_k = \operatorname{argmin}_{x \in B_k} f(x)$.
+we'll prove the following theorem.
+
+\begin{theorem}[Expanding subspace theorem]
+\label{thm:exp-subsp}
+$\forall k, x_k = \operatorname{argmin}_{x \in B_k} f(x)$.
+\end{theorem}
 
 $x_k = x_0 + \sum_{i=0}^{k-1} \alpha_i^* u_i$.
 Let $\alpha^* = [\alpha_0^*, \ldots, \alpha_{k-1}^*]$.
@@ -106,7 +111,7 @@ Since $h(\alpha^*) = f(x_k)$, if we prove that
 $\alpha^* = \operatorname{argmin}_{\beta \in \mathbb{R}^k} h(\beta)$,
 then $x_k = \operatorname{argmin}_{x \in B_k} f(x)$.
 
-\begin{theorem} $h(\beta)$ is a convex function. \end{theorem}
+\begin{lemma} $h(\beta)$ is a convex function. \end{lemma}
 \begin{proof}
 Let $U = [u_0, u_1, \ldots, u_{k-1}]$ be a $d$ by $k$ matrix. Then
 \[ (U\beta)_j = \sum_{i=0}^{k-1} U[j, i] \beta_i
@@ -179,7 +184,245 @@ Then induct on $k$ to prove that
 \[ \forall k, \forall i < k, u_k^TQu_i = 0 \]
 To do this, express $v_{k+1}$ as $-g_{k+1} + \beta_k v_k$,
 write $Qv_i$ as a linear combination of $\{v_0, v_1, \ldots, v_{i+1}\}$
-and invoke theorem \ref{thm:ug}.
+and carefully invoke theorem \ref{thm:ug}.
 \end{proof}
+
+\section{Faster convergence for structured eigenvalues}
+
+\newcommand*{\MatPoly}[1]{\textrm{Poly}^{#1}}
+
+When the eigenvalues of $Q$ have certain properties,
+we can guarantee faster convergence.
+
+$B_{k+1} = x_0 + \operatorname{span}(u_0, \ldots, u_k)$.
+Therefore, any vector $x \in B_{k+1}$ can be expressed as $x_0 + \sum_{i=0}^k \gamma_i u_i$.
+Since $\operatorname{span}(u_0, \ldots, u_k) = \operatorname{span}(g_0, \ldots, Q^kg_0)$,
+$x = x_0 + \left(\sum_{i=0}^k \delta_i Q^i\right)g_0$.
+
+Let $\MatPoly{k}$ be the set of univariate polynomials of degree at most $k$
+where the coefficients are from $\mathbb{R}$ and the variable is
+an $n$ by $n$ matrix over $\mathbb{R}$. Therefore,
+\[ x \in B_{k+1} \implies \left( \exists P_k \in \MatPoly{k}, x = x_0 + P_k(Q)g_0 \right) \]
+\begin{align*}
+x - x^* &= (x_0 - x^*) + P_k(Q)g_0
+= (x_0 - x^*) + P_k(Q)Q(x_0 - x^*)
+\\ &= (I + QP_k(Q))(x_0 - x^*)
+\end{align*}
+Define $E(x) = f(x) - f(x^*)$.
+By Taylor series,
+\begin{align*}
+E(x) &= \frac{1}{2} (x-x^*)^TQ(x-x^*)
+\\ &= \frac{1}{2} (x_0 - x^*)^T(I + QP_k(Q))^TQ(I+QP_k(Q))(x_0 - x^*)
+\\ &= \frac{1}{2} (x_0 - x^*)^T Q(I + QP_k(Q))^2 (x_0 - x^*)
+\end{align*}
+
+Let $R = \{e_1, e_2, \ldots, e_d\}$ be the set of orthonormal eigenvectors of $Q$.
+Let $\lambda_1 \ge \lambda_2 \ge \ldots \ge \lambda_d$ be the corresponding eigenvalues.
+Since $R$ forms a basis of $\mathbb{R}^d$, $x_0 - x^*$ can be represented as a linear combination of $R$.
+Let $x_0 - x^* = \sum_{i=1}^d \zeta_i e_i = \zeta_i$.
+
+\begin{lemma}
+$E(x_0) = \frac{1}{2} \sum_{i=1}^d \zeta_i^2 \lambda_i$
+\end{lemma}
+\begin{proof}
+Let $R$ be a matrix whose $i^{\textrm{th}}$ column is $e_i$.
+Since the eigenvectors are orthonormal, $RR^T = R^TR = I$.
+Let $\zeta = [\zeta_1, \ldots, \zeta_d]^T$. Then
+\[ R\zeta = \sum_{i=1}^d \zeta_i e_i = x_0 - x^* \]
+
+Since $Q$ is symmetric, $Q = RDR^T$,
+Where $D$ is a diagonal matrix whose $i^{\textrm{th}}$ entry is $\lambda_i$.
+Therefore,
+\begin{align*}
+2E(x_0) &= (x_0 - x^*)^T Q (x_0 - x^*) = (R\zeta)^T(RDR^T)(R\zeta)
+\\ &= \zeta^T (R^TR) D (R^TR) \zeta = \zeta^T D \zeta = \sum_{i=1}^d \zeta_i^2 \lambda_i
+\end{align*}
+\end{proof}
+
+\begin{lemma}[Homework]
+Let $T$ be a polynomial where $T(X) = X(I + XP_k(X))^2$. Then
+$E(x) = \frac{1}{2} \sum_{i=1}^d \zeta_i^2 T(\lambda_i)$.
+\end{lemma}
+\begin{proof}[Hint]
+Use the fact that for all $j \in \mathbb{N}$,
+$R$ is also the set of eigenvectors of $Q^j$
+and the corresponding eigenvalues are $\lambda_1^j, \ldots, \lambda_d^j$.
+\end{proof}
+
+\begin{lemma}
+For any polynomial $P_k \in \MatPoly{k}$,
+\[ \frac{E(x_{k+1})}{E(x_0)} \le \max_{i=0}^d (1 + \lambda_i P_k(\lambda_i))^2 \]
+\end{lemma}
+\begin{proof}
+\begin{align*}
+E(x_{k+1}) &= \min_{x \in B_{k+1}} E(x)  \tag{Expanding subspace theorem}
+\\ &= \min_{P_k \in \MatPoly{k}} \frac{1}{2} \sum_{i=1}^d \zeta_i^2 \lambda_i(1 + \lambda_iP_k(\lambda_i))^2
+\\ &\le \min_{P_k \in \MatPoly{k}} \frac{1}{2} \sum_{i=1}^d \left(\zeta_i^2 \lambda_i
+    \left(\max_{i=0}^d (1 + \lambda_i P_k(\lambda_i))^2\right)\right)
+\\ &= \min_{P_k \in \MatPoly{k}} \left( \frac{1}{2} \sum_{i=1}^d \zeta_i^2 \lambda_i \right)
+    \left(\max_{i=0}^d (1 + \lambda_i P_k(\lambda_i))^2\right)
+\\ &= E(x_0) \min_{P_k \in \MatPoly{k}} \max_{i=0}^d (1 + \lambda_i P_k(\lambda_i))^2
+\end{align*}
+\end{proof}
+
+Therefore, by cleverly choosing a polynomial, we can prove useful bounds on convergence.
+
+\subsection{\texorpdfstring{$Q$}{Q} has \texorpdfstring{$r$}{r} distinct eigenvalues}
+
+Suppose $Q$ has $r$ distinct eigenvalues $\mu_1 > \mu_2 > \ldots > \mu_r$.
+Let $\overline{P}_r(x) = 1 + x P_{r-1}(x)$.
+
+We'll construct $P_{r-1}$ such that $\overline{P}_r(x) = 0$ for all $1 \le i \le r$.
+This would mean that $\frac{E(x_r)}{E(x_0)} = 0$, so
+the conjugate gradient algorithm will converge in $r$ iterations.
+
+Define $\overline{P}_r$ and $P_{r-1}$ as follows:
+\begin{align*}
+\overline{P}_r(x) &= \prod_{j=1}^r \left( 1 - \frac{x}{\mu_j} \right)
+& P_{r-1}(x) &= \frac{\overline{P}_r(x)-1}{x}
+\end{align*}
+
+\begin{lemma}
+\label{thm:p-is-poly}
+$P_{r-1}$ is a polynomial of degree $r-1$ such that $\forall 0 \le i \le r, \overline{P}_r(\mu_i) = 0$.
+\end{lemma}
+\begin{proof}
+Clearly, $\overline{P}_r(\mu_i) = 0$ for all $i$. Also, the degree of $\overline{P}$ is $r$.
+
+Next, we must prove that $P_{r-1}$ is a polynomial.
+Note that $\overline{P}_r(0) = 1$, so $0$ is a root of $\overline{P}_r(x) - 1$.
+Therefore, $x$ is a factor of $\overline{P}_r(x)-1$
+and hence $P_{r-1}$ is a polynomial.
+
+Since the degree of $\overline{P}_r$ is $r$, the degree of $P_{r-1}$ is $r-1$.
+\end{proof}
+
+\subsection{Theorem for a polynomial}
+
+In this section, we'll prove a theorem for a certain polynomial which we'll use in the next section.
+
+\begin{theorem}
+\label{thm:prod-poly}
+Let $n \ge 2$. Let $0 < a_1 < a_2 < \ldots < a_n$.
+Let $p_1, p_2, \ldots, p_n$ be positive integers and let $p_1 = 1$.
+\begin{align*}
+f(x) &= \prod_{i=1}^n \left( 1 - \frac{x}{a_i} \right)^{p_i} &
+g(x) &= f(x) - 1 + \frac{x}{a_1}
+\end{align*}
+%Let $\eta$ be the leftmost root of $f'(x)$.
+Then
+\begin{enumerate}
+\item \label{thm-part:f-val} $f$ is positive in $(-\infty, a_1)$, negative in $(a_1, a_2)$ and 0 at $a_1$ and $a_2$.
+%\item $\eta \in (a_1, a_2)$.
+%\item \label{thm-part:d-val} $f'$ is negative in $(-\infty, \eta)$ and positive in $(\eta, a_2)$.
+%\item \label{thm-part:d2-val} $f''$ is convex in $(-\infty, \eta]$.
+\item \label{thm-part:g-val} $g(x) \le 0$ for $x \in [0, a_1]$ and $g(x) \ge 0$ for $x \in [a_1, a_2]$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Since $a_1$ and $a_2$ are zeros of $f$, $f(a_1) = f(a_2) = 0$.
+Since $a_1$ is the leftmost zero of $f$,
+$f$ has the same sign in $(-\infty, a_1)$ (by intermediate value theorem).
+Since $f(0) = 1$, $f$ is positive in $(-\infty, a_1)$.
+
+\[ \frac{f'(x)}{f(x)} = \sum_{i=1}^n \frac{p_i}{x - a_i} \]
+Let
+\[ h_1(x) = \prod_{i=1}^n (x - a_i)^{p_i - 1} \]
+Then $h_1(x)$ divides $f'(x)$.
+
+By Rolle's theorem, there must be points $b_1 < b_2 < \ldots < b_{n-1}$
+such that for all $i$, $f'(b_i) = 0$ and $b_i \in (a_i, a_{i+1})$. Let
+\[ h_2(x) = \prod_{i=1}^{n-1} (x - b_i) \]
+So $h_2(x)$ divides $f'(x)$.
+
+Let $N = \sum_{i=1}^n p_i$. Then $\deg(f) = N$. Also
+\[ \deg(h_1 h_2) = \deg(h_1) + \deg(h_2) = (N-n) + (n-1) = N-1 = \deg(f') \]
+Therefore, $f'(x) = \gamma h_1(x) h_2(x)$ for some $\gamma \in \mathbb{R}$.
+
+Since $p_1 = 1$, $b_1$ is the leftmost zero of $f'$
+and it is the only zero in $(-\infty, a_2)$.
+Therefore, $f'(x)$ has the same sign for $x \in (-\infty, b_1)$.
+Since $f(0) = 1$, $f'(0) = - \sum_{i=1}^n \frac{1}{a_i} < 0$.
+Therefore, $f'(x) < 0$ for $x \in (-\infty, b_1)$.
+
+Since $f(a_1) = 0$ and $f'(a_1) < 0$, $f(a_1 + \epsilon) < 0$ for all very small $\epsilon$.
+Also, $f$ has the same sign in $(a_1, a_2)$, otherwise
+it would have a root in $(a_1, a_2)$, which we know is false.
+Therefore, $f(x) < 0$ for $x \in (a_1, a_2)$.
+This completes the proof of part \ref{thm-part:f-val} of this theorem.
+
+Applying Rolle's theorem to $f'(x)$ and by a similar argument (todo: expand this),
+we get that $f''(x)$ must have its leftmost root in $(b_1, a_2)$.
+Therefore, $f''(x)$ has the same sign in $(-\infty, b_1]$.
+\[ \frac{f''(x)}{f(x)} = \left(\sum_{i=1}^n \frac{p_i}{a_i - x}\right)^2
+    - \sum_{i=1}^n \frac{p_i}{(a_i - x)^2} \]
+\[ \implies f''(0) = \left(\sum_{i=1}^n \frac{p_i}{a_i} \right)^2 - \sum_{i=1}^n \frac{p_i}{a_i^2} > 0 \]
+Therefore, $f''(x) > 0$ for $x \in (-\infty, b_1]$.
+
+$f'(b_1) = 0$ and $f''(b_1) > 0$.
+Therefore, $f'(b_1 + \epsilon) > 0$ for all very small $\epsilon$.
+$f'(x)$ has the same sign in $(b_1, a_2)$ because $b_1$ is the only root of $f'(x)$ in $[b_1, a_2)$.
+Therefore, $f'(x) > 0$ for $x \in (b_1, a_2)$.
+
+Since $f$ is convex in $(-\infty, b_1]$, for $\alpha \in [0, 1]$,
+\[ f(\alpha a_1) = f((1-\alpha)0 + \alpha a_1)
+\le (1-\alpha)f(0) + \alpha f(a_1) = (1-\alpha) \]
+Setting $\alpha$ to $x / a_1$, we get that for $x \in [0, a_1]$,
+$f(x) \le 1 - \frac{x}{a_1} \Rightarrow g(x) \le 0$.
+
+$g(0) = g(a_1) = 0$. By Rolle's theorem,
+$\exists x_0 \in (0, a_1), g'(x_0) = 0$.
+Since $g''(x) = f''(x) > 0$ for $x \in (-\infty, b_1]$,
+$g'(x) > 0$ for $x \in (x_0, b_1]$.
+
+$g'(x) = f'(x) + \frac{1}{a_1}$.
+For $x \in (b_1, a_2)$, $f'(x) > 0 \Rightarrow g'(x) > 0$.
+Therefore, $g'(x) > 0$ for $x \in [a_1, b_1)$.
+
+Since $g(a_1) = 0$ and $g'(x) > 0$ for $x \in [a_1, b_1)$,
+$g(x) > 0$ for $x \in (a_1, b_1)$.
+\end{proof}
+
+\subsection{\texorpdfstring{$Q$}{Q} has some clustered eigenvalues}
+
+Suppose $Q$ has eigenvalues $\lambda_1 \ge \lambda_2 \ge \ldots \ge \lambda_d$,
+where for some constants $a$ and $b$,
+\[ 0 < a \le \lambda_d \le \ldots \le \lambda_{r+1} < b < \lambda_r \le \ldots \le \lambda_1 \]
+
+Let $\mu_i = \lambda_i$ for $i$ from 1 to $r$.
+Let $\mu_{r+1} = \frac{a+b}{2}$.
+\begin{align*}
+\overline{P}_{r+1}(x) &= \prod_{j=1}^{r+1} \left( 1 - \frac{x}{\mu_j} \right)
+& P_{r}(x) &= \frac{P_{r+1}(x) - 1}{x}
+& h(x) &= 1 - \frac{x}{\mu_{r+1}}
+\end{align*}
+
+It's easy to prove (similar to lemma \ref{thm:p-is-poly}) that $P_{r}$ is a polynomial and has degree $r$.
+
+Since $\overline{P}_{r+1}$ is of the right form, we can apply theorem \ref{thm:prod-poly}.
+
+By part \ref{thm-part:f-val} of theorem \ref{thm:prod-poly},
+we get that for $x \in [a, \frac{a+b}{2}]$, $\overline{P}_{r+1}(x) \ge 0$.
+By part \ref{thm-part:g-val} of theorem \ref{thm:prod-poly},
+we get that for $x \in [a, \frac{a+b}{2}]$,
+\[ \overline{P}_{r+1}(x) \le h(x) \le h(a) = \frac{b-a}{b+a} \]
+
+By part \ref{thm-part:f-val} of theorem \ref{thm:prod-poly},
+we get that for $x \in [\frac{a+b}{2}, b]$, $\overline{P}_{r+1}(x) \le 0$.
+By part \ref{thm-part:g-val} of theorem \ref{thm:prod-poly},
+we get that for $x \in [\frac{a+b}{2}, b]$,
+\[ \overline{P}_{r+1}(x) \ge h(x) \ge h(b) = - \frac{b-a}{b+a} \]
+
+Therefore, for $x \in [a, b]$, $\left| \overline{P}_{r+1}(x) \right| \le \frac{b-a}{b+a}$.
+Therefore,
+\[ \frac{E(x_{r+1})}{E(x_0)} \le \left( \frac{b-a}{b+a} \right)^2 \]
+
+We can use the above fact to design an algorithm called the `partial conjugate gradient' algorithm.
+In this algorithm, we'll start at the point $z_0$ and run
+the conjugate gradient algorithm for $r+1$ steps to reach the point $z_1$.
+Then we'll rerun the conjugate gradient algorithm for $r+1$ steps from $z_1$ to reach a point $z_2$,
+then we'll rerun the conjugate gradient algorithm for $r+1$ steps from $z_2$ to reach a point $z_3$, and so on.
+We'll do this $l$ times. After $l$ iterations $\frac{E(z_l)}{E(z_0)} = \left( \frac{b-a}{b+a} \right)^{2l}$.
+This will give us linear convergence.
 
 \end{document}
