@@ -1,0 +1,150 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Newton's method}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+By second-order Taylor series, we get
+\[ f(y) = f(x) + \grad_f(x)^T(y-x) + \frac{1}{2}(y-x)^T\hessian_f(x)(y-x) + \|y-x\|^2o(1) \]
+
+In Newton's method, we choose an update rule which minimizes the resulting quadratic function,
+assuming that $\hessian_f(x)$ is positive definite.
+\[ x^{i+1} = x^i - \hessian_f(x^i)^{-1}\grad_f(x^i) \]
+
+\section{Matrix norm}
+
+\begin{definition}[Spectral Norm]
+Let $A$ be a $d$ by $d$ matrix. Then
+\[ \|A\| = \max_{i=1}^d |\lambda_i(A)| \]
+\end{definition}
+
+\begin{theorem}[Homework]
+The spectral norm is a norm (i.e. $\|A\| = 0 \iff A = 0$ and $\|A\| \ge 0$).
+\end{theorem}
+\begin{theorem}[Homework]
+$D(A, B) = \|A-B\| \implies D$ is a distance metric.
+\end{theorem}
+\begin{proof}[Proof hint for triangle inequality]
+Get a \href{https://sharmaeklavya2.github.io/theoremdep/nodes/linear-algebra/eigenvectors/sum.html}
+{bound on eigenvalues of sum of matrices} using the facts that the sum of positive semidefinite matrices
+is also positive semidefinite and that if $(\lambda, v)$ is an eigenpair of a matrix $A$
+then $(\lambda-k, v)$ is an eigenpair of the matrix $A - kI$.
+\end{proof}
+
+\section{Region of positive-definite hessian}
+
+Intuitively, Newton's method would work when the hessian is positive definite.
+Unfortunately, that need not be true for most real problems.
+However, at a local minimum, the hessian is guaranteed to be positive semidefinite.
+We hope that, due to $f$ being in $C^2$, hessian would be positive semidefinite or definite
+\emph{near} the local minimum too.
+
+Therefore, if we somehow reach close to a local minimum, we can start using Newton's method.
+We'll now try to quantify how close do we need to get.
+
+\begin{definition}
+Let $\lambda(A)$ denote the set of eigenvalues of matrix $A$.
+\end{definition}
+\begin{definition}
+For matrices $A$ and $B$, $A \le B$ iff $A-B$ is positive semidefinite.
+For matrices $A$ and $B$, $A < B$ iff $A-B$ is positive definite.
+Similarly define $\ge$ and $>$.
+\end{definition}
+\begin{theorem}[Transitivity of $\le$ (Homework)]
+$A \le B \wedge B \le C \implies A \le C$
+\end{theorem}
+\begin{definition}
+\[ f \in C^2_M \iff (\forall x, y \in \mathbb{R}^d, \| \hessian_f(y) - \hessian_f(x) \| \le M \|y - x\|) \]
+\end{definition}
+\begin{theorem}[Homework]
+\[ f \in C^2_M \implies (\forall x, y \in \mathbb{R}^d,
+\hessian_f(x) - MrI \le \hessian_f(y) \le \hessian_f(x) + MrI) \]
+where $r = \|y-x\|$.
+\end{theorem}
+
+\begin{theorem}
+Let $\hessian_f(x^*) \ge aI$, where $a > 0$.
+Then $r = \|x - x^*\| < \frac{a}{M} \implies \hessian_f(x)$ is positive definite.
+\end{theorem}
+\begin{proof}
+\[ r < \frac{a}{M} \implies 0 < (a - Mr)I \le \hessian_f(x^*) - MrI \]
+\[ f \in C^2_M \implies \hessian_f(x) \ge \hessian_f(x^*) - MrI > 0 \]
+\end{proof}
+
+We now have a region where $\hessian_f(x)$ is known to be positive definite.
+However, this is still not suitable for Newton's method,
+since the point in the next iteration may fall outside this region.
+We therefore impose another condition, that distance from $x^*$ should reduce.
+
+\section{Newton's region and convergence}
+
+\begin{lemma}[Proof omitted (beyond the scope of course?)] \label{thm:hessian-integral}
+$\forall x, y \in \mathbb{R}^d$,
+\[ \grad_f(y) - \grad_f(x) = \int_0^1 \hessian_f(x + \alpha(y-x)) (y-x) d\alpha \]
+\end{lemma}
+
+\begin{lemma} \label{thm:norm-mix}
+Let $A$ be a symmetric matrix and $u$ be a vector. Then $\|Au\| \le \|A\|\|u\|$.
+\end{lemma}
+\begin{proof}
+\[ \frac{\|Au\|^2}{\|u\|^2} = \frac{u^TA^2u}{\|u\|^2} \in [0, \|A\|^2]
+\implies \frac{\|Au\|}{\|u\|} \le \|A\| \]
+\end{proof}
+
+\begin{theorem}
+Let $\hessian_f(x^*) \ge a$, where $a > 0$.
+Let $r_k = \|x^k - x^*\|$.
+Then $r_k < \frac{2a}{3M} \implies r_{k+1} < r_k$.
+\end{theorem}
+\begin{proof}
+By theorem \ref{thm:hessian-integral}, we get
+\[ \grad_f(x^k) = \int_0^1 \hessian_f(x^* + \alpha(x^k - x^*))(x^k - x^*)d\alpha \]
+\begin{align*}
+x^{k+1} - x^* &= (x^k - x^*) - \hessian_f^{-1}(x^k) \grad_f(x^k)
+\\ &= \hessian_f^{-1}(x^k)(\hessian_f(x^k)(x^k - x^*) - \grad_f(x^k))
+\\ &= \hessian_f^{-1}(x^k)\int_0^1 \left(\hessian_f(x^k)
+- \hessian_f(x^k + \alpha(x^k - x^*))\right)(x^k - x^*)d\alpha
+\end{align*}
+\begin{align*}
+r_{k+1} &= \norm{\hessian_f^{-1}(x^k)\int_0^1 \left(\hessian_f(x^k)
+- \hessian_f(x^k + \alpha(x^k - x^*))\right)(x^k - x^*)d\alpha}
+\\ &\le \norm{\hessian_f^{-1}(x^k)}\norm{\int_0^1 \left(\hessian_f(x^k)
+- \hessian_f(x^k + \alpha(x^k - x^*))\right)(x^k - x^*)d\alpha} \tag{by lemma \ref{thm:norm-mix}}
+\\ &\le \norm{\hessian_f^{-1}(x^k)}\int_0^1 \norm{\left(\hessian_f(x^k)
+- \hessian_f(x^k + \alpha(x^k - x^*))\right)(x^k - x^*)}d\alpha \tag{by triangle inequality}
+\\ &\le \norm{\hessian_f^{-1}(x^k)}\int_0^1 \norm{\hessian_f(x^k)
+- \hessian_f(x^k + \alpha(x^k - x^*))}\norm{x^k - x^*}d\alpha \tag{by lemma \ref{thm:norm-mix}}
+\\ &\le \norm{\hessian_f^{-1}(x^k)}\int_0^1 (M\norm{(1-\alpha)(x^k - x^*)})\norm{x^k - x^*}d\alpha
+\tag{$f \in C^2_M$}
+\\ &= \norm{\hessian_f^{-1}(x^k)}\left(\frac{Mr_k^2}{2}\right)
+\end{align*}
+\[ \hessian_f(x^k) \ge (a-Mr_k)I
+\implies \hessian_f^{-1}(x^k) \le \frac{1}{a-Mr_k}I
+\implies \norm{\hessian_f^{-1}(x^k)} \le \frac{1}{a-Mr_k} \]
+\[ \implies r_{k+1} \le \frac{Mr_k^2}{2(a-Mr_k)} \]
+\[ \frac{Mr_k}{2(a-Mr_k)} < 1 \iff r_k < \frac{2a}{3M} \]
+Therefore,
+\[ r_k \le \frac{2a}{3M} \implies \frac{r_{k+1}}{r_k} \le \frac{Mr_k}{2(a-Mr_k)} < 1 \implies r_{k+1} < r_k \]
+\end{proof}
+
+The $\frac{2a}{3M}$-neighborhood of $x^*$ is called the Newton region.
+In this region, Newton's method will always be applicable.
+Furthermore,
+\[ r_k < \frac{2a}{3M}
+\implies \frac{a}{M} - r_k > \frac{a}{3M}
+\implies r_{k+1} = \frac{r_k^2}{2(\frac{a}{M}-r_k)} < \frac{3M}{2a} r_k^2 \]
+which shows that Newton's method gives us quadratic convergence.
+
+\section{Quadratic function}
+
+Let $f(x) = \frac{1}{2}x^TQx - b^Tx$, where $Q$ is symmetric and positive definite.
+$\grad_f(x) = Qx - b = Q(x - x^*)$.
+\[ x_1 = x_0 - \hessian_f(x_0)^{-1}\grad_f(x_0)
+= x_0 - Q^{-1}Q(x - x^*) = x^* \]
+Therefore, Newton's method converges to the minimum in a single iteration.
+
+\end{document}

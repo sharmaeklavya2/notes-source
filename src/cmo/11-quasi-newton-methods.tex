@@ -1,0 +1,303 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Quasi-Newton Methods}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\tableofcontents
+
+\section{Quasi-Newton method template}
+
+Newton's method's update rule:
+\[ x_{k+1} = x_k - \hessian_f^{-1}(x_k)\grad_f(x_k) \]
+This method is not useful, because it requires inverting the hessian,
+which can be prohibitively computationally expensive for high-dimensional data.
+
+We will therefore try to model the change in the hessian's inverse,
+and approximate the hessian's inverse instead of calculating it exactly.
+
+Let $g_k = \grad_f(x_k)$, $\delta_k = x_{k+1} - x_k$ and $\gamma_k = g_{k+1} - g_k$.
+\[ \grad_f(x_{k+1}) \approx \grad_f(x_k) + \hessian_f(x_k)(x_{k+1} - x_k)
+\tag{by differentiating Taylor series} \]
+\[ \implies \delta_k \approx \hessian_f^{-1}(x_k)\gamma_k \]
+
+This inspires us to use an update rule of this form:
+\[ x_{k+1} = x_k - A_kg_k \]
+and apply the following constraint on $A_k$:
+\begin{equation} \label{eqn:qn-cond} \delta_k = A_{k+1}\gamma_k \end{equation}
+This constraint is called the `Quasi-Newton condition'.
+
+Also, we must ensure that $A_k$ is symmetric and positive (semi)definite.
+
+Note that the Quasi-Newton condition is $d$ equations,
+whereas there are $d^2$ entries in $A_k$.
+We therefore have a lot of slack in terms of how to update $A_k$.
+
+In all Quasi-Newton methods described next, we choose $A_0$
+as any matrix which is symmetric and positive (semi)definite.
+Generally, the identity matrix is used.
+Then we use $A_k$, $\delta_k$ and $\gamma_k$ to obtain $A_{k+1}$ via an update rule,
+like `rank-1 update', `rank-2 update' or `BFGS'.
+
+\section{Rank-1 update}
+
+Here we impose a condition of the form $A_{k+1} = A_k + cuu^T$,
+where $c \in \mathbb{R}$ and $u \in \mathbb{R}^d$
+(Note that $\operatorname{rank}(uu^T) = 1$).
+
+It's easy to see that $A_{k+1}$ is symmetric for all $c$
+and positive definite for $c \ge 0$.
+
+To get concrete values of $c$ and $u$,
+we'll plug the rank-1 update condition into the Quasi-Newton condition (\ref{eqn:qn-cond}).
+\[ \delta_k = (A_k + cuu^T)\gamma_k \implies (cu^T\gamma_k)u = \delta_k - A_k\gamma_k \]
+Therefore, $u$ is parallel to $\delta_k - A_k\gamma_k$. Let $u = \delta_k - A_k\gamma_k$.
+Then
+\[ u = (cu^T\gamma_k)u \implies cu^T\gamma_k = 1
+\implies c = \frac{1}{u^T\gamma_k} = \frac{1}{\delta_k^T\gamma_k - \gamma_k^TA_k\gamma_k} \]
+
+With these specific values of $u$ and $c$,
+the rank-1 update condition will satisfy all required conditions
+(symmetry, positive definiteness and Quasi-Newton condition) if $c \ge 0$.
+
+Unfortunately, it has not yet been proved or disproved whether $c \ge 0$.
+
+\subsection{Analysis for quadratic function}
+
+Let $f(x) = \frac{1}{2}x^TQx - b^Tx$, where $Q$ is symmetric and positive definite.
+Then $\grad_f(x) = Qx - b \implies \gamma_k = Q\delta_k$.
+
+\begin{lemma} \label{thm:rank-1:ind}
+\[ \forall i \in [0, k], A_{k+1}\gamma_i = \delta_i \]
+\end{lemma}
+\begin{proof}[Proof by induction on $k$]
+\[ P(l): \forall i \in [0, l-1], A_l\gamma_i = \delta_i \]
+We have to prove $P(l)$ for all $l \ge 1$.
+
+\textbf{Base case}:
+Since $A_1$ was constructed to follow the Quasi-Newton condition,
+$\delta_0 = A_1\gamma_0 \implies P(1)$.
+
+\textbf{Inductive step}:
+Assume $P(l)$ is true. We'll prove $P(l+1)$.
+
+Let $i \in [0, l-1]$.
+\begin{align*}
+A_{l+1}\gamma_i &= \left( A_l + \frac{uu^T}{u^T\gamma_l} \right)\gamma_i
+\tag{here $u = \delta_l - A_l\gamma_l$}
+\\ &= \delta_i + \frac{u^T\gamma_i}{u^T\gamma_l}u
+\tag{$A_l\gamma_i = \delta_i$ by induction hypothesis}
+\end{align*}
+\begin{align*}
+u^T\gamma_i &= (\delta_l - A_l\gamma_l)^T\gamma_i
+\\ &= \delta_l^T\gamma_i - \gamma_l^TA_l\gamma_i
+\\ &= \delta_l^T\gamma_i - \gamma_l^T\delta_i \tag{by induction hypothesis}
+\\ &= \delta_l^TQ\delta_i - \delta_l^TQ\delta_i \tag{$\forall j, \gamma_j = Q\delta_j$}
+\\ &= 0
+\end{align*}
+Therefore, $A_{l+1}\gamma_i = \delta_i$ for all $i \in [0, l-1]$.
+Since $A_{l+1}$ was constructed to follow the Quasi-Newton condition,
+$A_{l+1}\gamma_l = \delta_l$. Therefore, $P(l+1)$ holds true.
+\end{proof}
+
+\begin{lemma}
+If all $\delta_i$ were orthonormal, then $A_d = Q^{-1}$.
+\end{lemma}
+\begin{proof}
+By lemma \ref{thm:rank-1:ind},
+\[ \forall i \in [0, d-1], \delta_i = A_d\gamma_i = A_dQ\delta_i \]
+Therefore, $(1, \delta_i)$ is an eigenpair for $A_dQ$.
+
+Let $P$ be the matrix whose $i^{\textrm{th}}$ columns is $\delta_i$.
+$P$ exists because real symmetric matrices are orthogonally diagonalizable
+and $A_dQ$ is real and symmetric.
+Then $A_dQ = PIP^T = I \implies A_d = Q^{-1}$.
+\end{proof}
+
+\begin{lemma} \label{thm:delta-linindep-convergence}
+If all $\delta_i$ are linearly independent, then $A_d = Q^{-1}$.
+\end{lemma}
+\begin{proof}
+Let $\Delta = \{\delta_0, \ldots, \delta_{d-1}\}$.
+Since $\Delta \subseteq \mathbb{R}^d$,
+$|\Delta| = d = \dim(\mathbb{R}^d)$
+and $\Delta$ is linearly independent, $\Delta$ is a basis of $\mathbb{R}^d$.
+
+Let $x \in \mathbb{R}^d$. Let $x = \sum_{i=0}^{d-1} c_i\delta_i$. Then
+\[ A_dQx
+= \sum_{i=0}^{d-1} A_dQ(c_i\delta_i)
+= \sum_{i=0}^{d-1} c_i(A_d\gamma_i)
+= \sum_{i=0}^{d-1} c_i\delta_i
+= x \]
+Therefore, $\forall x \in \mathbb{R}^d, (A_dQ)x = x$, so $A_dQ = I$.
+
+Note that the proof is not specific to rank-1 updates.
+Its correctness relies only on the Quasi-Newton condition and $f$ being quadratic.
+\end{proof}
+
+Since $A_d = Q^{-1}$, the $(d+1)^{\textrm{th}}$ iteration
+would be identical to Newton's method.
+So the rank-1 update method will converge to the minimum in at most $d+1$ iterations.
+
+\subsection{Unresolved questions}
+
+\begin{itemize}
+\item $A_k$ is positive definite when $c \ge 0$. Is $c \ge 0$?
+\item Is $\{\delta_0, \delta_1, \ldots\}$ linearly independent?
+\end{itemize}
+
+\section{Rank-2 update}
+
+\[ A_{k+1} = A_k + cuu^T + bvv^T \]
+It's easy to see that $A_{k+1}$ is symmetric iff $A_k$ is symmetric.
+
+By Quasi-Newton condition, we get
+\[ \delta_k = A_{k+1}\gamma_k
+\implies (cu^T\gamma_k)u + (bv^T\gamma_k)v = \delta_k - A_k\gamma_k \]
+Let $u = \delta_k$ and $v = A_k\gamma_k$. Then
+\begin{align*}
+c &= \frac{1}{u^T\gamma_k} = \frac{1}{\delta_k^T\gamma_k}
+& b &= \frac{-1}{v^T\gamma_k} = \frac{-1}{\gamma_k^TA_k\gamma_k}
+\end{align*}
+\[ A_{k+1} = A_k + \frac{\delta_k\delta_k^T}{\delta_k^T\gamma_k}
+- \frac{A_k\gamma_k\gamma_k^TA_k}{\gamma_k^TA_k\gamma_k} \]
+
+\subsection{Analysis for quadratic function}
+
+Let $f(x) = \frac{1}{2}x^TQx - b^Tx$. Then $\gamma_k = Q\delta_k$.
+
+\begin{lemma}[Symmetric square root of a matrix]
+If $A$ is a symmetric and positive definite matrix,
+then $\exists L$ such that $A = L^2$ and $L$ is symmetric, positive semidefinite and invertible.
+\end{lemma}
+\begin{proof}
+Since $A$ is real and symmetric, it is orthogonally diagonalizable.
+So there is a matrix $P$ and a diagonal matrix $D$ such that $A = PDP^T$ and $PP^T = P^TP = I$.
+Since $A$ is positive definite, all diagonal entries of $D$ are positive.
+Therefore, $\sqrt{D}$ exists.
+Also, all entries of $\sqrt{D}$ are positive, so $\sqrt{D}^{-1}$ exists.
+Let $L = P\sqrt{D}P^T$. Then $L$ is symmetric and $L^2 = A$.
+\[ u^TL^u = u^T(P\sqrt{D}P^T)u = (P^Tu)^T\sqrt{D}(P^Tu) \ge 0 \]
+Therefore, $L$ is also positive semidefinite. Also,
+\[ L(P\sqrt{D}^{-1}P^T) = P\sqrt{D}P^TP\sqrt{D}^{-1}P^T = I \]
+Therefore, $L^{-1} = P\sqrt{D}^{-1}P^T$.
+\end{proof}
+
+\begin{theorem} \label{thm:rank-2:pd}
+Let $A_k$ be symmetric and positive definite.
+Then $A_{k+1}$ is positive definite.
+\end{theorem}
+\begin{proof}
+\begin{equation} \label{eqn:c-pos}
+c = \frac{1}{\delta_k^T\gamma_k} = \frac{1}{\delta_k^TQ\delta_k} > 0
+\end{equation}
+We'll now prove that $A_{k+1} - cuu^T$ is positive semidefinite.
+Let $w \in \mathbb{R}^d - \{0\}$.
+\begin{align*}
+& w^T(A_{k+1} - cuu^T)w
+\\ &= w^T(A_k + bvv^T)w
+\\ &= w^TA_kw - \frac{(w^TA_k\gamma_k)^2}{\gamma_k^TA_k\gamma_k}
+\end{align*}
+Since $A_k$ is symmetric and positive definite, it has a symmetric and invertible square root $L$.
+\begin{align*}
+& w^T(A_{k+1} - cuu^T)w
+\\ &= w^TL^TLw - \frac{(w^TL^TL\gamma_k)^2}{\gamma_k^TL^TL\gamma_k}
+\\ &= \|Lw\|^2 - \frac{((Lw)^T(L\gamma_k))^2}{\|L\gamma_k\|^2}
+\\ &\ge 0 \tag{by Cauchy-Schwarz inequality}
+\end{align*}
+Therefore, $A_{k+1} - cuu^T$ is positive semidefinite.
+Since $cuu^T$ is also positive semidefinite, $A_{k+1}$ is also positive semidefinite.
+
+The Cauchy-Schwarz inequality is tight iff the vectors are parallel or anti-parallel.
+Therefore, $A_{k+1} - cuu^T = 0 \iff Lw = \alpha L\gamma_k$ for some $\alpha \in \mathbb{R}$.
+Since $L$ is invertible, this is equivalent to $w = \alpha \gamma_k$.
+
+Assume $A_{k+1}$ is not positive definite.
+$\exists w \in \mathbb{R}^d - \{0\}, w^TA_{k+1}w = 0$.
+\begin{align*}
+& w^TA_{k+1}w = 0
+\\ &\implies w^T(A_{k+1} - cuu^T)w + w^T(cuu^T)w = 0
+\\ &\implies w^T(A_{k+1} - cuu^T)w = 0 \wedge w^T(cuu^T)w = 0
+\\ &\implies (\alpha \gamma_k)^T(cuu^T)(\alpha \gamma_k) = 0
+\\ &\implies c\alpha^2 (\gamma_k^T\delta_k)^2 = 0 \tag{$u = \delta_k$}
+\\ &\implies \alpha^2 (\delta_k^TQ\delta_k) = 0 \tag{$\gamma_k = Q\delta_k$ and \ref{eqn:c-pos}}
+\end{align*}
+This is not possible because
+$\delta_k^TQ\delta_k > 0$ (because $Q$ is positive definite)
+and $\alpha \neq 0$ (because $w \neq 0$).
+Therefore, we have a contradiction.
+Therefore, $A_{k+1}$ is positive definite.
+\end{proof}
+
+\begin{lemma}[Proof omitted (probably beyond scope of course)] \label{thm:rank-2:ind}
+\[ \forall k \ge 1, \forall i \in [0, k-1], A_k\gamma_i = \delta_i \wedge \delta_k^TQ\delta_i = 0 \]
+\end{lemma}
+
+Let $\Delta = \{\delta_0, \delta_1, \ldots\}$.
+Lemma \ref{thm:rank-2:ind} states that $\Delta$ is $Q$-conjugate.
+This implies that $\Delta$ is linearly independent.
+By lemma \ref{thm:delta-linindep-convergence},
+we get that rank-2 updates converge to minimum in $d+1$ iterations.
+
+\section{BFGS}
+
+Instead of modeling the change in hessian's inverse,
+we'll now model the change in the hessian.
+But we need to do it in a way such that the change in the inverse is also easy to compute.
+
+Let $B_k$ be an approximation to the hessian and $A_k$ be an approximation to the inverse of the hessian.
+Then $\gamma_k = B_{k+1}\delta_k$ and $\delta_k = A_{k+1}\gamma_k$.
+
+We'll chose the update rule as
+\[ B_{k+1} = B_k + cuu^T + bvv^T \]
+This will make sure that $B_k$ is symmetric implies $B_{k+1}$ is symmetric.
+
+Applying the Quasi-Newton condition, we get
+\[ \gamma_k = B_{k+1}\delta_k
+\implies \gamma_k - B_k\delta_k = (cu^T\delta_k)u + (bv^T\delta_k)v \]
+Let $u = \gamma_k$ and $v = B_k\delta_k$.
+\begin{align*} c &= \frac{1}{u^T\delta_k} = \frac{1}{\gamma_k^T\delta_k}
+& d &= \frac{-1}{v^T\delta_k} = \frac{-1}{\delta_k^TB_k\delta_k} \end{align*}
+\[ B_{k+1} = B_k + \frac{\gamma_k^T\gamma_k}{\gamma_k^T\delta_k}
+- \frac{B_k\delta_k\delta_k^TB_k}{\delta_k^TB_k\delta_k} \]
+
+Similar to theorem \ref{thm:rank-2:pd}, we can prove that
+$B_{k+1}$ is positive definite for quadratic functions.
+This implies that $A_{k+1}$ is also symmetric and positive definite
+for quadratic functions.
+
+To invert $B_{k+1}$, we'll use the Sherman-Morrison formula.
+
+\begin{theorem}[Sherman-Morrison formula]
+Let $A$ be an invertible matrix. Then $A + uv^T$ is invertible iff $1 + v^TA^{-1}u \neq 0$. Also,
+\[ (A + uv^T)^{-1} = A^{-1} - \frac{A^{-1}uv^TA^{-1}}{1 + v^TA^{-1}u} \]
+\end{theorem}
+
+Applying the formula twice, we get
+\[ A_{k+1} = A_k + \frac{\delta_k\delta_k^T}{\delta_k^T\gamma_k}
+\left( 1 + \frac{\gamma_k^TA_k\gamma_k}{\delta_k^T\gamma_k} \right)
+- \frac{A_k\gamma_k\delta_k^T +  \delta_k\gamma_k^TA_k}{\delta_k^T\gamma_k} \]
+
+\section{Broyden Family}
+
+Let's explore this update rule:
+\[ A_{k+1} = A_k + a\frac{\delta_k\delta_k^T}{\delta^T\gamma_k}
++ c\frac{A_k\gamma_k\gamma_k^TA_k}{\gamma_k^TA\gamma_k}
+- b\frac{A_k\gamma_k\delta_k^T + \delta_k\gamma_k^TA_k}{\delta_k^T\gamma_k} \]
+Applying the Quasi-Newton condition, we get
+\[ \delta_k - A_k\gamma_k
+= \left(a - b\frac{\gamma_k^TA_k\gamma_k}{\delta_k^T\gamma_k}\right)\delta_k + (c - b)A_k\gamma_k \]
+Equating coefficients of $\delta_k$ and $\gamma_k$, we get
+\begin{align*} a &= 1 + b\frac{\gamma_k^TA_k\gamma_k}{\delta_k^T\gamma_k} & c &= b-1 \end{align*}
+On rearranging, we get
+\[ A_{k+1} = \left( A_k + \frac{\delta_k\delta_k^T}{\delta_k^T\gamma_k}
+- \frac{A_k\gamma_k\gamma_k^TA_k}{\gamma_k^TA_k\gamma_k} \right)
++ b(\gamma_k^TA_k\gamma_k)w_kw_k^T\]
+where
+\[ w = \frac{\delta_k}{\delta_k^T\gamma_k} - \frac{A_k\gamma_k}{\gamma_k^TA_k\gamma_k} \]
+
+\end{document}
