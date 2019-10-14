@@ -1,5 +1,7 @@
 \input{header.tex}
 \input{src/cmo/common.texlib}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \title{CMO: Conjugate Descent}
 
@@ -160,6 +162,29 @@ $u_0 = -g_0$ and $u_{k+1} = -g_{k+1} + \beta_k u_k$.
 We'll choose $\beta_k$ such that $u_k^TQu_{k+1} = 0$.
 \[ 0 = u_k^TQu_{k+1} = -u_k^TQg_{k+1} + \beta_k u_k^TQu_k
 \implies \beta_k = \frac{u_k^TQg_{k+1}}{u_k^TQu_k} \]
+
+\begin{algorithm}[H]
+\caption{$\operatorname{CGA}(x_0)$: Conjugate Gradient Algorithm for
+$f(x) = \frac{1}{2}x^TQx - b^Tx$. Takes starting point as input.}
+\label{alg:conj-grad-for-quadratic}
+\begin{algorithmic}[1]
+\State $g_0 = Qx_0 - b$
+\If{$g_0 \texttt{ == } 0$}
+    \State \Return $x_0$
+\EndIf
+\State $u_0 = -g_0$
+\For{$i \in [0, \infty)$}
+    \State $\displaystyle \alpha_i = \frac{-g_i^Tu_i}{u_i^TQu_i}$
+    \State $x_{i+1} = x_i + \alpha_iu_i$
+    \State $g_{i+1} = Qx_{i+1} - b$
+    \If{$g_{i+1} \texttt{ == } 0$}
+        \State \Return $x_{i+1}$
+    \EndIf
+    \State $\displaystyle \beta_i = \frac{u_i^TQg_{i+1}}{u_i^TQu_i}$
+    \State $u_{i+1} = -g_{i+1} + \beta_iu_i$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
 
 \begin{theorem}
 $U$ is $Q$-conjugate.
