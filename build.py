@@ -59,12 +59,12 @@ def get_markdown_and_template():
     if global_markdown is None:
         try:
             from markdown import Markdown
+            global_markdown = Markdown(extensions=['fenced_code'])
         except ImportError as e:
             print('error while importing package markdown:', file=sys.stderr)
             print('{}: {}'.format(type(e).__name__, str(e)))
             print('WARNING: markdown files will not be processed')
             global_markdown = False
-        global_markdown = Markdown(extensions=['fenced_code'])
 
     if global_markdown is False:
         markdown = None
