@@ -95,6 +95,19 @@ u_j^Tg_k &= u_j^Tg_0 - \begin{Bmatrix} u_j^Tg_j & j < k \\ 0 & j \ge k \end{Bmat
 \end{align*}
 \end{proof}
 
+\begin{corollary}
+$g_d = 0$. This means that the conjugate descent algorithm converges in $d$ iterations.
+\end{corollary}
+\begin{proof}
+By the previous theorem (\ref{thm:ug}), $\forall 0 \le j \le d-1, u_j^Tg_d = 0$.
+Since $U = \{u_0, u_1, \ldots, u_{d-1}\}$ forms a basis of $\mathbb{R}^d$,
+we get that $\forall x \in \mathbb{R}^d, x^Tg_d = 0$.
+Therefore, $g_d^Tg_d = 0 \implies g_d = 0$.
+\end{proof}
+
+We'll now look at an alternative way of proving convergence
+which will give us more insight.
+
 Let $B_k = \{x_0 + \sum_{i=0}^{k-1} \beta_i u_i : \beta_i \in \mathbb{R} \}$.
 Since $U$ is a basis of $\mathbb{R}^d$, $B_d = \mathbb{R}^d$.
 Therefore, to prove convergence of this algorithm,
