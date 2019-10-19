@@ -299,5 +299,16 @@ On rearranging, we get
 + b(\gamma_k^TA_k\gamma_k)w_kw_k^T\]
 where
 \[ w = \frac{\delta_k}{\delta_k^T\gamma_k} - \frac{A_k\gamma_k}{\gamma_k^TA_k\gamma_k} \]
+This update rule is called the Broyden Family.
+Note that the first term is the same as the rank-2 update.
+
+Define the following 2 functions:
+\[ \operatorname{rank-2}(A, \delta, \gamma) = A + \frac{\delta\delta^T}{\delta^T\gamma}
+- \frac{A\gamma\gamma^TA}{\gamma^TA\gamma} \]
+\[ \operatorname{bfgs}(A, \delta, \gamma) = A + \frac{\delta\delta^T}{\delta^T\gamma}
+\left( 1 + \frac{\gamma^TA\gamma}{\delta^T\gamma} \right)
+- \frac{A\gamma\delta^T + \delta\gamma^TA}{\delta^T\gamma} \]
+The Broyden family can also be rewritten as
+\[ A_{k+1} = (1-b)\operatorname{rank-2}(A_k, \delta_k, \gamma_k) + b\operatorname{bfgs}(A_k, \delta_k, \gamma_k) \]
 
 \end{document}
