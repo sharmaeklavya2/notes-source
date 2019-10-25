@@ -1,0 +1,172 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Constrained Optimization}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+In constrained optimization, we have to find
+\[ x^* = \argmin_{x \in C} f(x) \]
+where $C \in \mathbb{R}^d$ is a closed set.
+$C$ is called the feasible region.
+We say that $x$ is feasible iff $x \in C$.
+
+The methods which we developed for unconstrained optimization
+often don't work for constrained optimization because properties
+of optimal solutions are different here.
+For example, if $x^*$ is an unconstrained minimum of $f$,
+then $\grad_f(x^*) = 0$. This doesn't hold for constrained minima.
+$\min_{x \in [1, 2]} x^2$ is an example.
+
+We'll consider several special cases of constrained optimization.
+
+\newcommand{\FS}{\operatorname{FS}}
+\newcommand{\LFS}{\operatorname{LFS}}
+\newcommand{\DS}{\operatorname{DS}}
+
+\tableofcontents
+
+\section{Introduction}
+
+\begin{definition}[Feasible directions]
+$u \in \mathbb{R}^d$ is feasible direction at $x \in C$ iff
+\[ \exists \overline{\alpha} > 0, \forall \alpha \in [0, \overline{\alpha}], x + \alpha u \in C \]
+The set of feasible directions at $x$ is denoted by $\FS(x)$.
+\end{definition}
+
+\begin{theorem} \label{thm:locmin-implies-nofs}
+If $x$ is a local minimum of $f$, then there is no feasible descent direction.
+Formally,
+\[ \forall u \in \FS(x), \grad_f(x)^Tu \ge 0 \]
+\end{theorem}
+\begin{proof}[Proof Sketch]
+If there is a feasible descent direction $u$ at $x$,
+then for any arbitrarily small $\alpha$, we can decrease $f$
+by moving $\alpha$ distance towards $u$.
+So $f$ is not a local minimum.
+\end{proof}
+
+Note that the converse need not be true.
+Let $x$ be a saddle point of $f$ and let there be no constraints.
+Then every direction is not a descent direction (and not an ascent direction)
+but $x$ is not a local minimum.
+
+\section{Projection onto a convex set}
+
+\begin{theorem} \label{thm:convex-fs}
+Let $C$ be a convex set. Let $x^* = \argmin_{x \in C} f(x)$. Then
+\[ \forall x \in C, x-x^* \in \FS(x^*) \]
+\end{theorem}
+
+In this section, we'll now fix the objective function to be $f(x) = \frac{1}{2}\|x-z\|^2$
+and consider the feasible region $C$ to be convex. Also, assume that $z \not\in C$.
+
+\begin{definition}[Projection]
+Let $x^* = \argmin_{x \in C} f(x)$.
+Then $x^*$ is called the projection of $z$ onto $C$.
+\end{definition}
+
+\begin{theorem} \label{thm:proj-cond}
+\[ x^* = \argmin_{x \in C} f(x) \iff (\forall x \in C, (x^*-z)^T(x-x^*) \ge 0) \]
+\end{theorem}
+\begin{proof}
+Let $x^* = \argmin_{x \in C}$.
+By theorem \ref{thm:convex-fs}, we get that
+\[ \forall x \in C, x-x^* \in \FS(x^*) \]
+By theorem \ref{thm:locmin-implies-nofs}, we get that
+\begin{align*}
+& \forall x \in C, \grad_f(x^*)^T(x-x^*) \ge 0
+\\ &\implies \forall x \in C, (x^*-z)^T(x-x^*) \ge 0
+\end{align*}
+
+Now assume that $\forall x \in C, (x^*-z)^T(x-x^*) \ge 0$.
+\begin{align*}
+f(x) &= \frac{1}{2} \|(x-x^*)+(x^*-z)\|^2
+\\ &= \frac{1}{2} \|x-x^*\|^2 + \frac{1}{2} \|x^*-z\|^2 + (x^*-z)^T(x-x^*)
+\\ &\ge f(x^*)
+\end{align*}
+Therefore, $x^* = \argmin_{x \in C} f(x)$.
+\end{proof}
+
+\begin{theorem}
+There is a half-space which separates $C$ and $z$. Formally,
+\[ \forall x \in C, w^Tx > w^Tz \]
+where $w = x^* - z$.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& (x^*-z)^T(x-x^*) \ge 0 \tag{by theorem \ref{thm:proj-cond}}
+\\ & \implies (x^*-z)^T x & &\ge (x^*-z)^T x^*
+\\ & & &\ge (x^*-z)^T (x^* - z + z)
+\\ & & &\ge \|x^*-z\|^2 + (x^*-z)^T z
+\\ & & &> (x^*-z)^T z
+\end{align*}
+\end{proof}
+
+\section{Inequality constraints}
+
+Define the feasible region as
+\[ C = \{x: (\forall i \in I, c_i(x) \ge 0) \wedge (\forall i \in E, h_i(x) = 0) \]
+
+Here $\{c_i: i \in I\}$ is the set of inequality constraints
+and $\{h_i: i \in I\}$ is the set of equality constraints.
+Since we can write the constraint $h_i(x) = 0$ as the 2 constraints
+$h_i(x) \ge 0$ and $-h_i(x) \ge 0$, we'll ignore equality constraints for now.
+
+Our minimization algorithm will iteratively choose a feasible descent direction
+and make a small step in that direction.
+
+By the definition of feasible direction, we get
+\[ u \in \FS(x) \iff \exists \overline{\alpha} > 0, \forall \alpha \in [0, \overline{\alpha}],
+c_i(x+\alpha u) \ge 0 \]
+Also, for $x \in C$, define LFS (called linearized feasible directions) as
+\[ \LFS(x) = \bigcap_{i \in I} \begin{cases} \mathbb{R}^d & \textrm{ if } c_i(x) > 0
+\\ \{u: \grad_{c_i}(x)^Tu \ge 0\} & \textrm{ if } c_i(x) = 0 \end{cases} \]
+Intuitively, LFS should be the same as FS.
+Unfortunately, they need not be the same.
+
+Define descent directions (DS) as
+\[ u \in \DS(x) \iff \grad_f(x)^Tu < 0 \]
+When $\FS(x) \cap \DS(x) = \LFS(x) \cap \DS(x)$, we say that $x$ is regular.
+Regularity always holds when the constraints are linear.
+
+At a point $x$, a constraint $c_i$ is said to be active iff $c_i(x) = 0$.
+
+\begin{theorem}[Farkas' Lemma]
+Let $A$ be a $d$ by $m$ matrix and $b \in \mathbb{R}^d$.
+For a vector $x$, let $x \ge 0$ mean that all components of $x$ are non-negative.
+Let $T = \{u \mid b^Tu < 0 \wedge A^Tu \ge 0\}$.
+Let $L = \{\lambda \mid b = A\lambda \wedge \lambda \ge 0\}$.
+Then $T = \{\} \iff L \neq \{\}$.
+\end{theorem}
+
+Let $I'$ be the set of active constraints at $x^*$. Let $|I'| = m$.
+Let $A$ be the matrix whose $i^{\textrm{th}}$ column is $\grad_{c_i}(x^*)$.
+Then $A$ is a $d$ by $m$ matrix.
+Let $b = \grad_f(x^*)$.
+Then
+\begin{align*}
+u \in \LFS(x^*) &\iff A^Tu \ge 0 & u \in \DS(x^*) &\iff b^Tu < 0
+\end{align*}
+Then by Farkas' lemma, we get that
+\[ \LFS(x^*) \cap \DS(x^*) = \{\} \iff (\exists \lambda \ge 0, b = A\lambda) \]
+For such a $\lambda$, we have
+\[ \grad_f(x^*) = A\lambda = \sum_{i \in I'} \lambda_i\grad_{c_i}(x^*) \]
+This is equivalent to saying that
+\[ \grad_f(x^*) = \sum_{i \in I} \lambda_i\grad_{c_i}(x^*) \quad \textrm{ where } \lambda_ic_i(x^*) = 0 \]
+
+If $x^*$ is a local minimum and a regular point, then $\LFS(x^*) \cap \DS(x^*) = \{\}$.
+So there exists $\lambda \in \mathbb{R}^m$ such that
+\begin{itemize}
+\item $\forall i \in I, c_i(x^*) \ge 0$.
+\item $\grad_f(x^*) = \sum_{i \in I} \lambda_i\grad_{c_i}(x^*)$.
+\item $\forall i \in I, \lambda_i \ge 0$.
+\item $\forall i \in I, \lambda_ic_i(x^*) = 0$.
+\end{itemize}
+These 4 conditions are called `KKT conditions'.
+When these conditions hold for $x$ and $\lambda$, $(x, \lambda)$ is said to be a KKT point.
+
+\end{document}
