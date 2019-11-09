@@ -161,12 +161,22 @@ This is equivalent to saying that
 If $x^*$ is a local minimum and a regular point, then $\LFS(x^*) \cap \DS(x^*) = \{\}$.
 So there exists $\lambda \in \mathbb{R}^m$ such that
 \begin{itemize}
-\item $\forall i \in I, c_i(x^*) \ge 0$.
-\item $\grad_f(x^*) = \sum_{i \in I} \lambda_i\grad_{c_i}(x^*)$.
-\item $\forall i \in I, \lambda_i \ge 0$.
-\item $\forall i \in I, \lambda_ic_i(x^*) = 0$.
+\item (Primal feasibility) $\forall i \in I, c_i(x^*) \ge 0$.
+\item (Stationarity) $\grad_f(x^*) = \sum_{i \in I} \lambda_i\grad_{c_i}(x^*)$.
+\item (Dual feasibility) $\forall i \in I, \lambda_i \ge 0$.
+\item (Complementary slackness) $\forall i \in I, \lambda_ic_i(x^*) = 0$.
 \end{itemize}
 These 4 conditions are called `KKT conditions'.
 When these conditions hold for $x$ and $\lambda$, $(x, \lambda)$ is said to be a KKT point.
+
+This is generally stated using the Lagrangian function
+(we're also going to consider the equality constraints now):
+\[ L(x, \lambda, \mu) = f(x) - \lambda^Tc(x) - \mu^Th(x) \]
+\begin{itemize}
+\item (Primal feasibility) $c(x^*) \ge 0$ and $h(x^*) = 0$.
+\item (Stationarity) $\grad_x L(x, \lambda, \mu) = 0$.
+\item (Dual feasibility) $\lambda \ge 0$.
+\item (Complementary slackness) $\forall i \in I, \lambda_ic_i(x^*) = 0$.
+\end{itemize}
 
 \end{document}

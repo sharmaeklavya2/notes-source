@@ -1,0 +1,127 @@
+\input{header.tex}
+\input{src/cmo/common.texlib}
+
+\title{CMO: Constrained optimization for convex functions}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\section{Convex function and convex constraints}
+
+Let's analyze the following problem:
+\[ \begin{array}{lll}
+\min_x & f(x) \\
+\textrm{where} & c_i(x) \le 0 & \forall i \in I \\
+& h_j(x) = 0 & \forall j \in I
+\end{array} \]
+
+Here $f$ and $c_i$ are convex and $C^1$ and $h_j$ is linear, i.e. $h_j(x) = a_j^Tx - b_j$.
+
+\subsection{Feasible region is a convex set}
+
+\begin{lemma}[Homework]
+The set $S_i = \{x: c_i(x) \le 0\}$ is convex.
+\end{lemma}
+\begin{lemma}[Homework]
+The set $S_j = \{x: h_j(x) \le 0\}$ is convex.
+\end{lemma}
+\begin{lemma}[Homework]
+The intersection of convex sets is convex.
+\end{lemma}
+
+\subsection{KKT point gives global minimum}
+
+Define the Lagrangian as
+\[ L(x, \lambda, \mu) = f(x) + \lambda^Tc(x) + \mu^Th(x) \]
+
+\begin{lemma}
+\label{thm:f-ge-lagr}
+If $\lambda_i \ge 0$ and $x$ is a feasible point, then $f(x) \ge L(x, \mu, \lambda)$.
+\end{lemma}
+\begin{proof}
+Since $x$ is a feasible point,
+\begin{align*}
+& c_i(x) \le 0 \wedge h_j(x) = 0
+\\ &\implies \lambda^Tc(x) \le 0 \wedge \mu^Th(x) = 0
+\\ &\implies f(x) + \lambda^Tc(x) + \mu^Th(x) \le f(x)
+\\ &\implies L(x, \lambda, \mu) \le f(x)
+\end{align*}
+\end{proof}
+
+\begin{lemma}
+\label{thm:f-eq-lagr}
+Let $(x^*, \lambda^*, \mu^*)$ be a KKT point.
+Then $f(x^*) = L(x^*, \mu^*, \lambda^*)$.
+\end{lemma}
+\begin{proof}
+\begin{align*}
+& \lambda_i^*c_i(x^*) = 0 \wedge h_j(x^*) = 0 \tag{complementary slackness and primal feasibility}
+\\ &\implies {\lambda^*}^Tc(x^*) = 0 \wedge {\mu^*}^Th(x^*) = 0
+\\ &\implies f(x^*) + {\lambda^*}^Tc(x^*) + {\mu^*}^Th(x^*) = f(x^*)
+\\ &\implies L(x^*, \lambda^*, \mu^*) = f(x)
+\end{align*}
+\end{proof}
+
+\begin{theorem}[Proved previously]
+\label{thm:c1-convex}
+Let $f$ be $C^1$ and convex. Then
+\[ \forall u, v \in \mathbb{R}^d, f(v) \ge f(u) + \grad_f(u)^T(v-u) \]
+\end{theorem}
+
+\begin{theorem}
+Let $(x^*, \lambda^*, \mu^*)$ be a KKT point.
+Then $x^*$ is a constrained global minimum of $f$.
+\end{theorem}
+\begin{proof}
+Let $x$ be a feasible point.
+\begin{align*}
+f(x) &\ge L(x, \lambda^*, \mu^*) \tag{by lemma \ref{thm:f-ge-lagr}}
+\\ &= f(x) + \sum_i \lambda_i^*c_i(x) + \sum_j \mu_j^*(a_j^Tx - b_j)
+\\ &\ge \left(f(x) + \grad_f(x^*)^T(x-x^*)\right)
+\\ &\quad + \sum_i \lambda_i^* \left( c_i(x^*) + \grad_{c_i}(x^*)^T(x-x^*) \right)
+\\ &\quad + \sum_j \mu_j^* \left( a_j^T(x - x^*) + (a_j^Tx^* - b_j) \right)
+\tag{by theorem \ref{thm:c1-convex}}
+\\ &= \left( f(x^*) + \sum_i \lambda_i^*c_i(x^*) + \sum_j \mu_j^*(a_j^Tx^* - b_j) \right)
+\\ &\quad + (x-x^*)^T\left( \grad_f(x^*) + \sum_i \lambda_i^* \grad_{c_i}(x^*) + \sum_j \mu_j^*a_j \right)
+\tag{rearrange terms}
+\\ &= L(x^*, \lambda^*, \mu^*) + (x-x^*)^T (\grad_xL)(x^*, \lambda^*, \mu^*)
+\\ &= f(x^*) \tag{by lemma \ref{thm:f-eq-lagr} and stationarity}
+\end{align*}
+Since for all feasible points $f(x) \ge f(x^*)$, $x^*$ is a constrained global minimum of $f$.
+\end{proof}
+
+Note that unlike the necessary conditions for local minimum,
+here we do not require regularity.
+
+\subsection{Example: Projection over ball}
+
+Consider the optimization problem:
+\[ \min_x \frac{1}{2} \norm{x-z}^2 \textrm{ where } \norm{x}^2 \le r^2 \]
+Here $z$ lies outside the feasible region.
+
+$\norm{x-z}^2$ and $\norm{x}^2$ are convex functions
+(because their hessian is $2I$, which is positive definite),
+so this is a convex optimization problem.
+\[ L(x, \lambda) = \frac{1}{2}\norm{x-z}^2 + \lambda(\norm{x}^2 - r^2) \]
+
+Applying the KKT conditions, we get
+\begin{itemize}
+\item Stationarity: $z = (2\lambda + 1)x$.
+\item Primal feasibility: $\norm{x}^2 \le r^2$.
+\item Dual feasibility: $\lambda \ge 0$.
+\item Complementary slackness: $\lambda(\norm{x}^2 - r^2) = 0$.
+\end{itemize}
+
+If we take $\lambda = 0$, then stationarity gives us $x = z$.
+This violates feasibility, so this is not possible.
+Therefore, complementary slackness gives us $\norm{x}^2 = r^2$.
+On simplifying, we get
+\begin{align*}
+z &= \frac{r}{\norm{z}}z
+& \lambda &= \frac{1}{2}\left(\frac{\norm{z}}{r}-1\right)
+& f(x) &= \frac{1}{2}(r - \norm{z})^2
+\end{align*}
+
+\end{document}

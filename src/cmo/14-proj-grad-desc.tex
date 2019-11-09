@@ -1,0 +1,154 @@
+\input{header.tex}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\input{src/cmo/common.texlib}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\title{CMO: Projected Gradient Descent}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+Projected gradient descent is an algorithm for convex constrained optimization
+that is similar to gradient descent.
+In this algorithm, we use gradient descent and if we ever move out of the feasible set,
+we project the point back to the feasible set.
+
+\begin{algorithm}[H]
+\label{algo:proj-grad-desc}
+\caption{$\texttt{proj-grad-desc}(f, C, x_0)$:
+Minimize $f: \mathbb{R}^d \mapsto \mathbb{R}$ (in $C^1$, not necessarily convex)
+over the convex feasible set $C$. $x_0 \in C$ is the initial point.}
+\begin{algorithmic}
+\State $x^{(\textrm{min})} = x^{(0)}$
+\For{$t$ from $0$ to $\infty$}
+    \State Choose step size $\alpha_t$.
+    \State $x^{(t+1)} = \proj_C(x^{(t)} - \alpha_t\grad_f(x^{(t)}))$
+    \State $x^{(\textrm{min})} = \argmin_{x \in \{x^{(\textrm{min})}, x^{(t+1)}\}} f(x)$
+    \If{(stopping criterion)}
+        \State \Return $x^{(\textrm{min})}$
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\section{Finding projection: Example}
+
+Projected gradient descent requires a subroutine for finding projection.
+There is no easy general method for this.
+As an example we'll see how it's done for the constraint $Ax = b$,
+where $A$ is an $m$ by $d$ matrix.
+\[ \proj_{Ax=b}(z) = \argmin_{\substack{x \\ Ax=b}} \frac{1}{2} \norm{x-z}^2 \]
+Since $\norm{x-z}^2$ is a convex function, a KKT point will give us the global minimum.
+\[ L(x, \mu) = \frac{1}{2}\norm{x-z}^2 + \mu^T(Ax - b) \]
+By stationarity, we get
+\[ (\grad_x L)(x, \mu) = (x-z) + A^T\mu = 0 \implies x = z - A^T\mu \]
+By primal feasibility, we get
+\[ b = Ax = A(z-A^T\mu) \implies \mu = (AA^T)^{-1}(Az - b) \]
+\[ \implies x = (I - A^T(AA^T)^{-1}A)z - A^T(AA^T)^{-1}b \]
+The above $x$ is $\proj_{Ax=b}(z)$.
+
+We can plug the above equation into the algorithm to get a simpler expression:
+\[ x^{(t+1)} = x^{(t)} - \alpha_t(I - A^T(AA^T)^{-1}A)\grad_f(x^{(t)}) \]
+
+\section{Convergence Analysis}
+
+\begin{theorem}[Proved eariler]
+\label{thm:c1l-alt}
+Let $f \in C^1_L$. Then $\forall x, y \in \mathbb{R}^d$
+\[ f(y) \le f(x) + \grad_f(x)^T(y-x) + \frac{L}{2}\norm{y-x}^2 \]
+\end{theorem}
+\begin{theorem}[Proved earlier]
+\label{thm:convex-proj}
+Let $C$ be a convex set. Let $z \not\in C$. Then $\forall x \in C$
+\[ (\proj_C(z)-z)^T(x - \proj_C(z)) \ge 0 \]
+\end{theorem}
+
+Let the objective function $f$ in the projected gradient algorithm be $C^1_L$.
+
+\begin{theorem}
+The projected gradient algorithm converges
+if we choose step size less than $\frac{2}{L}$
+(but it may not converge to a local minimum).
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& x_{t+1} = \proj_C(x_t - \alpha_t\grad_f(x_t))
+\\ &\implies (x_{t+1} - x_t + \alpha_t\grad_f(x_t))^T(x_t - x_{t+1}) \ge 0
+\tag{by theorem \ref{thm:convex-proj}}
+\\ &\implies \grad_f(x_t)^T(x_{t+1} - x_t) \le - \frac{\norm{x_{t+1} - x_t}^2}{\alpha_t}
+\numberthis \label{eqn:grad-term-bound}
+\end{align*}
+\begin{align*}
+f(x_{t+1}) &\le f(x_t) + \grad_f(x_t)^T(x_{t+1} - x_t) + \frac{L}{2}\norm{x_{t+1}-x_t}^2
+\tag{by theorem \ref{thm:c1l-alt}}
+\\ &\le f(x_t) + \norm{x_{t+1} - x_t}^2\left( \frac{L}{2} - \frac{1}{\alpha_t} \right)
+\tag{by equation \eqref{eqn:grad-term-bound}}
+\end{align*}
+If we choose $\alpha_t < \frac{2}{L}$, then $f(x_{t+1}) < f(x_t)$.
+Assuming that $f$ is lower-bounded, this means that the algorithm will converge.
+\end{proof}
+
+\begin{theorem}[Proved earlier]
+\label{thm:c1-convex}
+Let $f$ be $C^1$ and convex. Then
+\[ \forall u, v \in \mathbb{R}^d, f(v) \ge f(u) + \grad_f(u)^T(v-u) \]
+\end{theorem}
+
+\begin{theorem}
+When $f$ is convex, $x_{\textrm{min}}$ converges to a minimum
+if we choose step size less than $\frac{1}{L}$.
+Also, let $x^*$ be a minimum of $f$, $E_T = \min_{0 \le t \le T} (f(x_t) - f(x^*))$
+and $\alpha = \min_{t=0}^T \alpha_t$. Then
+\[ E_T \le \frac{\norm{x_0 - x^*}^2}{2\alpha T} \]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& f(x^*) - f(x_t) \ge \grad_f(x_t)^T(x^* - x_t) \tag{by theorem \ref{thm:c1-convex}}
+\\ &\implies f(x_t) \le f(x^*) + \grad_f(x_t)^T(x_t - x^*)
+\end{align*}
+\begin{align*}
+f(x_{t+1}) &\le f(x_t) + \grad_f(x_t)^T(x_{t+1} - x_t) + \frac{L}{2}\norm{x_{t+1} - x_t}^2
+\tag{by theorem \ref{thm:c1l-alt}}
+\\ &\le \left(f(x^*) + \grad_f(x_t)^T(x_t - x^*)\right) + \grad_f(x_t)^T(x_{t+1} - x_t)
++ \frac{L}{2}\norm{x_{t+1} - x_t}^2
+\\ &\le f(x^*) + \grad_f(x_t)^T(x_{t+1}-x^*) + \frac{L}{2}\norm{x_{t+1}-x_t}^2
+\end{align*}
+\begin{align*}
+& x_{t+1} = \proj_C(x_t - \alpha_t\grad_f(x_t))
+\\ &\implies (x_{t+1} - x_t + \alpha_t\grad_f(x_t))^T(x^* - x_{t+1}) \ge 0
+\tag{by theorem \ref{thm:convex-proj}}
+\\ &\implies (x_{t+1} - x_t)^T(x_{t+1} - x^*) + \alpha_t\grad_f(x_t)^T(x_{t+1} - x^*) \le 0
+\\ &\implies \grad_f(x_t)^T(x_{t+1} - x^*) \le -\frac{1}{\alpha_t} (x_{t+1} - x_t)^T(x_{t+1} - x^*)
+\end{align*}
+\begin{align*}
+& f(x_{t+1}) - f(x^*)
+\\ &\le \grad_f(x_t)^T(x_{t+1}-x^*) + \frac{L}{2}\norm{x_{t+1}-x_t}^2
+\\ &\le -\frac{1}{\alpha_t} (x_{t+1} - x_t)^T(x_{t+1} - x^*) + \frac{L}{2}\norm{x_{t+1}-x_t}^2
+\\ &= -\frac{1}{\alpha_t} (\delta_{t+1}-\delta_t)^T\delta_{t+1} + \frac{L}{2}\norm{\delta_{t+1}-\delta_t}^2
+\tag{where $\delta_t = x_t - x^*$}
+\\ &= -\frac{\norm{\delta_{t+1}}^2}{\alpha_t} + \frac{L}{2}\norm{\delta_{t+1}-\delta_t}^2
++ \frac{\delta_t^T\delta_{t+1}}{\alpha_t}
+\\ &= -\frac{\norm{\delta_{t+1}}^2}{\alpha_t} + \frac{L}{2}\norm{\delta_{t+1}-\delta_t}^2
++ \frac{\norm{\delta_{t+1}}^2 + \norm{\delta_t}^2 - \norm{\delta_{t+1} - \delta_t}^2}{2\alpha_t}
+\\ &= \frac{\norm{\delta_t}^2 - \norm{\delta_{t+1}}^2}{2\alpha_t}
++ \frac{1}{2}\left(L - \frac{1}{\alpha_t}\right)\norm{\delta_{t+1}-\delta_t}^2
+\end{align*}
+Let $E(x) = f(x) - f(x^*)$. If we always choose $\alpha_t < \frac{1}{L}$, then
+\[ 0 \le E(x_{t+1}) < \frac{\norm{\delta_t}^2 - \norm{\delta_{t+1}}^2}{2\alpha_t}
+\implies \norm{\delta_t} < \norm{\delta_{t+1}} \]
+Let $E_T = \min_{0 \le t \le T} E(x_t)$ and $\alpha = \min_{t=0}^T \alpha_t$. Then
+\begin{align*}
+E_T &\le \frac{1}{T} \sum_{t=0}^{T-1} E(x_{t+1})
+\\ &< \frac{1}{T} \sum_{t=0}^{T-1} \frac{\norm{\delta_t}^2 - \norm{\delta_{t+1}}^2}{2\alpha_t}
+\\ &\le \frac{1}{2\alpha T} \sum_{t=0}^{T-1} (\norm{\delta_t}^2 - \norm{\delta_{t+1}}^2)
+\\ &= \frac{1}{2\alpha T} (\norm{\delta_0}^2 - \norm{\delta_T}^2)
+\\ &\le \frac{\norm{\delta_0}^2}{2\alpha T}
+\end{align*}
+When $T \rightarrow \infty$, $E_T \rightarrow 0$.
+Since $E_T = E(x_{\textrm{min}})$, $x_{\textrm{min}}$ converges to a minimum.
+\end{proof}
+
+\end{document}

@@ -16,3 +16,4 @@
 }
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand*{\proj}{\operatorname{proj}}
