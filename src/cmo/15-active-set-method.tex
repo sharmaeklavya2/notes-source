@@ -1,0 +1,268 @@
+\input{header.tex}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\input{src/cmo/common.texlib}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\DeclareMathOperator*{\argminset}{argminset}
+
+\title{CMO: Active Set Method}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+The active set method is a way of solving optimization problems with a convex quadratic objective
+and linear constraints. In this method, we guess the active set of constraints and then solve
+the resulting problem which has only equality constraints. We make multiple such guesses
+and each guess helps refine the next guess.
+
+\section{Equality constraints}
+
+We'll first figure out how to solve the optimization problem
+which has only equality constraints:
+\[ \min_x f(x) \textrm{ where } Ax = b \]
+Here $f(x) = \frac{1}{2} x^TQx - h^Tx$, where $Q$ is symmetric and positive definite.
+The $i^{\textrm{th}}$ row of $A$ is $a_i^T$.
+$x \in \mathbb{R}^d$ and $b \in \mathbb{R}^m$.
+
+We'll find a KKT point for this problem.
+Since the objective is strictly convex and the constraints are linear,
+the KKT point gives us the unique global minimum of this problem.
+\[ L(x, \mu) = f(x) - \mu^T(Ax - b) \]
+By stationarity, we get
+\[ \grad_f(x) - A^T\mu = 0 \implies Qx - A^T\mu = h \]
+By primal feasibility, we get
+\[ Ax = b \]
+These 2 conditions can be written as a system of linear equations.
+Solving this system will give us the KKT point $(x, \lambda)$.
+\[ \begin{bmatrix} Q & -A^T \\ A & 0 \end{bmatrix}
+\begin{bmatrix} x \\ \mu \end{bmatrix}
+= \begin{bmatrix} h \\ b \end{bmatrix} \]
+
+This system of equations is guaranteed to have a solution,
+since $(x, \lambda)$ is a KKT point iff it satisfies these conditions
+and the first-order necessary conditions for local minimum imply that a KKT point must exist
+(regularity is ensured because the constraints are linear).
+
+\section{Inequality constraints}
+
+We'll now try to solve this optimization problem:
+\[ \min_x f(x) \textrm{ where } Ax \ge b \]
+
+Define $\argminset$ as
+\[ \argminset_x g(x) = \{\widehat{x}: g(\widehat{x}) = \min_x g(x) \} \]
+
+The subroutine $\operatorname{eqsolve}(Q, h, A, b)$ returns $(x^*, \mu^*)$ such that
+\[ \begin{bmatrix} Q & -A^T \\ A & 0 \end{bmatrix}
+\begin{bmatrix} x^* \\ \mu^* \end{bmatrix}
+= \begin{bmatrix} h \\ b \end{bmatrix} \]
+This means that
+\[ x^* = \argmin_{\substack{x \\ Ax = b}} \frac{1}{2}x^TQx - h^Tx \]
+The subroutine $\operatorname{blocking-constraints}$ is defined as
+\[ \operatorname{blocking-constraints}(A, x, u) =
+\argminset_{\substack{i \\ a_i^Tu < 0}}\frac{a_i^Tx - b_i}{-a_i^Tu} \]
+
+\newcommand*{\CondExpr}[3]{#1 \textrm{ if } #2 \textrm{ else } #3}
+
+Let $A_B$ denote the matrix obtained by taking all rows of $A$
+whose indices lie in $B$.
+
+\begin{algorithm}[H]
+\label{algo:active-set-method}
+\caption{$\texttt{active-set-method}(Q, h, A, b, x^{(0)})$: $x_0$ is the initial feasible point}
+\begin{algorithmic}[1]
+\State $B^{(0)} = \{i: a_i^Tx^{(0)} = b_i \}$ \label{alg-line:B0}
+\State $t = 0$
+\While{\texttt{true}}
+    \While{\texttt{true}}
+        \State $(u^{(t)}, \mu^{(t)}) = \operatorname{eqsolve}(Q, h - Qx^{(t)}, A_{B^{(t)}}, 0)$
+        \If{$u^{(t)} \texttt{ == } 0$}
+            \State \texttt{break}
+        \EndIf
+        \State $I^{(t)} = \operatorname{blocking-constraints}(A, x^{(t)}, u^{(t)})$
+        \State $\alpha^{(t)} = \left(\CondExpr{1}{I^{(t)} \texttt{ == } \{\}}
+            {\min\left(1, \frac{a_i^Tx^{(t)} - b_i}{-a_i^Tu^{(t)}}\right)}\right)$, where $i \in I^{(t)}$.
+        \State $x^{(t+1)} = x^{(t)} + \alpha^{(t)}u^{(t)}$
+        \State $B^{(t+1)} = B^{(t)} \cup (\CondExpr{I^{(t)}}{\alpha^{(t)} < 1}{\{\}})$
+        \State $t = t + 1$
+    \EndWhile
+    \State Find $l^{(t)} \in B^{(t)}$ such that $\mu^{(t)}_{l^{(t)}} < 0$.
+    \If{$l^{(t)} \texttt{ == null}$} \label{alg-line:l-eq-null}
+        \State $\lambda_i = \begin{cases} \mu^{(t)}_i & i \in B^{(t)} \\ 0 & i \not\in B^{(t)} \end{cases}$
+        \State \Return $(x^{(t)}, \lambda)$
+    \Else
+        \State $B^{(t+1)} = B^{(t)} - \{l^{(t)}\}$
+        \State $x^{(t+1)} = x^{(t)}$
+        \State $t = t + 1$
+    \EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+
+\begin{lemma}[Invariants]
+\label{thm:invariants}
+Let $\mathcal{A}(x) = \{i: a_i^Tx = b_i\}$.
+The following are true for all $t$:
+\begin{itemize}
+\item $x^{(t)}$ is a feasible solution.
+\item $B^{(t)} \subseteq \mathcal{A}(x^{(t)})$.
+\end{itemize}
+\end{lemma}
+\begin{proof}[Proof by induction]
+\leavevmode \\
+\textbf{Base case}: $x^{(0)}$ is given to be feasible.
+$B^{(0)} = \mathcal{A}(x^{(0)})$ by line \ref{alg-line:B0}.
+Therefore, the hypothesis holds for $t=0$.
+
+\textbf{Inductive step}:
+Assume the hypothesis holds at $t$.
+
+\textbf{Case 1}: $u^{(t)} \neq 0$
+
+If $u^{(t)} \neq 0$, then $x^{(t+1)} = x^{(t)} + \alpha^{(t)}u^{(t)}$.
+Let $J = \{i: a_i^Tu^{(t)} < 0\}$. Then $\forall i \in J$,
+\[ \alpha^{(t)} \le \frac{a_i^Tx^{(t)}-b_i}{-a_i^Tu^{(t)}}
+\implies b_i \le a_i^T(x^{(t)} + \alpha^{(t)}u^{(t)}) = a_i^Tx^{(t+1)} \]
+When $i \not\in J$, then $a_i^Tu^{(t)} \ge 0$.
+Also, $a_i^Tx^{(t)} \ge b_i$, by inductive hypothesis.
+Therefore,
+\[ a_i^Tx^{(t+1)} = a_i^Tx^{(t)} + \alpha^{(t)}a_i^Tu^{(t)} \ge b_i \]
+Therefore, $x^{(t+1)}$ is feasible.
+
+\[ i \in B^{(t)} \implies a_i^Tx^{(t)} = b_i
+\tag{$B^{(t)} \subseteq \mathcal{A}(x^{(t)})$ by inductive hypothesis} \]
+\[ (u^{(t)}, \mu^{(t)}) = \operatorname{eqsolve}(Q, h - Qx^{(t)}, A_{B^{(t)}}, 0)
+\implies \forall i \in B^{(t)}, a_i^Tu^{(t)} = 0 \]
+Therefore, $\forall i \in B^{(t)}$,
+\[ a_i^Tx^{(t+1)} = a_i^Tx^{(t)} + \alpha^{(t)}a_i^Tu^{(t)} = b_i \]
+Therefore, $B^{(t)} \subseteq \mathcal{A}(x^{(t+1)})$.
+
+If $\alpha^{(t)} \ge 1$ or $I^{(t)} = \{\}$, then $B^{(t+1)} = B^{(t)} \subseteq \mathcal{A}(x^{(t+1)})$.
+Suppose $\alpha^{(t)} < 1$ and $I^{(t)} \neq \{\}$.
+Then $B^{(t+1)} = B^{(t)} \cup I^{(t)}$ and $\forall i \in I^{(t)}$,
+\[ \alpha^{(t)} = \frac{a_i^Tx^{(t)} - b_i}{-a_i^Tu^{(t)}}
+\implies b_i = a_i^T(x^{(t)} + \alpha^{(t)}u^{(t)}) = a_i^Tx^{(t+1)} \]
+Therefore, $I^{(t)} \subseteq \mathcal{A}(x^{(t+1)})$
+which implies that $B^{(t+1)} \subseteq \mathcal{A}(x^{(t+1)})$.
+
+\textbf{Case 2}: $u^{(t)} = 0$
+
+By inductive hypothesis, $x^{(t)}$ is feasible.
+Therefore, $x^{(t+1)} = x^{(t)}$ is also feasible.
+By inductive hypothesis, $B^{(t)} \subseteq \mathcal{A}(x^{(t)})$.
+Therefore, $B^{(t+1)} \subset B^{(t)} \subseteq \mathcal{A}(x^{(t+1)})$.
+
+Therefore, the inductive hypothesis holds at $t+1$.
+By mathematical induction, the inductive hypothesis holds for all $t \ge 0$.
+\end{proof}
+
+\begin{theorem}[Correctness]
+If $\operatorname{active-set-method}$ returns $(x^{(t)}, \lambda)$,
+then $x^{(t)}$ is a global minimum.
+\end{theorem}
+\begin{proof}
+We'll prove that $(x^{(t)}, \lambda)$ is a KKT point.
+This is a sufficient condition for minimum since this is a convex optimization problem.
+
+The algorithm enters the conditional block on line \ref{alg-line:l-eq-null}
+iff $u^{(t)} = 0$ and $\mu^{(t)}_i \ge 0$ for all $i \in B^{(t)}$.
+\begin{align*}
+& (0, \mu) = \operatorname{eqsolve}(Q, h - Qx^{(t)}, A_{B^{(t)}}, 0)
+\\ &\implies -A_{B^{(t)}}^T\mu = h - Qx^{(t)}
+\\ &\implies \grad_f(x^{(t)}) = A_{B^{(t)}}^T\mu = \sum_{i \in B^{(t)}} \mu_ia_i = \sum_{i=1}^m \lambda_ia_i
+\end{align*}
+This proves stationarity for $(x^{(t)}, \lambda)$.
+
+Primal feasibility follows from lemma \ref{thm:invariants}.
+
+Dual feasibility follows from the fact that $\lambda_i = \mu^{(t)}_i \ge 0$ for all $i \in B^{(t)}$
+and $\lambda_i = 0$ for all $i \not\in B^{(t)}$.
+
+When $i \not\in B^{(t)}$, then $\lambda_i = 0$.
+When $i \in B^{(t)}$, then $a_i^Tx^{(t)} = b_i$
+(since $B^{(t)} \subseteq \mathcal{A}(x^{(t)})$ by lemma \ref{thm:invariants}).
+This ensures complementary slackness.
+
+Therefore, $(x^{(t)}, \lambda)$ is a KKT point.
+\end{proof}
+
+\begin{lemma}
+$B^{(t)} = B^{(t+1)} \implies u^{(t+1)} = 0$
+\end{lemma}
+\begin{proof}
+\begin{align*}
+& (I^{(t)} = \{\} \implies \alpha^{(t)} = 1)
+\\ &\implies (\alpha^{(t)} < 1 \implies I^{(t)} \neq \{\} \implies B^{(t+1)} \neq B^{(t)})
+\\ &\implies (B^{(t+1)} = B^{(t)} \implies \alpha^{(t)} = 1)
+\\ &\implies (B^{(t+1)} = B^{(t)} \implies x^{(t+1)} = x^{(t)} + u^{(t)})
+\end{align*}
+By lemma \ref{thm:invariants}, $x^{(t)} + u^{(t)}$ is feasible.
+
+\begin{align*}
+& (u^{(t)}, \mu^{(t)}) = \operatorname{eqsolve}(Q, h - Qx^{(t)}, A_{B^{(t)}}, 0)
+\\ &\implies u^{(t)} = \argmin_{\substack{u \\ A_{B^{(t)}}u = 0}} f(x^{(t)} + u)
+\\ &\implies x^{(t+1)} = x^{(t)} + u^{(t)}
+= \argmin_{\substack{x \\ \forall i \in B^{(t)}, a_i^Tx = b_i}} f(x)
+\\ &\implies x^{(t+1)}
+= \argmin_{\substack{x \\ \forall i \in B^{(t+1)}, a_i^Tx = b_i}} f(x) \tag{$B^{(t+1)} = B^{(t)}$}
+\end{align*}
+\begin{align*}
+& (u^{(t+1)}, \mu^{(t+1)}) = \operatorname{eqsolve}(Q, h - Qx^{(t+1)}, A_{B^{(t+1)}}, 0)
+\\ &\implies u^{(t+1)} = \argmin_{\substack{u \\ A_{B^{(t+1)}}u = 0}} f(x^{(t+1)} + u)
+\\ &\implies x^{(t+1)} + u^{(t+1)}
+= \argmin_{\substack{x \\ \forall i \in B^{(t+1)}, a_i^Tx = b_i}} f(x)
+\end{align*}
+Therefore, $x^{(t+1)} = x^{(t+1)} + u^{(t+1)} \implies u^{(t+1)} = 0$.
+\end{proof}
+
+Therefore, if the algorithm gets stuck in the inner while loop, $B^{(t+1)} \neq B^{(t)}$.
+But in each iteration, we add a constraint and there are a finite number of constraints.
+Therefore, it's not possible to get stuck in the inner while loop.
+
+\begin{lemma}
+If the algorithm does not terminate in the $k^{\textrm{th}}$ step,
+\[ u^{(k)} = 0 \implies (a_{l^{(k)}}^Tu^{(k+1)} > 0
+\wedge \grad_f(x^{(k)})^Tu^{(k+1)} < 0 \wedge f(x^{(k)} + u^{(k+1)}) < f(x^{(k)})) \]
+\end{lemma}
+\begin{proof}
+Let $g^{(t)} = \grad_f(x^{(t)})^T = Qx^{(t)} - h$. For any $t$,
+\begin{align*}
+& (u^{(t)}, \mu^{(t)}) = \operatorname{eqsolve}(Q, h - Qx^{(t)}, A_{B^{(t)}}, 0)
+\\ &\implies \begin{bmatrix} Q & -A_{B^{(t)}}^T \\ A_{B^{(t)}} & 0 \end{bmatrix}
+\begin{bmatrix} u^{(t)} \\ \mu^{(t)} \end{bmatrix}
+= \begin{bmatrix} h - Qx^{(t)} \\ 0 \end{bmatrix}
+\\ &\implies Qu^{(t)} - A_{B^{(t)}}^T\mu^{(t)} = h - Qx^{(t)} = -g^{(t)} \wedge A_{B^{(t)}}u = 0
+\\ &\implies \left( g^{(t)} + Qu^{(t)} = A_{B^{(t)}}^T\mu^{(t)} = \sum_{i \in B^{(t)}} \mu^{(t)}_ia_i \right)
+\wedge (\forall i \in B^{(t)}, a_i^Tu = 0)
+\end{align*}
+For notational convenience, let $l = l^{(k)}$.
+Since $u^{(k)} = 0, x^{(k+1)} = x^{(k)} \implies g^{(k+1)} = g^{(k)}$ and $B^{(k+1)} = B^{(k)} - \{l\}$.
+Since the algorithm didn't terminate, $\mu^{(k)}_l < 0$.
+\[ g^{(k)} = g^{(k)} + Qu^{(k)} = \sum_{i \in B^{(k)}} \mu_i^{(k)}a_i
+= \mu_l^{(k)}a_l + \sum_{i \in B^{(k+1)}} \mu_i^{(k)}a_i \]
+\[ g^{(k+1)} + Qu^{(k+1)} = \sum_{i \in B^{(k+1)}} \mu_i^{(k+1)}a_i \]
+On subtracting these 2 equations, we get
+\[ Qu^{(k+1)} = -\mu^{(k)}_la_l + \sum_{i \in B^{(k+1)}} (\mu^{(k+1)}_i - \mu^{(k)}_i)a_i \]
+$\forall i \in B^{(k+1)}, a_i^T\mu^{(k+1)}_i = 0$. Therefore,
+\begin{align*}
+& \quad (u^{(k+1)})^TQu^{(k+1)}
+\\ &= -\mu^{(k)}_l a_l^Tu^{(k+1)} + \sum_{i \in B^{(k+1)}} (\mu^{(k+1)}_i - \mu^{(k)}_i)a_i^Tu^{(k+1)}
+\\ &= -\mu^{(k)}_l a_l^Tu^{(k+1)}
+\\ &\implies a_l^Tu^{(k+1)} = \frac{(u^{(k+1)})^TQu^{(k+1)}}{-\mu^{(k)}_l} > 0
+\tag{$Q$ is PD and $\mu^{(k)}_l < 0$}
+\end{align*}
+\begin{align*}
+& g^{(k)} + Qu^{(k+1)} = \sum_{i \in B^{(k+1)}} \mu_i^{(k+1)}a_i
+\\ &\implies {g^{(k)}}^Tu^{(k+1)} + {u^{(k+1)}}^TQu^{(k+1)} = \sum_{i \in B^{(k+1)}} \mu_i^{(k+1)}a_iu^{(k+1)} = 0
+\\ &\implies {g^{(k)}}^Tu^{(k+1)} = - {u^{(k+1)}}^TQu^{(k+1)}
+\end{align*}
+\begin{align*}
+& f(x^{(k)} + u^{(k+1)})
+\\ &= f(x^{(k)}) + {g^{(k)}}^Tu^{(k+1)} + \frac{1}{2}{u^{(k+1)}}^TQu^{(k+1)} \tag{Taylor series}
+\\ &= f(x^{(k)}) - \frac{1}{2}{u^{(k+1)}}^TQu^{(k+1)}
+\\ &< f(x^{(k)}) \tag{$Q$ is PD}
+\end{align*}
+\end{proof}
+
+\end{document}
