@@ -265,4 +265,32 @@ $\forall i \in B^{(k+1)}, a_i^T\mu^{(k+1)}_i = 0$. Therefore,
 \end{align*}
 \end{proof}
 
+\begin{corollary}
+$u^{(k)} = 0 \implies u^{(k+1)} \neq 0$
+\end{corollary}
+
+\begin{lemma}
+$\alpha^{(t)} > 0 \implies f(x^{(t+1)}) < f(x^{(t)})$
+\end{lemma}
+\begin{proof}
+For $\alpha^{(t)}$ to exist, $u^{(t)}$ must be non-zero.
+Therefore, $x^{(t)} \neq x^{(t)} + u^{(t)}$.
+\[ u^{(t)} = \argmin_{\substack{u \\ A_{B^{(t)}}u = 0}} f(x^{(t)} + u)
+\\ \implies x^{(t)} + u^{(t)} = \argmin_{\substack{x \\ \left(A_{B^{(t)}}\right)x = \left(b_{B^{(t)}}\right)}} f(x) \]
+Since $x^{(t)}$ satisfies $A_{B^{(t)}}x = b_{B^{(t)}}$,
+it is a feasible solution to the above optimization problem.
+However, $x^{(t)} + u^{(t)}$ is the optimial solution and $x^{(t)} \neq x^{(t)} + u^{(t)}$.
+Since $f$ is a strictly convex function, it has a unique global minimum.
+Therefore, $f(x^{(t)} + u^{(t)}) < f(x^{(t)})$.
+
+\begin{align*}
+f(x^{(t+1)}) &= f(x^{(t)} + \alpha^{(t)}u^{(t)})
+\\ &= f((1-\alpha^{(t)})x^{(t)} + \alpha^{(t)}(x^{(t)} + u^{(t)}))
+\\ &\le (1-\alpha^{(t)})f(x^{(t)}) + \alpha^{(t)}f(x^{(t)} + u^{(t)})
+\\ &< (1-\alpha^{(t)})f(x^{(t)}) + \alpha^{(t)}f(x^{(t)})
+\tag{$f(x^{(t)} + u^{(t)}) < f(x^{(t)})$ and $\alpha^{(t)} > 0$}
+\\ &= f(x^{(t)})
+\end{align*}
+\end{proof}
+
 \end{document}
