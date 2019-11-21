@@ -1,0 +1,137 @@
+\input{header.tex}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\input{src/cmo/common.texlib}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\DeclareMathOperator*{\argminset}{argminset}
+
+\title{CMO: Duality}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\section{Duality}
+
+Consider the optimization problem $P$:
+\[ \min_{x \in \mathbb{R}^d} f(x) \textrm{ where } \forall i \in I, c_i(x) \ge 0 \wedge \forall j \in J, h_j(x) = 0 \]
+The corresponding Lagrangian is
+\[ L(x, \lambda, \mu) = f(x) - \lambda^Tc(x) - \mu^Th(x) \]
+Define $g$ as
+\[ g(\lambda, \mu) = \min_{x \in \mathbb{R}^d} L(x, \lambda, \mu) \]
+Let $D$ be this optimization problem:
+\[ \max_{\lambda, \mu} g(\lambda, \mu) \textrm{ where } g(\lambda, \mu) \neq -\infty \wedge \lambda \ge 0 \]
+Then $D$ is said to be the dual of $P$.
+
+\begin{theorem}[Weak duality theorem]
+Let $x_0$ be a feasible solution to $P$ and $(\lambda_0, \mu_0)$ be feasible solution to $D$. Then
+\[ g(\lambda_0, \mu_0) \le L(x_0, \lambda_0, \mu_0) \le f(x_0) \]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& g(\lambda_0, \mu_0)
+\\ &= \min_{x \in \mathbb{R}^d} L(x, \lambda_0, \mu_0)
+\\ &\le L(x_0, \lambda_0, \mu_0)
+\\ &= f(x_0) - \lambda_0^Tc(x_0) - \mu^Th(x_0)
+\\ &\le f(x_0) \tag{$\lambda_0 \ge 0 \wedge c(x_0) \ge 0 \wedge h(x_0) = 0$ by feasibility}
+\end{align*}
+\end{proof}
+
+\begin{definition}[Duality gap]
+Let $x^*$ be the optimal solution to $P$ and $(\lambda^*, \mu^*)$ be the optimal solution to $D$.
+Then the duality gap is defined to be the quantity
+\[ f(x^*) - g(\lambda^*, \mu^*) \]
+\end{definition}
+
+\begin{corollary}
+Let $x_0$ be a feasible solution to $P$ and $(\lambda_0, \mu_0)$ be a feasible solution to $D$.
+If $f(x_0) = g(\lambda_0, \mu_0)$, then the duality gap is 0 and $x_0$ and $(\lambda_0, \mu_0)$ are optimal solutions.
+\end{corollary}
+\begin{proof}
+Let $x^*$ be the optimal solution to $P$ and $(\lambda^*, \mu^*)$ be the optimal solution to $D$. Then
+\[ g(\lambda_0, \mu_0) \le g(\lambda^*, \mu^*) \le f(x^*) \le f(x_0) = g(\lambda_0, \mu_0) \]
+Therefore,
+\[ g(\lambda_0, \mu_0) = g(\lambda^*, \mu^*) = f(x^*) = f(x_0) \]
+\end{proof}
+
+\section{Wolfe Dual}
+
+We'll now focus our attention on convex optimization problems.
+In the optimization problem $P$:
+\begin{itemize}
+\item Let $f$ be a convex function.
+\item Let $c_i(x) = -f_i(x)$, where $f_i$ is a convex function.
+\item Let $h_j(x) = a_j^Tx - b_j$, where $a_j \in \mathbb{R}^d$ and $b \in \mathbb{R}^{|I|}$.
+Let $A$ be the matrix whose $j^{\textrm{th}}$ column is $a_j$.
+\end{itemize}
+
+Let WD be the optimization problem
+\[ \max_{x, \lambda, \mu} L(x, \lambda, \mu) \textrm{ where } \lambda \ge 0
+\wedge \grad_xL(x, \lambda, \mu) = 0 \]
+This problem is called the Wolfe Dual of $P$.
+
+\begin{theorem}[Proved previously]
+\label{thm:c1-convex}
+Let $f$ be $C^1$ and convex. Then
+\[ \forall u, v \in \mathbb{R}^d, f(v) \ge f(u) + \grad_f(u)^T(v-u) \]
+\end{theorem}
+
+\begin{lemma}[Proved previously]
+\label{thm:f-eq-lagr}
+Let $(x^*, \lambda^*, \mu^*)$ be a KKT point.
+Then $f(x^*) = L(x^*, \mu^*, \lambda^*)$.
+\end{lemma}
+
+\begin{theorem}
+Let $(x^*, \lambda^*, \mu^*)$ be a KKT point of $P$.
+Then $(x^*, \lambda^*, \mu^*)$ is the optimal solution to WD.
+\end{theorem}
+\begin{proof}
+Let $(x, \lambda, \mu)$ be a feasible point of WD.
+\begin{align*}
+& L(x^*, \lambda^*, \mu^*)
+\\ &= f(x^*)  \tag{by lemma \ref{thm:f-eq-lagr}}
+\\ &\ge L(x^*, \lambda, \mu)  \tag{by $\lambda \ge 0$ and weak duality}
+\\ &= f(x^*) + \sum_i \lambda_if_i(x^*) + \sum_j \mu_j(a_j^Tx^*- b_j)
+\\ &\ge (f(x) + \grad_f(x)^T(x^* - x))
+\\ &\quad + \sum_i \lambda_i (f_i(x) + \grad_{f_i}(x)^T(x^* - x))
+\\ &\quad + \sum_j \mu_j (a_j^T(x^* - x) - (a_j^Tx - b_j))
+\tag{by theorem \ref{thm:c1-convex}}
+\\ &= \left(f(x) + \sum_i \lambda_i f_i(x) + \sum_j \mu_j (a_j^Tx - b_j)\right)
+\\ &\quad + (x^* - x)^T\left( \grad_f(x) + \sum_i \lambda_i \grad_{f_i}(x) + \sum_j \mu_j a_j \right)
+\\ &= L(x, \lambda, \mu) + (x^* - x)^T(\grad_x L(x, \lambda, \mu))
+\\ &= L(x, \lambda, \mu)  \tag{feasibility of WD implies $\grad_x L(x, \lambda, \mu) = 0$}
+\end{align*}
+Therefore, $(x^*, \lambda^*, \mu^*)$ maximizes WD.
+\end{proof}
+
+Therefore, to find the KKT point of a problem, we can optimize its Wolfe Dual.
+
+\begin{example}
+\[ \min_x \frac{1}{2} \norm{x}^2 \textrm{ where } A^Tx \ge b \]
+The Lagrangian for this problem is
+\[ L(x, \lambda) = \frac{1}{2}\norm{x}^2 - \lambda^T(A^Tx - b) \]
+\[ \grad_x L(x, \lambda) = x - A\lambda \]
+The Wolfe Dual is
+\[ \max_{x, \lambda} \frac{1}{2}\norm{x}^2 - \lambda^T(A^Tx - b)
+\textrm{ where } x - A\lambda = 0 \textrm{ and } \lambda \ge 0 \]
+We can simplify this by substituting $x = A\lambda$ and removing the constraint
+\[ \max_{\lambda} b^T\lambda - \frac{1}{2} \norm{A\lambda}^2 \textrm{ where } \lambda \ge 0 \]
+\end{example}
+
+\begin{example}
+\[ \min_x c^Tx \textrm{ where } x \ge 0 \wedge Ax \ge b \]
+The Lagrangian for this problem is
+\[ L(x, \lambda, \pi) = c^Tx - \lambda^T(Ax - b) - \pi^Tx = (c - A^T\lambda - \pi)^Tx + b^T\lambda \]
+\[ \grad_x L(x, \lambda, \pi) = c - A^T\lambda - \pi \]
+The Wolfe Dual is
+\[ \max_{x, \lambda, \pi} (c - A^T\lambda - \pi)^Tx + b^T\lambda
+\textrm{ where } c - A^T\lambda - \pi  = 0 \textrm{ and } \lambda \ge 0 \textrm{ and } \pi \ge 0 \]
+We can simplify this by substituting $\pi = c - A^T\lambda$ and removing the constraint
+\[ \max_{x, \lambda} b^T\lambda
+\textrm{ where } A^T\lambda \le c \textrm{ and } \lambda \ge 0 \]
+This gives us the dual linear program for this problem.
+\end{example}
+
+\end{document}
