@@ -52,6 +52,8 @@ def run_check(cmd, **kwargs):
 global_markdown = None
 global_html_template = None
 global_css = None
+global_dot_error = False
+global_warn_count = 0
 
 
 def get_markdown_and_template():
@@ -64,6 +66,9 @@ def get_markdown_and_template():
             print('error while importing package markdown:', file=sys.stderr)
             print('{}: {}'.format(type(e).__name__, str(e)))
             print('WARNING: markdown files will not be processed')
+            print('WARNING: make sure you have the Markdown python package (pip install Markdown)')
+            global global_warn_count
+            global_warn_count += 1
             global_markdown = False
 
     if global_markdown is False:
@@ -193,6 +198,8 @@ def process_tree(ipath, opath, action, filter=None):
 
 def main():
     success = process_tree('src', 'output', process_by_ext)
+    if global_warn_count:
+        print(global_warn_count, 'warnings')
     if not success:
         sys.exit(2)
 
