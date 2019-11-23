@@ -1,0 +1,12 @@
+digraph dlog {
+    label=<Hardness assumptions when a bilinear pairing exists from G to H.<BR/>An edge from u to v means that v is a stronger assumption than u.>
+    labeljust="left"
+    "dlog(H)" -> "dlog(G)"
+    "dlog(G)" -> "cdh(G)"
+    "dlog(H)" -> "cdh(H)"
+    "cdh(H)" -> "ddh(H)"
+    "cdh(G)" -> "cbdh(G, H)"
+    "cdh(H)" -> "cbdh(G, H)"
+    "cbdh(G, H)" -> "dbdh(G, H)"
+    "ddh(H)" -> "dbdh(G, H)"
+}
