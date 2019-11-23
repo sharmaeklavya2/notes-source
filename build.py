@@ -158,9 +158,43 @@ def process_md_file(ifpath, odpath):
     return True
 
 
+def process_dot_file(ifpath, odpath):
+    """Compile a dot file to SVG.
+
+    ifpath: Path to input file.
+    odpath: Path to output directory.
+    """
+
+    name = os.path.splitext(os.path.basename(ifpath))[0]
+    svg_path = pjoin(odpath, name + '.svg')
+
+    if not (ARGS.force or is_source_updated(ifpath, svg_path)):
+        print(' Skipped ' + ifpath)
+    else:
+        print('Building ' + ifpath)
+        os.makedirs(odpath, exist_ok=True)
+        args = ['dot', '-Tsvg', ifpath, '-o', svg_path]
+        try:
+            subprocess.check_call(args)
+        except FileNotFoundError as e:
+            global global_dot_error
+            print('error while running dot:', file=sys.stderr)
+            print(args, file=sys.stderr)
+            print('{}: {}'.format(type(e).__name__, str(e)))
+            if global_dot_error is False:
+                global_dot_error = True
+                global global_warn_count
+                global_warn_count += 1
+                print('WARNING: dot files will not be processed')
+                print('WARNING: make sure you have dot (graphviz) installed')
+
+    return True
+
+
 FUNC_BY_EXT = {
     '.tex': process_tex_file,
     '.md': process_md_file,
+    '.dot': process_dot_file,
 }
 
 
