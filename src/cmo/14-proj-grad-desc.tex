@@ -138,7 +138,7 @@ f(x_{t+1}) &\le f(x_t) + \grad_f(x_t)^T(x_{t+1} - x_t) + \frac{L}{2}\norm{x_{t+1
 \end{align*}
 Let $E(x) = f(x) - f(x^*)$. If we always choose $\alpha_t < \frac{1}{L}$, then
 \[ 0 \le E(x_{t+1}) < \frac{\norm{\delta_t}^2 - \norm{\delta_{t+1}}^2}{2\alpha_t}
-\implies \norm{\delta_t} < \norm{\delta_{t+1}} \]
+\implies \norm{\delta_t} > \norm{\delta_{t+1}} \]
 Let $E_T = \min_{0 \le t \le T} E(x_t)$ and $\alpha = \min_{t=0}^T \alpha_t$. Then
 \begin{align*}
 E_T &\le \frac{1}{T} \sum_{t=0}^{T-1} E(x_{t+1})
