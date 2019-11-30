@@ -7,7 +7,8 @@ Chapter Summery:
     * Definition of second-preimage resistance.
     * Definition of preimage resistance.
     * Collision resistance implies second-preimage resistance.
-    * Second-preimage resistance implies preimage resistance.
+    * Second-preimage resistance implies preimage resistance under uniformity assumption.
+    * Collision resistance does not imply preimage resistance.
     * Preimage resistance does not imply collision resistance.
 * Merkle-Damgard Transform:
     * Construction
