@@ -1,0 +1,73 @@
+\input{header.tex}
+
+\title{Bernstein-concentration}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\begin{definition}[$\gamma$-bernstein-concentration]
+A random variable $X \in \mathbb{R}^n$ is $\gamma$-bernstein-concentrated iff
+\[ \Pr[a^TX - \E(a^TX) \ge t]
+\le \exp\left( \frac{-1}{2\gamma} \; \frac{t^2}{\sum_{i=1}^n a_i^2 \Var(X_i) + \frac{Mt}{3}} \right) \]
+where $M = \max_{i=1}^n \abs{a_i(X_i - \E(X_i))}$.
+\end{definition}
+
+\begin{theorem}[Bernstein's inequality]
+Let $X \in \mathbb{R}^n$ be a random variable where each coordinate of $X$ is independent.
+Then $X$ is $1$-bernstein-concentrated.
+\end{theorem}
+
+\section{Bernouilli variables}
+
+\begin{theorem}
+\label{thm:refined-bern-conc}
+Let $X \in \{0, 1\}^n$ be a random variable with $\E(X) = x$.
+If $X$ is $\gamma$-bernstein-concentrated, then
+\[ \Pr[a^TX - a^Tx \ge t]
+\le \exp\left( \frac{-1}{2\gamma} \; \frac{t^2}{\norm{a}_{\infty}(a^Tx + t/3)} \right) \]
+\end{theorem}
+\begin{proof}
+$\Var(X_i) = x_i(1-x_i)$.
+\[ \sum_{i=1}^n a_i^2 x_i(1-x_i)
+\le \norm{a}_{\infty} \sum_{i=1}^n a_ix_i
+= \norm{a}_{\infty} a^Tx \]
+\[ M = \max_{i=1}^n \abs{a_i}\abs{X_i - \E(X_i)}
+\le \norm{a}_{\infty} \max_{i=1}^n \abs{X_i - \E(X_i)}
+\le \norm{a}_{\infty} \]
+\end{proof}
+
+\begin{theorem}
+Let $X \in \{0, 1\}^n$ be a random variable with $\E(X) = x$.
+Let $X$ be $\gamma$-bernstein-concentrated.
+Let $\alpha \le a^Tx \le \beta$. Then
+\[ \Pr[ a^TX \ge (1+\delta)\beta ]
+\le \exp\left(\frac{-1}{2\gamma} \frac{\beta}{\norm{a}_{\infty}} \frac{\delta^2}{1+\delta/3} \right) \]
+\[ \Pr[ a^TX \le (1-\delta)\alpha ]
+\le \exp\left(\frac{-1}{2\gamma} \frac{\alpha}{\norm{a}_{\infty}} \frac{\delta^2}{1+\delta/3} \right) \]
+\end{theorem}
+\begin{proof}
+Let $c = (1+\delta)\beta$.
+\begin{align*}
+\Pr[ a^TX \ge c ]
+&= \Pr[ a^TX - a^Tx \ge c - a^Tx ]
+\\ &\le \exp\left( -\frac{1}{2\gamma} \; \frac{(c-a^Tx)^2}{\norm{a}_{\infty}
+\left(a^Tx + \frac{1}{3}(c - a^Tx)\right)} \right)
+\tag{by theorem \ref{thm:refined-bern-conc}}
+\\ &\le \exp\left( -\frac{1}{2\gamma} \frac{3}{\norm{a}_{\infty}} \frac{(c-a^Tx)^2}{c + 2a^Tx} \right)
+\end{align*}
+Let $f(y) = (c-y)^2/(c+2y)$, where $y \in [\alpha, \beta]$. $f(y) > 0$.
+\[ \ln(f(y)) = 2\ln(c-y) - \ln(c+2y) \]
+\[ \frac{f'(y)}{f(y)} = -\frac{2}{c-y} - \frac{2}{c+2y} < 0 \]
+Since $f'(y) < 0$, $f(y)$ is minimized at $y = \beta$.
+$f(\beta) = (\delta^2\beta)/(3 + \delta)$.
+Therefore,
+\[ \Pr[ a^TX \ge (1+\delta)\beta ]
+\le \exp\left( \frac{-1}{2\gamma} \frac{\beta}{\norm{a}_{\infty}} \frac{\delta^2}{1+\delta/3} \right) \]
+The other inequality can be proven similarly.
+\end{proof}
+
+%\addMyBib{}
+
+\end{document}
