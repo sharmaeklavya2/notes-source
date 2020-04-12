@@ -1,0 +1,85 @@
+\input{header.tex}
+
+\title{Inverse of \texorpdfstring{$x \mapsto x\log_b x$}{x -> x*log_b(x)}}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+Let $b > 1$. Let $f: \mathbb{R}_{\ge 0} \mapsto \mathbb{R}_{\ge 1}$ be a function such that
+$f(x)\log_b(f(x)) = x$; i.e. it is the inverse of $x \mapsto x\log_b(x)$.
+Our objective is to determine the asymptotic behavior of $f(x)$.
+
+\begin{theorem}
+$f$ is a bijective function.
+\end{theorem}
+\begin{proof}
+Let $h: \mathbb{R}_{\ge 1} \mapsto \mathbb{R}_{\ge 0}$ where $h(x) = x\log_b x$.
+
+$x \ge 1 \implies x \log_b x \ge 0$. So $h$ is a function.
+$h'(x) = \log_b x + \frac{1}{\ln b} > 0$. So $h(x)$ is strictly increasing.
+
+Since $h$ is a strictly increasing function from $[1, \infty)$ to $[0, \infty)$
+and $h(1) = 0$, $h$ is a bijective function (proof beyond the scope of this document).
+
+Since $f$ is the inverse of $h$, $f$ is also bijective
+(proof beyond the scope of this document).
+\end{proof}
+
+Define functions $\ell$ and $u$ as
+\begin{align*}
+\ell(x) &= \frac{x}{\log_b x}
+& u(x) &= \left(1 + \frac{1}{e\ln b}\right)\frac{x}{\log_b x}
+\end{align*}
+
+\begin{theorem}
+$y \ge b \implies \ell(y) \le f(y)$
+\end{theorem}
+\begin{proof}
+Let $y \ge b$ and $x = f(y)$. Therefore, $y = x\log_b x$ and $x \ge b$.
+\begin{align*}
+\ell(y) &= \ell(x\log_b x)
+\\ &= \frac{x\log_b x}{\log_b x + \log_b\log_b x}
+\\ &\le \frac{x\log_b x}{\log_b x}  \tag{$x\log_b x \ge 0$ and $\log_b \log_b x \ge 0$}
+\\ &= x = f(y)
+\end{align*}
+\end{proof}
+
+
+\begin{lemma}
+\label{thm:lem1}
+Let $g(x) = \frac{\log_b x}{x}$. Then $g(x) \le \frac{1}{e\ln b}$.
+\end{lemma}
+\begin{proof}
+\begin{align*}
+g(x) &= \frac{1}{\ln b} \frac{\ln x}{x}
+& g'(x) &= \frac{1}{\ln b} \frac{1-\ln x}{x^2}
+\end{align*}
+\[ x \ge e \implies 1-\ln x \le 0 \implies g'(x) \le 0 \]
+\[ 0 < x \le e \implies 1-\ln x \ge 0 \implies g'(x) \ge 0 \]
+Therefore, $g(x)$ attains its maximum value at $x = e$.
+\[ g(x) \le g(e) = \frac{1}{e\ln b} \]
+\end{proof}
+
+\begin{theorem}
+$y \ge 1 \implies f(y) \le u(y)$
+\end{theorem}
+\begin{proof}
+Let $y \ge 1$ and $x = f(y)$. Therefore, $y = x\log_b x$ and $x \ge b$.
+Let $\frac{1}{e\ln b} = c$.
+\begin{align*}
+u(y) &= u(x\log_b x)
+\\ &= (1+c)\frac{x\log_b x}{\log_b x + \log_b \log_b x}
+\\ &= (1+c)\frac{x}{1 + g(\log_b x)}
+\\ &\ge x \tag{$x \ge 0$ and $g(\log_b x) \le c$}
+\\ &= f(y)
+\end{align*}
+\end{proof}
+
+Therefore,
+\[ f(x) \in \Theta\left(\frac{x}{\log_b x}\right) \]
+
+%\addMyBib{}
+
+\end{document}
