@@ -8,6 +8,8 @@ To compile all latex files to PDF and all markdown files to HTMl at once, run `p
 (requires python 3.5+ and `pdflatex` to be installed).
 This will put all generated PDF and HTML files in a directory named `output`.
 
+Alternatively, you can access the PDF and HTML files at <https://sharmaeklavya2.github.io/dl/notes/>.
+
 ## How to report build failures
 
 If the build process fails for you, feel free to
