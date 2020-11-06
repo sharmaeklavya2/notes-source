@@ -1,8 +1,19 @@
 html {font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, 'Open Sans', sans-serif;}
-body {margin: 0; padding: 0 2.5em; color: #202020; line-height: 1.5; font-size: 1.1em;}
+body {margin: 0; padding: 0 2.5em; line-height: 1.5; font-size: 1.1em;}
+a:not(:hover) {text-decoration: none;}
 @media (max-width: 820px) {
     body {padding: 0 1em;}
     ul {padding-left: 1em;}
     ol {padding-left: 1.2em;}
 }
-a:not(:hover) {text-decoration: none;}
+
+/* color scheme */
+body {color: #202020;}
+a {color: rgb(3, 102, 214);}
+a:visited {color: rgb(100, 0, 150);}
+@media (prefers-color-scheme: dark) {
+    body {background: rgb(27, 30, 32); color: rgb(192, 192, 192);}
+    a {color: rgb(65, 175, 235);}
+    a:visited {color: rgb(150, 100, 230);}
+    img {filter: brightness(.8) contrast(1.2);}
+}
