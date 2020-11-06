@@ -18,7 +18,7 @@ Alternatively, you can access the PDF and HTML files at <https://sharmaeklavya2.
 If you want the output directory to be navigable from a web browser,
 get [`auto-index.py`](https://github.com/sharmaeklavya2/auto-index) and run
 
-    python3 auto-index.py output --external-style
+    python3 auto-index.py output
 
 ## How to report build failures
 
