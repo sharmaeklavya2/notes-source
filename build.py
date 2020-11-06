@@ -10,13 +10,14 @@ import subprocess
 
 
 parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('out_dir', help='Path to output directory')
 parser.add_argument('--no-clean', action='store_false', dest='clean', default=True,
     help="Do not remove temporary files from output directory")
 parser.add_argument('--force', action='store_true', default=False,
     help="Build even if source was not updated")
 parser.add_argument('--dryrun', action='store_true', default=False,
     help="Only print commands; do not run them")
-ARGS = parser.parse_args(None if __name__ == '__main__' else [])
+ARGS = parser.parse_args(None if __name__ == '__main__' else ['output'])
 
 
 TRASH_EXTS = ['.aux', '.log', '.out', '.toc', '.bbl', '.blg']
@@ -231,7 +232,7 @@ def process_tree(ipath, opath, action, filter=None):
 
 
 def main():
-    success = process_tree('src', 'output', process_by_ext)
+    success = process_tree('src', ARGS.out_dir, process_by_ext)
     if global_warn_count:
         print(global_warn_count, 'warnings')
     if not success:

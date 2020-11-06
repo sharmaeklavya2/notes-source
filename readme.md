@@ -4,11 +4,21 @@ This repository contains notes I wrote while studying computer science.
 
 Currently all notes are written in LaTeX and markdown.
 
-To compile all latex files to PDF and all markdown files to HTMl at once, run `python3 build.py`
-(requires python 3.5+ and `pdflatex` to be installed).
+To compile all latex files to PDF and all markdown files to HTML at once, run
+
+    python3 build.py output
+
+This requires python 3.5+ and `pdflatex` to be installed.
 This will put all generated PDF and HTML files in a directory named `output`.
 
-Alternatively, you can access the PDF and HTML files at <https://sharmaeklavya2.github.io/dl/notes/>.
+Alternatively, you can access the PDF and HTML files at <https://sharmaeklavya2.github.io/notes/>.
+
+## auto-index
+
+If you want the output directory to be navigable from a web browser,
+get [`auto-index.py`](https://github.com/sharmaeklavya2/auto-index) and run
+
+    python3 auto-index.py output --external-style
 
 ## How to report build failures
 

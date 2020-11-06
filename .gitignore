@@ -1,6 +1,8 @@
-secret/
-output/
+secret
+output
+deploy
 .env
+auto-index.py
 
 *.aux
 *.bbl
