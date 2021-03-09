@@ -1,85 +1,150 @@
 \input{header.tex}
 
-\title{Inverse of \texorpdfstring{$x \mapsto x\log_b x$}{x -> x*log_b(x)}}
+\title{Inverse of \texorpdfstring{$x \mapsto x\ln x$}{x -> x*ln(x)}}
 
 \begin{document}
 
 \maketitle
 \initMinimal{}
 
-Let $b > 1$. Let $f: \mathbb{R}_{\ge 0} \mapsto \mathbb{R}_{\ge 1}$ be a function such that
-$f(x)\log_b(f(x)) = x$; i.e. it is the inverse of $x \mapsto x\log_b(x)$.
-Our objective is to determine the asymptotic behavior of $f(x)$.
+We want to bound the inverse of $x \mapsto x\ln x$, i.e.,
+if $y = x\ln x$, then we want to lower and upper bound $x$
+by simple functions of $y$.
 
-\begin{theorem}
-$f$ is a bijective function.
-\end{theorem}
-\begin{proof}
-Let $h: \mathbb{R}_{\ge 1} \mapsto \mathbb{R}_{\ge 0}$ where $h(x) = x\log_b x$.
+Our main result is that $x \in \Theta(y/\ln y)$.
+We also prove tighter non-asymptotic bounds.
 
-$x \ge 1 \implies x \log_b x \ge 0$. So $h$ is a function.
-$h'(x) = \log_b x + \frac{1}{\ln b} > 0$. So $h(x)$ is strictly increasing.
+\section{Preliminaries}
 
-Since $h$ is a strictly increasing function from $[1, \infty)$ to $[0, \infty)$
-and $h(1) = 0$, $h$ is a bijective function (proof beyond the scope of this document).
-
-Since $f$ is the inverse of $h$, $f$ is also bijective
-(proof beyond the scope of this document).
-\end{proof}
-
-Define functions $\ell$ and $u$ as
-\begin{align*}
-\ell(x) &= \frac{x}{\log_b x}
-& u(x) &= \left(1 + \frac{1}{e\ln b}\right)\frac{x}{\log_b x}
-\end{align*}
-
-\begin{theorem}
-$y \ge b \implies \ell(y) \le f(y)$
-\end{theorem}
-\begin{proof}
-Let $y \ge b$ and $x = f(y)$. Therefore, $y = x\log_b x$ and $x \ge b$.
-\begin{align*}
-\ell(y) &= \ell(x\log_b x)
-\\ &= \frac{x\log_b x}{\log_b x + \log_b\log_b x}
-\\ &\le \frac{x\log_b x}{\log_b x}  \tag{$x\log_b x \ge 0$ and $\log_b \log_b x \ge 0$}
-\\ &= x = f(y)
-\end{align*}
-\end{proof}
-
+\begin{lemma}[Log bounds \cite{theoremdep:log-bound}]
+\label{thm:log-bound}
+\[ \forall x \in \mathbb{R}_{> 0}, \frac{x-1}{x} \le \ln x \le x - 1. \]
+\end{lemma}
 
 \begin{lemma}
-\label{thm:lem1}
-Let $g(x) = \frac{\log_b x}{x}$. Then $g(x) \le \frac{1}{e\ln b}$.
+\label{thm:xy-lb}
+Let $y = x\ln x$.
+Then $y > 0 \iff x > 1$ and $y \ge e \iff x \ge e$.
 \end{lemma}
 \begin{proof}
-\begin{align*}
-g(x) &= \frac{1}{\ln b} \frac{\ln x}{x}
-& g'(x) &= \frac{1}{\ln b} \frac{1-\ln x}{x^2}
-\end{align*}
-\[ x \ge e \implies 1-\ln x \le 0 \implies g'(x) \le 0 \]
-\[ 0 < x \le e \implies 1-\ln x \ge 0 \implies g'(x) \ge 0 \]
-Therefore, $g(x)$ attains its maximum value at $x = e$.
-\[ g(x) \le g(e) = \frac{1}{e\ln b} \]
+\[ x \le 1 \implies \ln x \le 0 \implies y = x\ln x \le 0. \]
+\[ x > 1 \implies \ln x > 0 \implies y = x\ln x > 0. \]
+Therefore, $x \ge 1 \iff y \ge 0$.
+\[ x < e \implies \ln x < 1 \implies y = x\ln x < e. \]
+\[ x \ge e \implies \ln x \ge 1 \implies y = x\ln x \ge e. \]
+Therefore, $x \ge e \iff y \ge e$.
 \end{proof}
 
 \begin{theorem}
-$y \ge 1 \implies f(y) \le u(y)$
+\label{thm:refine}
+Let $x \ge 1$ and $y = x\ln x$. Then
+\[ 1 < \ell \le x \le u \implies \frac{y}{\ln u} \le x \le \frac{y}{\ln\ell}. \]
 \end{theorem}
 \begin{proof}
-Let $y \ge 1$ and $x = f(y)$. Therefore, $y = x\log_b x$ and $x \ge b$.
-Let $\frac{1}{e\ln b} = c$.
 \begin{align*}
-u(y) &= u(x\log_b x)
-\\ &= (1+c)\frac{x\log_b x}{\log_b x + \log_b \log_b x}
-\\ &= (1+c)\frac{x}{1 + g(\log_b x)}
-\\ &\ge x \tag{$x \ge 0$ and $g(\log_b x) \le c$}
-\\ &= f(y)
-\end{align*}
+& \ell \le x \le u
+\implies \ln\ell \le \ln x \le \ln u
+\\ &\implies x\ln\ell \le y \le x\ln u
+\implies \frac{y}{\ln u} \le x \le \frac{y}{\ln\ell}
+\qedhere \end{align*}
+\end{proof}
+The above theorem is useful because it helps us \emph{refine} the bounds that we find.
+
+\section{Bounds when \texorpdfstring{$y \ge e$}{y >= e}}
+
+\begin{theorem}
+\label{thm:lin-ub-e}
+Let $y \ge e$ and $y = x\ln x$. Then $x \le y$.
+\end{theorem}
+\begin{proof}
+By \cref{thm:xy-lb}, $y \ge e \iff x \ge e$.
+$x \ge e \implies \ln x \ge 1 \implies y \ge x$.
 \end{proof}
 
-Therefore,
-\[ f(x) \in \Theta\left(\frac{x}{\log_b x}\right) \]
+\begin{theorem}
+Let $x \ge e$ and $y = x\ln x$. Then $x \ge y/(\ln y)$.
+\end{theorem}
+\begin{proof}
+Set $u = y$ and use \cref{thm:lin-ub-e,thm:refine}.
+\end{proof}
 
-%\addMyBib{}
+\begin{theorem}
+Let $y > 1$ and $y = x\ln x$. Then
+\[ x \le \frac{e+1}{e} \frac{y}{\ln y}. \]
+\end{theorem}
+\begin{proof}
+By \cref{thm:xy-lb}, $x > 1$.
+\[ \frac{x\ln y}{y}
+= \frac{x(\ln x + \ln\ln x)}{x\ln x}
+= 1 + \frac{\ln\ln x}{\ln x} \]
+Let $t = \ln x$. Then $t > 0$ and $(x\ln y)/y = 1 + (\ln t)/t$.
+Define $g(t) = (\ln t)/t$. Then
+\[ g'(t) = \frac{1 - \ln t}{t^2} \]
+$g'(t)$ is positive for $t < e$, negative for $t > e$ and $g'(e) = 0$.
+Therefore, $g(t)$ is maximized at $t = e$, and the maximum value is $g(e) = 1/e$.
+Therefore,
+\[ \frac{x\ln y}{y} = 1 + g(\ln x) \le 1 + \frac{1}{e}
+\implies x \le \frac{e+1}{e} \frac{y}{\ln y}  \qedhere \]
+\end{proof}
+
+\section{Bounds when \texorpdfstring{$y \ge 0$}{y >= 0}}
+
+\begin{theorem}
+\label{thm:lin-ub}
+Let $y = x\ln x$. Then $x \le y + 1$.
+\end{theorem}
+\begin{proof}
+$\frac{x-1}{x} \le \ln x \implies x-1 \le y$.
+\end{proof}
+
+Define
+\[ \ell(y) = \begin{cases} y/\ln(y+1) & y \neq 0
+\\ 1 & y = 0 \end{cases}. \]
+Note that $\ell(y)$ is continuous over $y \in (-1, \infty)$.
+
+\begin{theorem}
+\label{thm:ell-lb}
+Let $x \ge 1$ and $y = x\ln x$. Then $\ell(y) \le x$.
+\end{theorem}
+\begin{proof}
+This is true for $x = 1$.
+For $x > 1$, set $u = y+1$ and use \cref{thm:lin-ub,thm:refine}.
+\end{proof}
+
+\begin{theorem}
+\label{thm:ell-ub}
+Let $x \ge 1$ and $y = x\ln x$. Then $x \le 2\ell(y) - 1$.
+\end{theorem}
+\begin{proof}
+This is true for $x = 1$, so let $x > 1$.
+By \cref{thm:xy-lb}, $y > 0$.
+\[ x \le 2\ell(y) - 1 \iff \frac{2y}{\ln(y+1)} \ge x+1
+\iff \frac{2x\ln x}{x+1} \ge \ln(x\ln x + 1) \]
+Define $g(x)$ as
+\[ g(x) = \frac{2x\ln x}{x+1} - \ln(x\ln x + 1). \]
+To prove that $x \le 2\ell(y) - 1$, we need to prove that $g(x) \ge 0$.
+
+Note that $g(1) = 0$. If we prove that $g'(x) \ge 0$ for all $x \ge 1$,
+then that would imply $g(x) \ge 0$ for all $x \ge 1$.
+\begin{align*}
+g'(x) &= 2\left( \frac{\ln x + 1}{x+1} - \frac{x\ln x}{(x+1)^2}\right)
+    - \frac{\ln x + 1}{x\ln x + 1}
+\\ &= \frac{x^2(\ln x - 1) + 2x(\ln x)^2 + \ln x + 1}{(x+1)^2(x\ln x + 1)}
+\end{align*}
+\begin{align*}
+& x^2(\ln x - 1) + 2x(\ln x)^2 + \ln x + 1
+\\ &\ge x^2\left(\frac{x-1}{x} - 1\right) + 2x\left(\frac{x-1}{x}\right)^2 + \frac{x-1}{x} + 1
+    \tag{since $x > 1$ and by \cref{thm:log-bound}}
+\\ &= x + \frac{1}{x} - 2 = \left(\sqrt{x} - \frac{1}{\sqrt{x}}\right)^2 \ge 0
+\end{align*}
+Hence, for $x \ge 1$, $g'(x) \ge 0 \implies g(x) \ge 0 \implies x \le 2\ell(y) - 1$.
+\end{proof}
+
+\begin{theorem}
+Let $y = x\ln x$. Then $\ell(y) - 1 \le x$.
+\end{theorem}
+\begin{proof}(TODO)\end{proof}
+
+\addMyBib{}
 
 \end{document}
