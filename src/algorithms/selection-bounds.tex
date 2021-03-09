@@ -32,7 +32,7 @@ All efficient algorithms use $\Theta(n\lg n)$ comparisons.
 Build a min-heap of all elements and pop $k$ times.
 
 A binary min-heap of size $n$ can be built using at most $2(n-1)$ comparisons and an item can be
-popped from it using at most $2\floor{\lg (n-1)}$ comparisons \cite{eku-notes-heaps}.
+popped from it using at most $2\floor{\lg (n-1)}$ comparisons \cite{eku-notes:heaps}.
 
 Therefore, number of comparisons to select the $k^{\textrm{th}}$-smallest element is upper bounded by
 \[ 2\left( n-1 + \sum_{i=1}^k \floor{\lg(n-i)} \right)
@@ -46,7 +46,7 @@ Replace top by new element and repair heap.
 The heap top at the end of this process is the $k^{\textrm{th}}$-smallest element.
 
 A binary max-heap of size $k$ can be built using at most $2(k-1)$ comparisons and top can be replaced
-using at most $2\floor{\lg k}$ comparisons \cite{eku-notes-heaps}.
+using at most $2\floor{\lg k}$ comparisons \cite{eku-notes:heaps}.
 
 Therefore, number of comparisons to select the $k^{\textrm{th}}$-smallest element is upper bounded by
 \[ 2((n-k)\floor{\lg k} + (k-1)) \]

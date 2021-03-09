@@ -45,7 +45,7 @@ In the worst case, merge sort performs $f(n)$ comparisons, where
 $f(0) = f(1) = 0$ and
 $f(n) = f\left(\floor{\frac{n}{2}}\right) + f\left(\ceil{\frac{n}{2}}\right) + (n-1)$.
 
-The solution to this recurrence is \cite{eku-notes-recurrences}
+The solution to this recurrence is \cite{eku-notes:recurrences}
 \[ f(n)
 = n(\floor{\lg n} + 1) - 2^{\floor{\lg n} + 1} + 1
 \in n\floor{\lg n} - [0, n-1] \]
@@ -55,7 +55,7 @@ This is $O(n)$ higher than the decision-tree lower bound.
 
 With a binary heap, total number of comparisons for heapsort
 \[ \le 2(n-1 + \floor{\lg((n-1)!)}) \le 2n\lg n - 2(\lg e - 1)n - \lg n + \lg\pi - \frac{5}{6} \]
-See \cite{eku-notes-heaps} for the algorithm and analysis.
+See \cite{eku-notes:heaps} for the algorithm and analysis.
 
 \subsection{Randomized quicksort}
 
