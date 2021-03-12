@@ -124,10 +124,11 @@ def process_tex_file(ifpath, odpath):
             if ARGS.dryrun:
                 if os.path.exists(fpath):
                     print(DRYRUN_PROMPT + 'rm ' + fpath)
-            try:
-                os.remove(fpath)
-            except FileNotFoundError:
-                pass
+            else:
+                try:
+                    os.remove(fpath)
+                except FileNotFoundError:
+                    pass
 
     return True
 
