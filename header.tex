@@ -17,42 +17,63 @@
     urlcolor={blue!50!black}
 }
 
+% THEOREMS
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
 
+% SHORTHANDS
+
+\newcommand*{\Th}{^{\textrm{th}}}
+\newcommand*{\WLoG}{Without loss of generality}
+\newcommand*{\wLoG}{without loss of generality}
+\newcommand*{\wrt}{with respect to}
+
+% SYMBOLS
+
+\let\eps\epsilon
+\newcommand*{\defeq}{:=}
+
+% MATH
+
 \newcommand*{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand*{\smallfloor}[1]{\lfloor #1 \rfloor}
 \newcommand*{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand*{\smallceil}[1]{\lceil #1 \rceil}
 \newcommand*{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand*{\smallabs}[1]{\lvert #1 \rvert}
 \newcommand*{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand*{\smallnorm}[1]{\lVert #1 \rVert}
 \DeclareMathOperator*{\E}{E}
 \DeclareMathOperator*{\Var}{Var}
 \DeclareMathOperator*{\argmin}{argmin}
 \DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\opt}{opt}
+\newcommand*{\OPT}{\mathrm{OPT}}
+
+% INITIALIZATIONS
 
 \newcommand{\initMinimal}{
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.5em}
 }
-
 \newcommand{\initFromContents}{
 \tableofcontents
 \newpage
 \initMinimal{}
 }
-
 \newcommand{\initAfterBeginDocument}{
 \maketitle
 \initFromContents{}
 }
-
 \newcommand{\addMyBib}{
 \bibliographystyle{plainurl}
 \bibliography{bibdb}
 }
 
 \author{Eklavya Sharma}
-
 \date{}
