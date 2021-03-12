@@ -15,7 +15,7 @@ parser.add_argument('--no-clean', action='store_false', dest='clean', default=Tr
     help="Do not remove temporary files from output directory")
 parser.add_argument('--force', action='store_true', default=False,
     help="Build even if source was not updated")
-parser.add_argument('--dryrun', action='store_true', default=False,
+parser.add_argument('--dry-run', action='store_true', default=False,
     help="Only print commands; do not run them")
 ARGS = parser.parse_args(None if __name__ == '__main__' else ['output'])
 
@@ -37,14 +37,14 @@ def is_source_updated(source, dest):
 
 
 def run(cmd, **kwargs):
-    if ARGS.dryrun:
+    if ARGS.dry_run:
         print(DRYRUN_PROMPT + ' '.join(cmd))
     else:
         return subprocess.call(cmd, **kwargs)
 
 
 def run_check(cmd, **kwargs):
-    if ARGS.dryrun:
+    if ARGS.dry_run:
         print(DRYRUN_PROMPT + ' '.join(cmd))
     else:
         return subprocess.check_call(cmd, **kwargs)
@@ -121,7 +121,7 @@ def process_tex_file(ifpath, odpath):
     if ARGS.clean:
         for ext in TRASH_EXTS:
             fpath = pjoin(odpath, name + ext)
-            if ARGS.dryrun:
+            if ARGS.dry_run:
                 if os.path.exists(fpath):
                     print(DRYRUN_PROMPT + 'rm ' + fpath)
             else:
