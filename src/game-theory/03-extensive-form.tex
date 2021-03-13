@@ -1,0 +1,77 @@
+\input{header.tex}
+\usepackage{diagbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\title{Extensive Form Games}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+We will look at another model for games, called \emph{extensive form games}.
+We will then show how it can be reduced to a strategic form game.
+
+An extensive form game captures games where players move sequentially.
+Such a game is usually visualized as a tree.
+
+An extensive form game $\Gamma$ is represented as the tuple
+$(N, (A_i)_{i \in N}, H, P, (I_i)_{i \in N}, (u_i)_{i \in N})$ where
+\begin{itemize}
+\item $N$ is the set of players.
+\item $A_i$ is the set of actions available to player $i$.
+\item A history is a sequence of actions that can be played during the game.
+    The state of the game can be represented by the history at that point in time.
+\item $H$ is the set of terminal histories, i.e.,
+    when the game reaches a state in $H$, the game ends.
+    No history in $H$ is a prefix of another history in $H$.
+\item $S_H$ is the set of proper subhistories of $H$. Formally, let
+    $\operatorname{prefix}(h)$ denote the set of proper prefixes of history $h \in H$.
+    Then $S_H \defeq \bigcup_{h \in H} \operatorname{prefix}(h)$.
+\item $P: S_H \mapsto N$ is the player function, i.e., when the game is at state $h \in S_H$,
+    the player $P(h)$ is supposed to make a move.
+\item For $i \in N$, let $H_i$ be the states where $i$ is supposed to make a move,
+    i.e., $H_i \defeq \{h \in S_H: P(h) = i\}$. Then $I_i$ is a partition of $H_i$.
+    Sets in $I_i$ are called the information sets of player $i$.
+    Intuitively, for each $X \in I_i$, player $i$ cannot distinguish the states in $X$.
+\item For each $i \in N$, $u_i: H \mapsto \mathbb{R}$ is the utility function of player $i$.
+    This means that when the game reaches state $h \in H$,
+    each player $i$ will get utility $u_i(h)$.
+\item For history $h \in S_H$, where $P(h) = i$, let $C(h) \subseteq A_i$ be the
+    actions available to player $i$, i.e., $a \in C(h) \iff h + a \in S_H \cup H$.
+    For each $i \in N$ and each $X \in I_i$, $C(h)$ should be the same for each $h \in X$.
+    Intuitively, the actions available to player $i$ should be the same
+    for all histories in an information set. Denote these actions as $C(X)$.
+\end{itemize}
+
+\begin{definition}
+A game is said to be a perfect information game
+iff for each player $i$, all information sets are singletons.
+\end{definition}
+
+\begin{definition}
+For a player $i$, $s_i: I_i \mapsto A_i$ is called a \emph{strategy} iff
+for each $J \in I_i$, we have $s_i(J) \in C(J)$.
+\end{definition}
+Intuitively, a strategy is a plan about which action to take for each information set.
+
+\begin{definition}
+Let $s_i$ be a strategy of player $i$.
+Let $s \defeq (s_i)_{i \in N}$.
+Then $s$ is called a \emph{strategy profile} for the game.
+Let $S_i$ be all possible strategies for player $i$.
+Let $S \defeq S_1 \times S_2 \times \ldots \times S_n$, where $n \defeq |N|$.
+Then $S$ is called the \emph{strategy profile collection} for the game.
+
+For a strategy profile $s$, the outcome of the game, denoted by $O(s)$,
+is the terminal history reached when the game ends.
+For a player $i$ and strategy profile $s$, $u_i(s) \defeq u_i(O(s))$.
+
+The \emph{strategic form equivalent} of $\Gamma$
+is the game $(N, (S_i)_{i \in N}, (u_i)_{i \in N})$.
+\end{definition}
+
+%\addMyBib{}
+
+\end{document}
