@@ -63,6 +63,29 @@ A very weak DSE is also a PSNE.
 \qedhere \end{align*}
 \end{proof}
 
+\begin{theorem}
+If a game contains a strong DSE, then that is the only PSNE.
+\end{theorem}
+\begin{proof}
+Assume the game contains a strong DSE $s^*$ and a PSNE $t^*$ such that $s^* \neq t^*$.
+Since $s^* \neq t^*$, there exists a player $i$ such that $s^*_i \neq t^*_i$.
+\begin{align*}
+& s^* \textrm{ is a strong DSE}
+\\ &\implies s^*_i \textrm{ is a strongly dominant strategy for player } i
+\\ &\iff \forall s_i \in S_i - \{s_i^*\}, \; \forall s_{-i} \in S_{-i}, \;
+    u_i(s_i^*, s_{-i}) > u_i(s_i, s_{-i})
+\\ &\implies u_i(s_i^*, t_{-i}^*) > u_i(t_i^*, t_{-i}^*)
+\end{align*}
+\begin{align*}
+& t^* \textrm{ is a PSNE}
+\\ &\implies \forall s_i \in S_i, \;
+    u_i(t_i^*, t_{-i}^*) \ge u_i(s_i, t_{-i}^*)
+\\ &\implies u_i(t_i^*, t_{-i}^*) \ge u_i(s_i^*, t_{-i}^*)
+\end{align*}
+This is a contradiction, so we cannot have a strong DSE
+and a different PSNE together in a game.
+\end{proof}
+
 %\addMyBib{}
 
 \end{document}
