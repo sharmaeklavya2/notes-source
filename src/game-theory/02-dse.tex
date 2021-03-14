@@ -3,6 +3,8 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
 
+\newcommand*{\shat}{\widehat{s}}
+
 \title{Dominant Strategy Equilibria}
 
 \begin{document}
@@ -127,8 +129,10 @@ The utility function is given by
 
 \begin{theorem}
 \label{thm:braess-dse}
-If $\gamma < \beta - \alpha n$, then $(AB)_{i \in N}$ is a
-strongly dominant strategy equilibrium.
+$AB$ is a strongly dominant strategy for each player iff $\gamma < \beta - \alpha n$.
+$AB$ is a very weakly dominant strategy for each player iff $\gamma \le \beta - \alpha n$.
+If $n \ge 3$ and $\alpha > 0$, then $AB$ is a weakly dominant strategy for each player
+iff $\gamma \le \beta - \alpha n$.
 \end{theorem}
 \begin{proof}
 For any player, consider a strategy profile $s_{-i}$ for the other players. Then
@@ -138,7 +142,7 @@ For any player, consider a strategy profile $s_{-i}$ for the other players. Then
 \\ &= (\alpha(n_A(s_{-i}) + 1 + n_{AB}(s_{-i})) + \beta)
     - (\gamma + \alpha(n + n_{AB}(s_{-1}) + 1))
 \\ &= (\beta - \gamma) + \alpha(n_A(s_{-i}) - n)
-\\ &\ge (\beta - \alpha n) - \gamma > 0
+\\ &\ge (\beta - \alpha n) - \gamma
 \end{align*}
 \begin{align*}
 & u_i(AB, s_{-i}) - u_i(B, s_{-i})
@@ -146,10 +150,33 @@ For any player, consider a strategy profile $s_{-i}$ for the other players. Then
 \\ &= (\beta + \alpha(n_B(s_{-i}) + 1 + n_{AB}(s_{-i})))
     - (\gamma + \alpha(n + n_{AB}(s_{-1}) + 1))
 \\ &= (\beta - \gamma) + \alpha(n_B(s_{-i}) - n)
-\\ &\ge (\beta - \alpha n) - \gamma > 0
+\\ &\ge (\beta - \alpha n) - \gamma
 \end{align*}
-Therefore, for player $i$, action $AB$ is a strongly dominant strategy.
-By symmetry, we get that $(AB)_{i \in N}$ is a strong DSE.
+Therefore, for player $i$,
+action $AB$ is a strongly dominant strategy if $\gamma < \beta - \alpha n$
+and action $AB$ is a very weakly dominant strategy if $\gamma \le \beta - \alpha n$.
+
+Let $s^*_{-i}$ be the strategy profile where
+all players other than $i$ choose action $AB$. Then
+\[ u_i(AB, s^*_{-i}) - u_i(A, s^*_{-i})
+= (\beta - \gamma) + \alpha(n_A(s^*_{-i}) - n)
+= (\beta - \alpha n) - \gamma \]
+\[ u_i(AB, s^*_{-i}) - u_i(B, s^*_{-i})
+= (\beta - \gamma) + \alpha(n_B(s^*_{-i}) - n)
+= (\beta - \alpha n) - \gamma \]
+Therefore, for player $i$,
+action $AB$ is a strongly dominant strategy iff $\gamma < \beta - \alpha n$
+and action $AB$ is a very weakly dominant strategy iff $\gamma \le \beta - \alpha n$.
+
+Let $n \ge 3$, $\alpha > 0$ and $\gamma \le \beta - \alpha n$.
+Let $\shat_{-i}$ be the strategy profile where
+$\floor{(n-1)/2}$ players from $N - \{i\}$ play strategy $A$ and
+$\ceil{(n-1)/2}$ players from $N - \{i\}$ play strategy $B$. Then
+\[ u_i(AB, \shat_{-i}) - u_i(A, \shat_{-i})
+= (\beta - \alpha n - \gamma) + \alpha n_A(\shat_{-i}) > 0 \]
+\[ u_i(AB, \shat_{-i}) - u_i(B, \shat_{-i})
+= (\beta - \alpha n - \gamma) + \alpha n_B(\shat_{-i}) > 0 \]
+Therefore, $AB$ is a weakly dominant strategy for player $i$.
 \end{proof}
 
 Let $n = 1000$, $\alpha = 1/50$, $\beta = 25$ and $\gamma = 0$.
