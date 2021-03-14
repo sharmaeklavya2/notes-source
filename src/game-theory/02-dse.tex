@@ -248,24 +248,28 @@ For second-price auctions, the bid profile $(v_1, v_2, \ldots, v_n)$ is a weak D
 
 \begin{lemma}
 \label{thm:no-weak-dom-strategy}
-For any player, there cannot be two distinct weakly dominant strategies.
+For any player, if there are two distinct very weakly dominant strategies,
+then none of them is a weakly dominant strategy.
 \end{lemma}
 \begin{proof}
-Assume player $i$ has two distinct weakly dominant strategies $a$ and $b$.
+Assume player $i$ has two distinct strategies $a$ and $b$
+where $a$ is weakly dominant and $b$ is very weakly dominant.
 Since $a$ weakly dominates $b$, $\exists s_{-i} \in S_{-i}$ such that
 $u_i(a, s_{-i}) > u_i(b, s_{-i})$.
-Since $b$ weakly dominates $a$, $u_i(b, s_{-i}) \ge u_i(a, s_{-i})$.
+Since $b$ very weakly dominates $a$, $u_i(b, s_{-i}) \ge u_i(a, s_{-i})$.
 This is a contradiction, so for any player,
-there cannot be two distinct weakly dominant strategies.
+there cannot be a weakly dominant strategy and a different very weakly dominant strategy.
 \end{proof}
 
 \begin{theorem}
-There is at most one weak DSE for a strategic form game.
+If a strategic form game contains a weak DSE, then it does not contain
+any other very weak DSE.
 \end{theorem}
 \begin{proof}
-Assume there are two distinct weak DSEs $s$ and $t$ for a strategic form game.
+Assume there is a weak DSE $s$ and a very weak DSE $t$ such that $s \neq t$.
 Since $s \neq t$, there is a player $i$ such that $s_i \neq t_i$.
-Since $s$ and $t$ are weak DSEs, $s_i$ and $t_i$ are weakly dominant strategies for player $i$.
+Therefore, $s_i$ is a weakly dominant strategy for player $i$
+and $t_i$ is a very weakly dominant strategy for player $i$.
 But this contradicts \cref{thm:no-weak-dom-strategy}.
 \end{proof}
 
