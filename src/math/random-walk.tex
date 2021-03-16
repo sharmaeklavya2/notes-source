@@ -1,0 +1,81 @@
+\input{header.tex}
+
+\title{Random Walks}
+
+\begin{document}
+
+\maketitle
+\initMinimal{}
+
+\section{One-dimensional random walk with left bounce and right absorb}
+
+There are $n+1$ nodes, numbered from $0$ to $n$, where $n \ge 1$.
+Let $X_t$ be a random variable denoting our position at time $t$.
+Let $X_0 = 0$ (i.e., we start at node 0).
+
+At node 0 we always move to node 1 in the next time step,
+i.e., $X_t = 0 \implies X_{t+1} = 1$.
+Node $n$ is absorbing, i.e., $X_t = n \implies X_{t+1} = n$.
+At every other node $i$, we move to node $i+1$ with probability $p$
+and node $i-1$ with probability $1-p$, where $p \in (0, 1)$ is a constant.
+So for $0 < i < n$, we have
+\[ X_t = i \implies X_{t+1} = \begin{cases} i+1 & \textrm{ with probability } p
+\\ i-1 & \textrm{ with probability } 1-p \end{cases} \]
+
+Our aim is to find the expected number of moves to reach $n$ from $0$.
+
+For $0 \le i < n$, let $s_i$ be the expected number of moves to reach $i+1$ from $i$.
+Then by linearity of expectation, the expected number of moves to reach $n$ from $0$
+is $\sum_{i=0}^{n-1} s_i$.
+
+Consider the sequence of nodes corresponding to a random walk that
+starts at $i$ and ends at $i+1$.
+Suppose this sequence contains $t$ occurrences of node $i$.
+This means that we moved $t-1$ times from node $i$ to node $i-1$
+and we moved once from $i$ to $i+1$.
+The probability of observing such a sequence is $(1-p)^{t-1}p$,
+which means that $t$ is a geometric random variable.
+Therefore, the expected number of times we will move from $i$ to $i-1$ is $1/p - 1$.
+Whenever we move from $i$ to $i-1$, we will have to random-walk our way back to $i$ from $i-1$,
+which will take $s_{i-1}$ steps in expectation.
+Therefore,
+\[ s_i = 1 + \left(\frac{1}{p}-1\right)(s_{i-1} + 1) = \frac{1-p}{p}s_{i-1} + \frac{1}{p} \]
+
+As a base case, we know that $s_0 = 1$.
+Therefore, we get
+\[ s_i = \begin{cases} 2i + 1 & \textrm{ if } p = 1/2
+\\ \frac{2(1-p)}{1-2p}\left(\frac{1-p}{p}\right)^i - \frac{1}{1-2p} & \textrm{ if } p \neq 1/2
+\end{cases} \]
+When $p = 1/2$, the expected number of steps to reach $n$ from $0$ is
+\[ \sum_{i=0}^{n-1} s_i = \sum_{i=0}^{n-1} (2i+1)
+= \sum_{i=0}^{n-1} ((i+1)^2 - i^2) = n^2 \]
+When $p \neq 1/2$, the expected number of steps to reach $n$ from $0$ is
+\[ \sum_{i=0}^{n-1} s_i
+= \frac{2p(1-p)}{(1-2p)^2}\left(\left(\frac{1-p}{p}\right)^n - 1\right) - \frac{n}{1-2p} \]
+
+\subsection{Alternative proof}
+
+Let $Z_i$ be the expected number of steps needed to reach $n$ from $i$.
+Then we have $Z_n = 0$ and $Z_0 = Z_1 + 1$. For all other $i$ from 1 to $n-1$,
+we either move to $i+1$ with probability $p$ and use $Z_{i+1}$ steps to reach node $n$,
+or we move to $i-1$ with probability $1-p$ and use $Z_{i-1}$ steps to reach node $n$.
+So, $Z_i = 1 + pZ_{i+1} + (1-p)Z_{i-1}$. Our aim is to find $Z_0$.
+\begin{align*}
+& Z_i = 1 + pZ_{i+1} + (1-p)Z_{i-1}
+\\ &\implies Z_i - Z_{i+1} = \frac{1}{p} + \frac{1-p}{p}(Z_{i-1} - Z_i)
+\end{align*}
+
+For $p = 1/2$, we get that for $0 < j < n$,
+\begin{align*}
+& Z_j - Z_{j+1} = 2 + (Z_{j-1} - Z_j)
+\\ &\implies \sum_{j=1}^i (Z_j - Z_{j+1}) = \sum_{j=1}^i 2 + \sum_{j=1}^i (Z_{j-1} - Z_j)
+\\ &\implies Z_1 - Z_{i+1} = 2i + Z_{0} - Z_i
+\\ &\implies Z_i - Z_{i+1} = 2i + 1
+\\ &\implies \sum_{i=1}^{n-1} (Z_i - Z_{i+1}) = \sum_{i=1}^{n-1} (2i + 1)
+\\ &\implies Z_1 - Z_n = \sum_{i=1}^{n-1} ((i+1)^2 - i^2) = n^2 - 1
+\\ &\implies Z_0 = n^2
+\end{align*}
+
+%\addMyBib{}
+
+\end{document}
