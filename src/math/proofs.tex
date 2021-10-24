@@ -1,0 +1,455 @@
+\input{header.tex}
+\usepackage[shortlabels]{enumitem}
+\usepackage{setspace}
+
+\onehalfspacing
+
+\DeclareMathOperator{\isOdd}{isOdd}
+\newcommand*{\todotext}[1]{\textcolor{red}{#1}}
+\newenvironment*{tightemize}{\begin{itemize}[noitemsep,topsep=0pt]}{\end{itemize}}
+
+\renewcommand{\algorithmiccomment}[1]{\hfill\textcolor{gray}{\texttt{//} \textit{#1}}}
+\newsavebox{\formalproofbox}
+\newenvironment*{formalproof}%
+{\begin{lrbox}{\formalproofbox}\begin{minipage}{0.9\textwidth}\phantomsection\algorithmic[1]}%
+{\endalgorithmic\end{minipage}\end{lrbox}\vspace{\parskip}\noindent
+\colorbox[HTML]{EEEEEE}{\usebox{\formalproofbox}}\vspace{\parskip}}
+
+\title{Understanding Proofs}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.4em}
+
+\begin{abstract}
+Many people falsely believe that an explanation written in English
+that attempts to justify their opinions is a proof.
+Such an explanation may be useful for convincing most people,
+but technically, it need not be a valid proof.
+Proofs are useful because they are objective in nature
+and establish truth beyond any doubt.
+This article attempts to precisely define what a proof is.
+\end{abstract}
+
+I was a Teaching Assistant (TA) for the `Design and Analysis of Algorithms' course
+at \href{https://www.csa.iisc.ac.in/}{CSA, IISc} in 2020.
+While grading homeworks, I was surprised to find out that
+a lot of students didn't know how to write proofs.
+Many of them wrote incorrect proofs but strongly believed that their proofs were correct.
+Hence, they believed that my grading was pedantic or arbitrary.
+When I talked to them, I realized that the problem was
+not that people didn't know \emph{how} to prove;
+the problem was that many of them didn't know \emph{what} exactly a proof is.
+
+\begin{comment}
+\section{Detailed Background}
+
+I was a Teaching Assistant (TA) for the `Design and Analysis of Algorithms' course
+at \href{https://www.csa.iisc.ac.in/}{CSA, IISc} from October 2020 to January 2021.
+In this course, students are taught how to design algorithms that have
+\emph{provable} performance guarantees.
+This course had multiple graded homeworks, where students had to prove
+theorems related to algorithms. Homeworks were graded by TAs.
+Before I started grading, I thought that for each problem,
+most students would fall into two categories:
+\begin{tightemize}
+\item Those who know how to prove the theorem, and would do so correctly.
+\item Those who don't know how to prove the theorem, and would not write a proof.
+\end{tightemize}
+When I started grading homeworks, I was surprised to know that these two categories
+where actually minorities. Most students \emph{thought} that they knew how to prove,
+and they wrote an \emph{incorrect} proof!
+
+So obviously, many of them scored very low.
+They were surprised! They \emph{thought} that their proofs were right
+and they vehemently defended themselves during video calls for grievance redressal.
+Many thought that I deducted marks because I was pedantic.
+They were confused about what to do, since they were putting in their best effort
+but the grading seemed arbitrary to them.
+But the problem wasn't (just?) my grading.
+Many proofs were completely wrong.
+Sometimes I could even find counterexamples to their arguments.
+
+At that time, we TAs mostly told them to just `look at examples of proofs in books' and `practice'.
+Although that's good advice, it won't always work.
+I realized that the problem was not that people didn't know \emph{how} to prove.
+The problem was that many of them didn't know \emph{what} exactly a proof is.
+And how can we expect them to do something correctly if they don't even know
+what they're supposed to do?
+Many proofs were a long string of arguments that led to basic claims that
+people thought were \emph{obvious}. They weren't obvious to me,
+and some of those claims were (provably) wrong since I could find counterexamples.
+
+I don't blame the students, though. Learning to write proofs is tricky.
+Most students learn proof-writing by looking at examples.
+This is what I too initially did during my undergrad.
+Examples are good for learning proof techniques, like proof by contradiction,
+proof by induction, proof by cases, etc.
+But examples can't be used to truly understand \emph{what} a proof is.
+Unless people know what a proof is, it would be very difficult for them to know
+whether their attempted proof is correct or not.
+\end{comment}
+
+\section{Why proofs?}
+
+If you want to show that a statement is true, an explanation for why you think
+the statement is true may not constitute a valid proof,
+even if the explanation is detailed enough and
+written using enough amount of mathematics.
+The word `proof' has a very specific meaning.
+
+As an analogy, if you want to explain someone an algorithm,
+one option is to explain the algorithm using English sentences.
+But that may be imprecise and ambiguous.
+On the other hand, if you give them code for the algorithm in a
+programming language, that would be completely unambiguous.
+The syntax of the programming language would force you to be unambiguous.
+Similarly, a proof is a way of establishing the truth of a statement
+using arguments written in a specific language.
+Writing arguments in such a language would force you to be unambiguous.
+
+The ability to precisely state something is often taken for granted.
+A 10-year-old child can probably explain how to sort a list of numbers.
+But when I was new to programming, writing a program to sort a list of numbers
+was non-trivial for me. Many of my friends had a similar experience.
+It was difficult not because we didn't know what loops and conditionals were.
+It was difficult because we weren't used to stating algorithms precisely.
+Before this exercise, the idea that I don't know how to precisely describe
+how to sort a list of numbers would have sounded absurd!
+In this sense, programming was enlightening for me.
+I think it's the same with writing proofs, i.e.,
+learning to write proofs gives people the ability
+to precisely reason about the truth of mathematical statements.
+
+If you write an algorithm in a programming language and
+the compiler successfully compiles you code,
+you can be sure that there are no syntax errors in your code.
+Similarly, there is a simple mechanical way to check whether a proof is correct.
+
+\begin{comment}
+In fact, there are computer programs, like \href{https://coq.inria.fr/}{Coq},
+that can validate your proofs if they're written in a certain proof language.
+If such a program says that your proof is correct,
+you can be absolutely sure that your proof is correct.
+\end{comment}
+
+\section{What is a proof?}
+
+A proof is a \emph{sequence} of \emph{statements}, where each statement is
+either an assumption or follows from previously-known facts using \emph{rules of inference}.
+A \emph{rule of inference} is a statement of the form $A_1, A_2, \ldots, A_n \vdash B$,
+which means that if $A_1$, $A_2$, $\ldots$, $A_n$ are known to be true,
+then we can infer that $B$ is true.
+
+Let's look at an example of a rule:
+\[ k \in \Z,\; x = 2 \times k + 1\; \vdash\; \isOdd(x). \]
+This rule says that if $k$ is an integer and $x = 2 \times k + 1$,
+then we can infer that $x$ is odd.
+We know that $3 \in \Z$ and $7 = 2 \times 3 + 1$.
+So using this rule, we can infer $\isOdd(7)$.
+In this rule, $x$ and $k$ are \emph{parameters}, i.e.,
+they are treated as placeholders which we can replace by other values.
+Here we replaced $x$ by $7$ and $k$ by $3$.
+
+Note that once we assume $3 \in \Z$ and $7 = 2 \times 3 + 1$,
+we don't need to know what $\in$, $\Z$, $+$, $\times$, $=$, 2, 3, 1, 7 and $\isOdd$ mean.
+The inference procedure is simply symbolic substitution.
+This is why checking proofs is simple, we just need to ensure
+that the symbolic substitution was carried out correctly.
+
+I'll now give a few examples of proofs.
+Note that the way proofs are presented here looks very different from
+the way proofs are presented in most mathematical texts.
+I'll comment on this discrepancy after presenting the first example
+and explain why this difference is merely cosmetic.
+
+\section{Example 1: product of odd numbers is odd}
+
+We will prove that the product of two odd numbers is odd.
+To do this, we first need to express this statement precisely:
+\[ \isOdd(a), \isOdd(b) \vdash \isOdd(ab). \]
+
+In our proof, we will need many definitions and basic facts.
+For example, the definition of $\isOdd$, the definition of `logical and' ($\land$),
+the definition of $=$, and some basic facts about arithmetic operators $+$ and $\times$,
+like closure over integers, associativity, distributivity, etc.
+We will capture these definitions and facts using inference rules, called \emph{axioms}.
+Specifically, axioms are either definitions or they are statements that are
+so simple and obvious that we assume them to be true without proof.
+In this example, instead of stating beforehand all the axioms that we will use in the proof,
+we will introduce them when we need them.
+
+Axioms for $\isOdd$:
+\begin{tightemize}
+\item \texttt{Odd1}: $x = 2k+1, k \in \Z \vdash \isOdd(x)$.
+\item \texttt{Odd2}: $\isOdd(x) \vdash \exists k (x = 2k+1 \land k \in \Z)$.
+\end{tightemize}
+Here \texttt{Odd1} and \texttt{Odd2} are the names of the two axioms.
+
+Here $\land$ means `logical and'.
+Note that in axiom \texttt{Odd2}, $x$ is a parameter but $k$ is not,
+since it is \emph{bound to} the `$\exists$' symbol.
+
+Next, we have an inference rule about $\exists$:
+Let $\phi(k)$ be an expression containing a variable $k$.
+Then from $\exists k \phi(k)$ we can infer $\phi(r)$,
+where $r$ is a fresh variable, i.e., a variable that hasn't been used so far in the proof.
+We call this rule $\exists$-elimination.
+
+Let's start the proof now.
+
+\begin{formalproof}
+\Statex \textbf{Proof of $\isOdd(a), \isOdd(b) \vdash \isOdd(ab)$:}
+\State \label{p1:given1}$\isOdd(a)$ \Comment{given}
+\State \label{p1:given2}$\isOdd(b)$ \Comment{given}
+\algstore{p1}
+\end{formalproof}
+
+These statements follow from the left half of the result that we want to prove,
+i.e., $\isOdd(a), \isOdd(b) \vdash \isOdd(ab)$.
+The text after `\texttt{//}' are comments, i.e., not part of the statements.
+
+\begin{formalproof}
+\algrestore{p1}
+\State \label{p1:oddEla}$a = 2r + 1 \land r \in \Z$
+    \Comment{from \texttt{Odd2}, \ref{p1:given1}, $\exists$-elimination}
+\State \label{p1:oddElb}$b = 2s + 1 \land s \in \Z$
+    \Comment{from \texttt{Odd2}, \ref{p1:given2}, $\exists$-elimination}
+\algstore{p1}
+\end{formalproof}
+
+Axioms for $\land$:
+\begin{tightemize}
+\item $\land$E1: $A \land B \vdash A$.
+\item $\land$E2: $A \land B \vdash B$.
+\end{tightemize}
+
+\begin{formalproof}
+\algrestore{p1}
+\State \label{p1:aeq2rp1}$a = 2r + 1$
+    \Comment{\ref{p1:oddEla}, $\land$E1}
+\State \label{p1:rinZ}$r \in \Z$
+    \Comment{\ref{p1:oddEla}, $\land$E2}
+\State \label{p1:beq2sp1}$b = 2s + 1$
+    \Comment{\ref{p1:oddElb}, $\land$E1}
+\State \label{p1:sinZ}$s \in \Z$
+    \Comment{\ref{p1:oddElb}, $\land$E2}
+\algstore{p1}
+\end{formalproof}
+
+Axioms for $=$:
+\begin{tightemize}
+\item \texttt{id=}: $a = a$.
+\item \texttt{symm=}: $a = b \vdash b = a$.
+\item \texttt{repl=}: Let $\phi(x)$ be a predicate containing variable $x$.
+Then $a = b, \phi(a) \vdash \phi(b)$.
+\end{tightemize}
+(Recall that rules of inference are statements of the form $A_1, A_2, \ldots, A_n \vdash B$.
+But when $n = 0$, we simply write the rule as $B$. \texttt{id=} is one such rule.)
+
+Using \texttt{repl=}, we can prove transitivity of $=$, i.e.,
+$a = b, b = c \vdash a = c$ (use $b = c$ and $\phi(x): a = x$;
+see \cref{thm:trn-eq} in \cref{sec:misc-proofs} for details).
+Let's name this result \texttt{trn=}.
+Using \texttt{repl=} twice, we can prove that $a = b, c = d \vdash ac = bd$
+(first use $\phi(x): ac = xc$ and $a = b$, then use $\phi(x): ac = bx$ and $c = d$).
+Let's name this result \texttt{mult=}.
+(See \cref{thm:add-eq} in \cref{sec:misc-proofs} for a similar proof.)
+
+\begin{formalproof}
+\algrestore{p1}
+\State \label{p1:abeq}$ab = (2r + 1)(2s + 1)$
+    \Comment{\texttt{mult=}, \ref{p1:aeq2rp1}, \ref{p1:beq2sp1}}
+\algstore{p1}
+\end{formalproof}
+
+Axioms about arithmetic:
+\begin{tightemize}
+\item Distributivity of $\times$ over $+$: $a(b+c) = ab + ac$, $(a+b)c = ac + bc$.
+\item Multiplicative identity: $a \times 1 = a$, $1 \times a = a$.
+\item Associativity of $\times$: $(ab)c = a(bc)$.
+\item Associativity of $+$: $a + (b + c) = (a + b) + c$.
+\end{tightemize}
+
+Using the above axioms for arithmetic with \texttt{repl=} and \texttt{symm=},
+we can prove that for any $r$ and $s$, we get $(2r+1)(2s+1) = 2(r(2s+1)+s) + 1$
+(see \cref{thm:arith} in \cref{sec:misc-proofs} for details).
+
+\begin{formalproof}
+\algrestore{p1}
+\State \label{p1:abeq2}$(2r+1)(2s+1) = 2(r(2s+1)+s) + 1$.
+    \Comment{\cref{thm:arith} in \cref{sec:misc-proofs}}
+\State \label{p1:abeq3}$ab = 2(r(2s+1)+s) + 1$.
+    \Comment{\ref{p1:abeq}, \ref{p1:abeq2}, \nameref{thm:trn-eq}}
+\algstore{p1}
+\end{formalproof}
+
+Axioms for $\Z$ membership:
+\begin{tightemize}
+\item $1 \in \Z$, $2 \in \Z$.
+\item $a \in \Z, b \in \Z \vdash a + b \in \Z$.
+\item $a \in \Z, b \in \Z \vdash ab \in \Z$.
+\end{tightemize}
+
+\begin{formalproof}
+\algrestore{p1}
+\State \label{p1:tinZ}$r(2s+1)+s \in \Z$.
+    \Comment{\ref{p1:rinZ}, \ref{p1:sinZ}, axioms for $\Z$ membership}
+\State \label{p1:final}$\isOdd(ab)$
+    \Comment{\ref{p1:abeq3}, \ref{p1:tinZ}, \texttt{Odd1}}
+\end{formalproof}
+
+This completes the proof of $\isOdd(a), \isOdd(b) \vdash \isOdd(ab)$.
+
+Note how we only used symbolic substitution in the proof.
+So if you believe in the axioms above and if you verify that the symbolic
+substitution was performed correctly, then the proof is irrefutable.
+All the axioms above are well-known facts
+(some can even be found in elementary-school textbooks),
+so almost everyone would believe them.
+Proofs written like this are, therefore, the gold standard in establishing truth.
+
+But this isn't how proofs are written in most mathematical texts,
+and for good reason: writing proofs this way is cumbersome.
+A more common way of writing the above proof is as follows.
+
+\begin{lemma}
+If $a$ and $b$ are odd numbers, then their product $ab$ is also odd.
+\end{lemma}
+\begin{proof}
+Since $a$ is odd, $a = 2r+1$ for some $r \in \Z$.
+Similarly, $b = 2s+1$ for some $s \in \Z$.
+Therefore, $ab = (2r+1)(2s+1) = 2(r(2s+1)+s)+1$.
+Since $r(2s+1)+s \in \mathbb{Z}$, we get that $ab$ is odd.
+\end{proof}
+
+A proof written in this way is called an \emph{informal} proof.
+On the other hand, the proof above that used symbolic substitution
+is called a \emph{formal} proof.
+
+Note the similarity between the informal and formal proofs.
+In the informal version, we skipped some of the simple intermediate results,
+but the core idea is the same as that in the formal version.
+It is the formal proof that ultimately establishes truth;
+an informal proof is just a convenient tool to convince others of the existence of
+a formal proof without the hassle of writing down the full formal proof.
+
+Although you will probably not need to write formal proofs, it's instructive to
+have a rough idea of the formal version in mind when writing informal proofs.
+If you're ever unsure of whether your informal proof is correct,
+try to see if you can get a formal proof.
+Once you convince yourself that a formal proof exists,
+you'll be confident about your proof's correctness.
+
+\textbf{Disclaimer}: the axiom names above are probably non-standard.
+Some of the axioms above are actually not axioms in standard systems of logic,
+since they can be derived from even more primitive axioms.
+The words \emph{informal} and \emph{formal} as defined above are also not standard.
+
+\section{Example 2: De Morgan's theorem}
+
+\todotext{TODO: introduce propositional logic, most of its axioms
+and proof by contradiction.}
+
+\begin{tightemize}
+\item \href{https://en.wikipedia.org/wiki/Propositional_calculus#Example_2._Natural_deduction_system}%
+{A list of propositional logic axioms}.
+\item \href{https://en.wikipedia.org/wiki/Propositional_calculus#Basic_and_derived_argument_forms}%
+{A list of derived rules}.
+\end{tightemize}
+
+\section{Example 3: \texorpdfstring{$|E| \ge |V|-1$}{|E| >= |V|-1}
+for a simple undirected connected graph \texorpdfstring{$(V, E)$}{(V, E)}}
+
+\todotext{TODO: axiomatize some graph-theoretic definitions and introduce proof by induction.}
+
+\todotext{TODO: maybe add more examples from other areas,
+like number theory, linear algebra, probability.}
+
+\todotext{TODO: talk about soundness and completeness.
+Link to more resources on logic for those who are interested.}
+
+\subsection*{Acknowledgements}
+
+I attended Prof.~Shan Sundar Balasubramaniam's enlightening course on
+`Logic in Computer Science' at \href{https://www.bits-pilani.ac.in}{BITS Pilani}
+during my undergrad years.
+That's where I first learned about the true meaning of proofs.
+
+%\bibliographystyle{plainurl}
+%\bibliography{bibdb}
+
+\appendix
+
+\section{Miscellaneous Proofs}
+\label{sec:misc-proofs}
+
+\begin{lemma}[\texttt{trn=}]
+\label{thm:trn-eq}
+$a = b, b = c \vdash a = c$.
+\end{lemma}
+\begin{proof}\leavevmode
+
+\begin{formalproof}
+\State \label{p:trn-eq:1a}$a = b$
+    \Comment{given}
+\State \label{p:trn-eq:1b}$b = c$
+    \Comment{given}
+\State \label{p:trn-eq:2}$a = c$
+    \Comment{\ref{p:trn-eq:1a}, \ref{p:trn-eq:1b},
+        \texttt{repl=} with $\phi(x): a = x$}.
+\end{formalproof}
+
+\end{proof}
+
+\begin{lemma}[\texttt{add=}]
+\label{thm:add-eq}
+$a = b, c = d \vdash a + c = b + d$.
+\end{lemma}
+\begin{proof}\leavevmode
+
+\begin{formalproof}
+\State \label{p:add-eq:1a}$a = b$
+    \Comment{given}
+\State \label{p:add-eq:2}$a + c = b + c$
+    \Comment{\ref{p:add-eq:1a}, \texttt{repl=} with $\phi(x): a + c = x + c$}
+\State \label{p:add-eq:1b}$c = d$
+    \Comment{given}
+\State \label{p:add-eq:3}$a + c = b + d$
+    \Comment{\ref{p:add-eq:1b}, \ref{p:add-eq:2},
+        \texttt{repl=} with $\phi(x): a + c = b + x$}
+\end{formalproof}
+
+\end{proof}
+
+\begin{theorem}
+\label{thm:arith}
+$(2r+1)(2s+1) = 2(r(2s+1)+s) + 1$
+\end{theorem}
+\begin{proof}\leavevmode
+
+\begin{formalproof}
+\State \label{p2:1}$(2r+1)(2s+1) = (2r)(2s+1) + 1 \times (2s+1)$
+    \Comment{distributivity of $\times$ over $+$}
+\State \label{p2:2a}$(2r)(2s+1) = 2(r(2s+1))$
+    \Comment{associativity of $\times$}
+\State \label{p2:2b}$1 \times (2s+1) = 2s + 1$
+    \Comment{Multiplicative identity}
+\State \label{p2:3}$(2r)(2s+1) + 1 \times (2s+1) = 2(r(2s+1)) + 2s + 1$
+    \Comment{\ref{p2:2a}, \ref{p2:2b}, \nameref{thm:add-eq}}
+\State \label{p2:4}$(2r+1)(2s+1) = 2(r(2s+1)) + 2s + 1$
+    \Comment{\ref{p2:1}, \ref{p2:3}, \nameref{thm:trn-eq}}
+\State \label{p2:5a}$2(r(2s+1) + s) = 2(r(2s+1)) + 2s$
+    \Comment{distributivity of $\times$ over $+$}
+\State \label{p2:5b}$2(r(2s+1)) + 2s = 2(r(2s+1) + s)$
+    \Comment{\ref{p2:5a}, \texttt{symm=}}
+\State \label{p2:5c}$2(r(2s+1)) + 2s + 1 = 2(r(2s+1) + s) + 1$
+    \Comment{\ref{p2:5b}, $1=1$, \nameref{thm:add-eq}}
+\State \label{p2:6}$(2r+1)(2s+1) = 2(r(2s+1) + s) + 1$
+    \Comment{\ref{p2:4}, \ref{p2:5c}, \nameref{thm:trn-eq}}
+\end{formalproof}
+
+\end{proof}
+
+\end{document}
