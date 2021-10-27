@@ -1,0 +1,518 @@
+\input{header.tex}
+\usepackage[shortlabels]{enumitem}
+%\usepackage{setspace}
+
+%\onehalfspacing
+
+\newcommand*{\thmdepUrl}{https://sharmaeklavya2.github.io/theoremdep/nodes}
+\newcommand*{\todotext}[1]{\textcolor{red}{#1}}
+\newenvironment*{tightemize}{\begin{itemize}[noitemsep,topsep=0pt]}{\end{itemize}}
+\renewcommand{\algorithmiccomment}[1]{\hfill\textcolor{gray}{\texttt{//} \textit{#1}}}
+
+\newcommand*{\Jcomp}{\overline{J}}
+\newcommand*{\bline}{\overline{b}}
+\newcommand*{\btildline}{\overline{\btild}}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\solve}{\mathtt{solve}}
+\DeclareMathOperator{\pivot}{\mathtt{pivot}}
+\DeclareMathOperator{\assert}{\mathtt{assert}}
+\DeclareMathOperator{\naiveSimplex}{\mathtt{naiveSimplex}}
+
+\title{The Simplex Method}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.4em}
+
+This document describes the \emph{simplex method} for solving linear programs.
+The following result (proof omitted for brevity) will help us
+focus on a special case of linear programming.
+
+\section{Preliminaries}
+
+\begin{theorem}
+Any linear programming problem can be reduced to the following problem
+(called a \emph{standard form linear program}):
+\[ \min_{x \in \mathbb{R}^n}\; c^Tx \textrm{ where } Ax = b \textrm{ and } x \ge 0. \]
+Here $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$ and $c \in \mathbb{R}^n$.
+\end{theorem}
+
+We will also assume \wLoG{} that
+$\href{https://sharmaeklavya2.github.io/theoremdep/nodes/linear-algebra/matrices/rank.html}{\rank}(A) = m$.
+
+Read the following concepts at TheoremDep (\url{https://sharmaeklavya2.github.io/theoremdep/}):
+\begin{tightemize}
+\item \href{\thmdepUrl/convexity/polyhedra/bfs.html}{Basic feasible solution (BFS)}
+\item \href{\thmdepUrl/convexity/extreme-point.html}{Extreme point of a convex set}
+\item \href{\thmdepUrl/convexity/polyhedra/extreme-point-iff-bfs.html}{Extreme point iff BFS}
+\item \href{\thmdepUrl/convexity/polyhedra/orth-lp.html}{LP in orthant is optimized at BFS}
+\end{tightemize}
+Due to the last point above, we will focus on finding an optimal solution that is also a BFS.
+
+\begin{lemma}
+\label{thm:replace-vector-in-basis}
+Let $B = [u_1, u_2, \ldots, u_n]$ be a basis of a vector space $V$.
+Let $w = \sum_{i=1}^n \lambda_i u_i$.
+Then $B' = B - \{u_r\} \cup \{w\}$ is a basis of $V$ iff $\lambda_r \neq 0$.
+\end{lemma}
+\begin{proof}
+(See \url{\thmdepUrl/linear-algebra/vector-spaces/basis/replace-vector.html}.)
+\end{proof}
+
+\begin{lemma}
+For any matrix $A$, we have $\rank(A) = \rank(A^T)$.
+\end{lemma}
+\begin{proof}
+(TODO: find proof)
+\end{proof}
+
+\subsection{Notation}
+
+For any non-negative integer $n$, let $[n] \defeq \{1, 2, \ldots, n\}$
+(or $[n] \defeq [1, 2, \ldots, n]$, depending on the context).
+
+Let $v \in \mathbb{R}^n$ and $A \in \mathbb{R}^{m \times n}$.
+Let $i \in [m]$ and $j \in [n]$.
+Then the $j\Th$ element of $v$ is denoted as $v_j$ or $v[j]$.
+The element of $A$ in the $i\Th$ row and $j\Th$ column of $A$ is denoted as
+$A_{i,j}$ or $A[i,j]$. $A[*,j]$ denotes the $j\Th$ column of $A$ and
+$A[i, *]$ denotes the $i\Th$ row of $A$.
+
+Let $J = [j_1, j_2, \ldots, j_r]$ be a sequence of $r$ integers in $[n]$.
+$v[J]$ is defined as the vector $[v[j_1], v[j_2], \ldots, v[j_n]]$.
+$A[*,J]$ is defined as the matrix whose $k\Th$ column is $A[*,j_k]$.
+Let $K = [k_1, k_2, \ldots, k_q]$ be a sequence of $q$ integers in $[m]$.
+Then $A[K,*]$ is defined as the matrix whose $i\Th$ column is $A[k_i,*]$.
+
+For matrices $A \in \mathbb{R}^{m \times n_1}$ and $B \in \mathbb{R}^{m \times n_2}$,
+let $C = [A, B]$ denote the matrix in $\mathbb{R}^{m \times (n_1 + n_2)}$
+where the first $n_1$ columns in $C$ are the columns of $A$
+and the last $n_2$ columns in $C$ are the columns of $B$.
+We call $C$ the \emph{horizontal concatenation} of $A$ and $B$.
+We can similarly define horizontal concatenation of more than two matrices.
+We can similarly define vertical concatenation of $A$ and $B$,
+which we denote as $\begin{bmatrix}A\\B\end{bmatrix}$.
+
+\section{Bases}
+
+Consider this linear program:
+\[ \min_{x \in \mathbb{R}^n}\; c^Tx \textrm{ where } Ax = b \textrm{ and } x \ge 0. \]
+Here $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$ and $c \in \mathbb{R}^n$.
+
+\begin{definition}[Basis]
+Let $J$ be a sequence of $m$ distinct numbers from $[n]$.
+Let $B \defeq A[*,J]$.
+Then $J$ is called a \emph{basis} of the LP iff $\rank(B) = m$.
+$J$ is called a feasible basis iff it is a basis and $B^{-1}b \ge 0$.
+
+Let $\Jcomp$ be the increasing sequence of values of $[n]$ that are not in $J$.
+Define $\solve(J)$ as a vector $\xhat \in \mathbb{R}^n$,
+where $\xhat[J] = B^{-1}b$ and $\xhat[\Jcomp] = 0$.
+\end{definition}
+
+The following two results show that to find an optimal BFS of the LP,
+we can find a feasible basis $J$ that minimizes $c^T\solve(J)$, and then return $\solve(J)$.
+
+\begin{lemma}
+\label{thm:basis-gives-bfs}
+Let $J$ be a feasible basis and $\xhat = \solve(J)$.
+Then $\xhat$ is a BFS of the LP.
+\end{lemma}
+\begin{proof}
+It's trivial to see that $\xhat \ge 0$. Let $B = A[*,J]$ and $N = A[*,\Jcomp]$. Then
+\[ A\xhat = B\xhat[J] + N\xhat[\Jcomp] = B(B^{-1}b) = b. \]
+Hence, $\xhat$ is feasible for the LP.
+
+Because we can rearrange variables and constraints, we can assume \wLoG{} that $J = [m]$.
+The equality constraints are tight, and their coefficient matrix is $A = [B, N]$.
+The non-negativity constraints $\{x_j \ge 0: j \in \Jcomp\}$ are tight,
+and their coefficient matrix is $I_n[\Jcomp,*] = [0, I_{n-m}]$,
+where $I_k$ denotes the $k$-by-$k$ identity matrix.
+Hence, the rank of the coefficient matrix of tight constraints at $\xhat$ is
+\[ \rank\left(\begin{bmatrix}B & N \\ 0 & I_{n-m}\end{bmatrix}\right)
+= \rank\left(\begin{bmatrix}B & 0 \\ 0 & I_{n-m}\end{bmatrix}\right)
+= \rank(B) + (n-m) = n. \]
+The first equation follows from the fact that rank is unaffected by row operations.
+The third equation follows from the fact that $J$ is a basis.
+Since the coefficient matrix of tight constraints of $\xhat$ has rank $n$,
+$\xhat$ is a BFS of the LP.
+\end{proof}
+
+\begin{lemma}
+\label{thm:bfs-gives-basis}
+Let $\xhat$ be a BFS of the LP. Then there exists a feasible basis $J$
+such that $\xhat = \solve(J)$.
+\end{lemma}
+\begin{proof}
+Since $\xhat$ is a BFS, there exist $n$ linearly independent constraints that are tight at $\xhat$.
+$m$ of these are the equality constraints, whose coefficient matrix is $A$.
+The rest are inequality constraints.
+Let $\Jcomp$ be the indices of these $n-m$ inequality constraints.
+This implies $\xhat[\Jcomp] = 0$.
+Since we can rearrange variables, assume \wLoG{} that $\Jcomp = [m+1, m+2, \ldots, n]$.
+The coefficient matrix of these constraints is $I_n[\Jcomp,*] = [0, I_{n-m}]$.
+
+Let $J = [m]$. Let $B = A[*,J]$ and $N = A[*,J]$. Then $A = [B, N]$. Since $\xhat$ is a BFS, we get
+\[ n = \rank\left(\begin{bmatrix}B & N \\ 0 & I_{n-m}\end{bmatrix}\right)
+= \rank\left(\begin{bmatrix}B & 0 \\ 0 & I_{n-m}\end{bmatrix}\right)
+= \rank(B) + (n-m). \]
+This implies that $\rank(B) = m$, which shows that $J$ is a basis of the LP.
+
+Furthermore, since $\xhat$ is feasible for the LP, we get that
+$b = A\xhat = B\xhat[J] + N\xhat[\Jcomp] = B\xhat[J]$.
+Hence, $\xhat[J] = B^{-1}b$. Since $\xhat$ is feasible for the LP,
+we get $\xhat \ge 0 \implies \xhat[J] \ge 0 \implies B^{-1}b \ge 0$.
+Hence, $J$ is a feasible basis and $\solve(J) = \xhat$.
+\end{proof}
+
+\section{The Simplex Algorithm}
+
+\begin{algorithm}[H]
+\caption{$\naiveSimplex(A, b, c, J)$:
+Here $A \in \mathbb{R}^{m \times n}$ and $J$ is a feasible basis
+for the standard LP given by $A$, $b$, $c$.}
+\begin{algorithmic}[1]
+\While{true}
+    \State $B = A[*,J]$
+    \State \label{alg-line:naive-simplex:Y}$Y = B^{-1}A$  \Comment{If $B$ isn't invertible, throw an exception}
+    \State $\bline = B^{-1}b$
+    \State \label{alg-line:naive-simplex:bline-positive}$\assert(\bline \ge 0)$
+    \State $z = Y^Tc[J]$
+    \If{$c - z \ge 0$}
+        \State \Return $(\textrm{optimal}, \solve(J))$
+    \EndIf
+    \State Find $k \in [n]$ such that $c_k - z_k < 0$.
+    \State \label{alg-line:naive-simplex:y}Define $y \in \mathbb{R}^n$ as
+        $\displaystyle y_t = \begin{cases}
+            -Y[i, k] & \textrm{ if } t = j_i
+            \\ 1 & \textrm{ if } t = k
+            \\ 0 & \textrm{ otherwise}
+        \end{cases}$.
+    \If{$Y[*, k] \le 0$}\label{alg-line:naive-simplex:Y-neg}
+        \State \Return $(\textrm{unbounded}, \solve(J), y)$, where
+    \EndIf
+    \State $\displaystyle r = \argmin_{i \in [m]: Y[i, k] > 0} \frac{\bline_i}{Y[i, k]}$
+    \State $\delta = \bline_r/Y[r, k]$
+    \State \label{alg-line:naive-simplex:J}$J[r] = k$  \Comment{change the $r\Th$ entry in $J$ to $k$.}
+\EndWhile
+\end{algorithmic}
+\label{algo:naive-simplex}
+\end{algorithm}
+
+\begin{theorem}
+\label{thm:simplex-optimal}
+If $\naiveSimplex$ outputs $(\textrm{optimal}, \xhat)$,
+then $\xhat$ is a BFS of the LP and an optimal solution to the LP.
+\end{theorem}
+\begin{proof}
+If $\naiveSimplex$ outputs $(\textrm{optimal}, \xhat)$ in an iteration, then
+the algorithm didn't fail at
+\cref{alg-line:naive-simplex:Y,alg-line:naive-simplex:bline-positive}, so
+$\rank(B) = m$ and $\bline \ge 0$ in that iteration.
+This implies that $J$ is a feasible basis in that iteration.
+Hence, by \cref{thm:basis-gives-bfs}, $\xhat = \solve(J)$ is a BFS of the LP.
+Note that $c^T\xhat = c[J]^T\xhat[J] = c[J]^T\bline$.
+
+Let $\Jcomp = [n] - J$. Let $N = A[*,\Jcomp]$.
+Let $x_B = x[J]$ and $x_N = x[\Jcomp]$. Then
+\[ Ax = b \iff Bx_B + Nx_N = b \iff x_B = \bline - B^{-1}Nx_N. \]
+Note that since the constraint $x_B = \bline - B^{-1}Nx_N$ is equivalent to $Ax = b$,
+we can replace $Ax = b$ by $x_B = \bline - B^{-1}Nx_N$ in the LP without affecting
+the set of feasible solutions.
+
+We can use these new constraints to express the objective value as a function of $x_N$.
+\begin{align*}
+c^Tx &= c[J]^Tx_B + c[\Jcomp]^Tx_N
+\\ &= c[J]^T\left(\bline - B^{-1}Nx_N\right) + c[\Jcomp]^Tx_N
+\\ &= c[J]^T\bline + (c[\Jcomp]^T - c[J]^TB^{-1}N)x_N
+\end{align*}
+\[ z[\Jcomp]^T = (c[J]^TY)[\Jcomp] = c[J]^TB^{-1}A[*,\Jcomp] = c[J]^TB^{-1}N. \]
+\[ \implies c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N. \]
+From the non-negativity constraints, we know that $x_N \ge 0$.
+We also know that $c-z \ge 0$, since $\naiveSimplex$ returned
+$(\textrm{optimal}, \xhat)$.
+Hence, for every feasible $x$, we have
+$c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N \ge c[J]^T\bline = c^T\xhat$.
+Hence, $\xhat$ is an optimal solution to the LP.
+\end{proof}
+
+\begin{lemma}
+\label{thm:zJ-eq-cJ}
+$z[J] = c[J]$ (before $J$ changes at \cref{alg-line:naive-simplex:J}).
+\end{lemma}
+\begin{proof}
+\[ z[J]^T = c[J]^T(B^{-1}A)[*,J] = c[J]^TB^{-1}A[*,J] = c[J]^T.  \qedhere \]
+\end{proof}
+\Cref{thm:zJ-eq-cJ} implies that $k \not\in J$, since $c_k - z_k < 0$.
+
+\begin{lemma}
+\label{thm:YJ-is-I}
+$Y[*, J] = I$.
+Let $J = [j_1, j_2, \ldots, j_m]$.
+Then $Y[i, j_p] = \begin{cases}1 & \textrm{ if } p = i
+\\ 0 & \textrm{ if } p \neq i\end{cases}$.
+\end{lemma}
+\begin{proof}
+\[ Y[*, J] = (B^{-1}A)[*, J] = B^{-1}A[*, J] = B^{-1}B = I. \]
+\[ Y[i, j_p] = Y[*, J][i, p] = I[i, p] = \begin{cases}1 & \textrm{ if } p = i
+\\ 0 & \textrm{ if } p \neq i\end{cases}. \qedhere \]
+\end{proof}
+
+We will now show that the simplex algorithm moves in the direction $y$ in each iteration,
+and $y$ is a direction in the nullspace of $A$ in which the cost $c^Ty$ reduces.
+
+\begin{lemma}
+\label{thm:y-in-nullsp}
+$Yy = Ay = 0$.
+\end{lemma}
+\begin{proof}
+\begin{align*}
+(Yy)_i &= \sum_{j=1}^n Y[i, j]y_j
+= \sum_{p=1}^m Y[i, j_p]y_{j_p} + Y[i, k]y_k
+\\ &= y_{j_i} + Y[i, k]y_k
+= -Y[i, k] + Y[i, k] = 0.
+\end{align*}
+\[ Ay = B^{-1}Yy = B^{-1}0 = 0. \qedhere \]
+\end{proof}
+
+\begin{lemma}
+\label{thm:y-reduces-cost}
+$c^Ty = c_k - z_k < 0$.
+\end{lemma}
+\begin{proof}
+\begin{align*}
+c^Ty &= \sum_{j=1}^n c_jy_j = c_ky_k + \sum_{p=1}^m c_{j_p}y_{j_p}
+= c_k - \sum_{p=1}^m c_{j_p}Y[p, k]
+\\ &= c_k - \sum_{p=1}^m Y^T[k, p]c[J]_p
+= c_k - (Y^Tc[J])_k = c_k - z_k < 0.
+\qedhere \end{align*}
+\end{proof}
+
+\begin{theorem}
+\label{thm:simplex-unbounded}
+If $\naiveSimplex$ outputs $(\textrm{unbounded}, \xhat, y)$,
+then the LP's cost reduces along the ray $\{\xhat + \lambda y: \lambda \ge 0\}$
+and the ray is feasible, which implies that the LP is unbounded.
+\end{theorem}
+\begin{proof}
+Since $\naiveSimplex$ didn't fail at
+\cref{alg-line:naive-simplex:Y,alg-line:naive-simplex:bline-positive},
+we know that $\rank(B) = m$ and $\bline \ge 0$.
+Hence, $J$ is a feasible basis.
+So, by \cref{thm:basis-gives-bfs}, we know that $\xhat = \solve(J)$ is a BFS of the LP.
+
+By \cref{thm:y-in-nullsp}, we know that $Ay = 0$.
+Hence, $A(\xhat + \lambda y) = A\xhat = b$.
+Since $\naiveSimplex$ returned $(\textrm{unbounded}, \xhat, y)$,
+we get that $Y[*,k] \le 0$ (by \cref{alg-line:naive-simplex:Y-neg}).
+Hence, $y \ge 0$ and so $\xhat + \lambda y \ge \xhat \ge 0$.
+Hence, $\xhat + \lambda y$ is feasible for the LP for all $\lambda \ge 0$.
+
+By \cref{thm:y-reduces-cost}, we know that $c^Ty < 0$,
+Hence, moving along the ray will reduce cost indefinitely.
+This implies that the LP is unbounded.
+\end{proof}
+
+Suppose $\naiveSimplex$ doesn't return an output in an iteration.
+Then it will change $J$ to, say, $\Jtild$ in that iteration
+(at \cref{alg-line:naive-simplex:J}).
+We will show that $\Jtild$ is also a feasible basis of the LP,
+and hence, $\naiveSimplex$ will not fail at
+\cref{alg-line:naive-simplex:Y,alg-line:naive-simplex:bline-positive}.
+
+\begin{lemma}
+\label{thm:simplex-new-basis}
+Suppose $\naiveSimplex$ changes $J$ to $\Jtild$ in an iteration.
+Then $\Jtild$ is a basis of the LP.
+\end{lemma}
+\begin{proof}
+Let $J = [j_1, j_2, \ldots, j_m]$.
+The set of values in $\Jtild$ is $J - \{j_r\} \cup \{k\}$.
+Since $k \not\in J$, $\Jtild$ has distinct values.
+
+Let $a_j$ be the $j\Th$ column of $A$. Let $B = A[*,J]$. Let $\Btild = A[*,\Jtild]$.
+Let $S = \{a_{j_1}, a_{j_2}, \ldots, a_{j_m}\}$ be the set of columns of $B$
+and let $\Stild = S - \{a_{j_r}\} \cup \{a_k\}$ be the set of columns of $\Btild$.
+Since $J$ is a basis, $\rank(B) = m$, so $S$ is a set of linearly independent vectors.
+Since $|S| = m$, we get that $S$ is a basis of $\mathbb{R}^m$. Hence, $a_k \in \Span(S)$.
+
+Let $a_k = \sum_{i=1}^m \lambda_i a_{j_i}$. Let $\lambda = [\lambda_1, \lambda_2, \ldots, \lambda_m]$.
+Then $B\lambda = \sum_{i=1}^m \lambda_i a_{j_i} = a_k$.
+Hence, $\lambda = B^{-1}a_k = Y[*,k]$.
+Since $Y[r,k] > 0$, we get that $\lambda_r > 0$.
+Hence, by \cref{thm:replace-vector-in-basis}, we get that
+$\Stild$ is also a basis of $\mathbb{R}^m$.
+Hence, $\rank(\Btild) = m$, so $\Jtild$ is a basis.
+\end{proof}
+
+\begin{lemma}
+\label{thm:simplex-feasible-basis}
+Suppose $\naiveSimplex$ changes $J$ to $\Jtild$ in an iteration.
+Let $\xhat = \solve(J)$ and $\xtild = \xhat + \delta y$.
+Then $\xtild = \solve(\Jtild)$ and $\Jtild$ is a feasible basis.
+\end{lemma}
+\begin{proof}
+By \cref{thm:y-in-nullsp}, we get that $Ay = 0$.
+Hence, $A\xtild = A\xhat + \delta (Ay) = A\xhat = b$.
+
+If $i \not\in J$ or $Y[i, k] \le 0$, then $y_i \ge 0$,
+and hence $\xtild_i = \xhat_i + \delta y_i \ge \xhat_i \ge 0$.
+Now let $i \in J$ and $Y[i,k] > 0$.
+Let $J = [j_1, j_2, \ldots, j_m]$. Then
+\[ \delta = \frac{\bline_r}{Y[r,k]} \le \frac{\bline_i}{Y[i, k]}. \]
+\[ \implies \xtild_{j_i} = \xhat_{j_i} + \delta y_{j_i} = \bline_i - \delta Y[i,k] \ge 0. \]
+Hence, $\xtild \ge 0$. Therefore, $\xtild$ is feasible for the LP.
+
+Let $i \in [n] - \Jtild$. If $i = j_r$, then
+\[ \xtild_i = \xhat_{j_r} + \delta y_{j_r} = \bline_r - \delta Y[r,k] = 0. \]
+If $i \in [n] - J - \{k\}$, then $\xtild_i = \xhat_i + \delta y_i = 0 + \delta 0 = 0$.
+Hence, $\xtild_i = 0$ when $i \not\in \Jtild$.
+Let $\Btild \defeq A[*,\Jtild]$. Then
+\[ b = A\xtild = A[*,\Jtild]\xtild[\Jtild] = \Btild\xtild[\Jtild]. \]
+By \cref{thm:simplex-new-basis}, $\Jtild$ is a basis, so $\Btild$ is invertible.
+Hence, $\xtild[\Jtild] = \Btild^{-1}b$.
+Furthermore, $\xtild[[n] - \Jtild] = 0$, so $\xtild = \solve(\Jtild)$.
+Since $\xtild \ge 0$, we get that $\Btild^{-1}b \ge 0$.
+Hence, $\Jtild$ is a feasible basis.
+\end{proof}
+
+\section{The Tableau Method and the Revised Simplex method}
+
+The naive simplex method has a large running time of $O(m^2(m + n))$,
+since we compute $B^{-1}$, $Y$, $\bline$ and $z$ afresh in each iteration.
+The tableau method and the revised simplex method are two ways to get around this problem.
+
+Let $J$ be a feasible basis of the LP.
+Let $B = A[*,J]$, $Y = B^{-1}A$, $\bline = B^{-1}b$ and $z = Y^Tc[J]$.
+Suppose $c_k - z_k < 0$ for some $k \in [n] - \Jtild$ and $Y[r,k] > 0$ for some $r \in [m]$.
+Assume \wLoG{} that $r = \argmin_{i \in [m]: Y[i,k] > 0} \frac{\bline_i}{Y[i,k]}$.
+Let $\Jtild$ be a sequence obtained by changing the $r\Th$ element of $J$ to $k$.
+By \cref{thm:simplex-feasible-basis}, $\Jtild$ is a feasible basis.
+Let $\Btild = A[*,\Jtild]$, $\Ytild = \Btild^{-1}A$, $\btildline = \Btild^{-1}b$
+and $\ztild = \Ytild^Tc[\Jtild]$.
+We will now see how to compute $\Ytild$, $\ztild$ and $\btildline$
+from $\Ytild$, $z$ and $\bline$.
+
+Define the matrix $\Yhat$ as
+\[ \Yhat[i,j] = \begin{cases}
+\displaystyle \frac{Y[r,j]}{Y[r,k]} & \textrm{ if } i = r
+\\[1em] \displaystyle Y[i,j] - \frac{Y[i,k]}{Y[r,k]}Y[r,j] & \textrm{ if } i \neq r
+\end{cases}. \]
+Note that $\Yhat$ is obtained from $Y$ by elementary row operations.
+This is called \emph{pivoting}, and $Y[r,*]$ is a column vector where
+the $r\Th$ entry is 1 and the others are 0.
+Let $R$ be the matrix of these row operations. Then $\Yhat = RY$.
+We can find $R$ by applying these row operations to the $m$-by-$m$ identity matrix.
+\begin{align*}
+R[i,j] &= \begin{cases}
+\displaystyle \frac{I[r,j]}{Y[r,k]} & \textrm{ if } i = r
+\\[1em] \displaystyle I[i,j] - \frac{Y[i,k]}{Y[r,k]}I[r,j] & \textrm{ if } i \neq r
+\end{cases}
+\\ &= \begin{cases}
+\displaystyle \frac{1}{Y[r,k]} & \textrm{ if } i = r = j
+\\[1em] \displaystyle -\frac{Y[i,k]}{Y[r,k]} & \textrm{ if } i \neq r \land j = r
+\\ \displaystyle 1 & \textrm{ if } i \neq r \land j = i
+\\ \displaystyle 0 & \textrm{ if } j \not\in \{i, r\}
+\end{cases}.
+\end{align*}
+
+\begin{lemma}
+\label{thm:upd-Y}
+$\Btild^{-1} = RB^{-1}$ and $\Ytild = RY$ and $\btildline = R\bline$.
+\end{lemma}
+\begin{proof}
+Let $J = [j_1, j_2, \ldots, j_m]$. $\Jtild = J - \{j_r\} \cup \{k\}$.
+By \cref{thm:YJ-is-I}, we get that $Y[*,J] = \Ytild[*,\Jtild] = I$.
+We will try to show that $\Yhat[*,\Jtild] = I$.
+
+Let $p, q \in [m] - \{r\}$.
+\[ \Yhat[*,\Jtild][r,r] = \Yhat[r,\Jtild[r]] = \Yhat[r,k] = 1. \]
+\[ \Yhat[*,\Jtild][r,q] = \Yhat[r,\Jtild[q]] = \Yhat[r,j_q] = \frac{Y[r,j_q]}{Y[r,k]} = 0.
+    \tag{by \cref{thm:YJ-is-I}} \]
+\[ \Yhat[*,\Jtild][p,r] = \Yhat[p,\Jtild[r]] = \Yhat[p,k]
+    = Y[p,k] - \frac{Y[p,k]}{Y[r,k]}Y[r,k] = 0. \]
+\begin{align*}
+\Yhat[*,\Jtild][p,q] &= \Yhat[p,\Jtild[q]] = \Yhat[p,j_q]
+= Y[p,j_q] - \frac{Y[p,k]}{Y[r,k]}Y[r,j_q] = Y[p,j_q]
+\\ &= \begin{cases}1 & \textrm{ if } p = q \\ 0 & \textrm{ otherwise}\end{cases}.
+\tag{by \cref{thm:YJ-is-I}}
+\end{align*}
+Hence, $\Yhat[*,\Jtild] = I$.
+
+\[ I = \Yhat[*,\Jtild] = (RB^{-1}A)[*,\Jtild] = RB^{-1}A[*,\Jtild] = RB^{-1}\Btild. \]
+Hence, $\Btild^{-1} = RB^{-1}$.
+\[ \Ytild = \Btild^{-1}A = RB^{-1}A = RY. \]
+\[ \btildline = \Btild^{-1}b = RB^{-1}b = R\bline. \qedhere \]
+\end{proof}
+
+Define $\zhat \in \mathbb{R}^n$ and $\eta$ as
+\begin{align*}
+\zhat_j &= z_j + \frac{c_k - z_k}{Y[r,k]} Y[r,j]
+& \eta &= c[J]^T\bline + \frac{c_k - z_k}{Y[r, k]}\bline_r.
+\end{align*}
+
+\begin{lemma}
+\label{thm:upd-z}
+$\zhat = \ztild$ and $\eta = c[\Jtild]^T\btildline$.
+\end{lemma}
+\begin{proof}
+Let $J = [j_1, j_2, \ldots, j_m]$. Then $\Jtild = J - \{j_r\} \cup \{k\}$.
+Let $i \in [m] - \{r\}$. Then
+\[ \zhat[\Jtild]_i = \zhat_{j_i} = z_{j_i} + \frac{c_k - z_k}{Y[r,k]} Y[r,j_i] = z_{j_i}. \]
+By \cref{thm:YJ-is-I}, we get $Y[r,j_i] = 0$.
+By \cref{thm:zJ-eq-cJ}, we get $z_{j_i} = c_{j_i}$.
+Hence, $\zhat[\Jtild]_i = c_{j_i} = c[\Jtild]_i$.
+\[ \zhat[\Jtild]_r = \zhat_k = z_k + \frac{c_k - z_k}{Y[r,k]} Y[r,k] = c_k = c[\Jtild]_r. \]
+Hence, $\zhat[\Jtild] = c[\Jtild]$.
+
+\[ Y[r,*] = (B^{-1}A)[r,*] = B^{-1}[r,*]A. \]
+\[ \bline_r = (B^{-1}b)_r = B^{-1}[r,*]b. \]
+Let $\alpha = (c_k - z_k)/Y[r,k]$. Then
+\[ \zhat^T = z^T + \alpha Y[r,*] = c[J]^TB^{-1}A + \alpha B^{-1}[r,*]A. \]
+\[ \eta = c[J]^T\bline + \alpha \bline_r = c[J]^TB^{-1}b + \alpha B^{-1}[r,*]b. \]
+Let $u^T = c[J]^TB^{-1} + \alpha B^{-1}[r,*]$. Then $\zhat^T = u^TA$ and $\eta = u^Tb$.
+\[ c[\Jtild]^T = \zhat[\Jtild]^T = (u^TA)[\Jtild] = u^TA[*,\Jtild] = u^T\Btild. \]
+Hence, $u^T = c[\Jtild]^T\Btild^{-1}$.
+So, $\zhat = c[\Jtild]^T\Btild^{-1}A = c[\Jtild]^T\Ytild = \ztild$
+and $\eta = c[\Jtild]^T\Btild^{-1}b = c[\Jtild]^T\btildline$.
+\end{proof}
+
+\subsection{Tableau method}
+
+Note that $c[J]^T\bline = c^T\solve(J)$.
+In the tableau method, we compute $B^{-1}$, $Y$, $\bline$, $z$ and $c[J]^T\bline$ in the first iteration.
+In subsequent iterations, we update $Y$ and $\bline$
+by applying elementary row operations given by $R$ (see \cref{thm:upd-Y}),
+and update $z$ and $c[J]^T\bline$ as per \cref{thm:upd-z}.
+All of these operations can be done together as a pivoting operation
+on the following matrix, called the tableau:
+\[ \begin{bmatrix} c - z & c[J]^T\bline \\[0.5em] Y & \bline \end{bmatrix}. \]
+The time per iteration is, therefore, $O(mn)$.
+We can reduce this to $O(m(n-m))$ if we observe that when we pivot on row $r$ and column $k$,
+then $m-1$ entries in $Y[r,*]$ are 0 (by \cref{thm:YJ-is-I}).
+The space complexity is $O(mn)$.
+
+\subsection{Revised simplex method}
+
+In the revised simplex method, we compute $B^{-1}$ in the first iteration.
+Henceforth, we will assume that $B^{-1}$ is available in the beginning of each iteration
+and we need to update it at the end of each iteration.
+
+Compute $c[J]^TB^{-1}$ by multiplying $c[J]^T$ and $B^{-1}$.
+Then we iterate over $j \in [n] - \Jtild$, and compute $z_j = (c[J]^TB^{-1})A[*,j]$.
+We stop iterating when we find a suitable $k \in [n] - \Jtild$ such that $c_k - z_k < 0$,
+or if $c_j - z_j \ge 0$ for all $j \in [n] - \Jtild$.
+
+Next, we compute $u = B^{-1}A[*,k]$ and $\bline = B^{-1}b$. Note that $u = Y[*,k]$.
+Then we continue from \cref{alg-line:naive-simplex:y} onwards
+(i.e., compute $y$, $\delta$ and $r$, and update $\Jtild$).
+At the end of the iteration, we can update $B^{-1}$ using row operations as per \cref{thm:upd-Y}.
+This is possible since $R$ is defined by $u$.
+
+The time taken is $O(m(t+m))$, where $t$ is the number of variables
+that need to be considered till we find $k$. Note that $t \le n-m$.
+The space complexity (in addition to storing the input) is $O(m^2)$.
+
+\end{document}
