@@ -241,13 +241,15 @@ Axioms for $\land$:
 Axioms for $=$:
 \begin{tightemize}
 \item \texttt{id=}: $a = a$.
-\item \texttt{symm=}: $a = b \vdash b = a$.
 \item \texttt{repl=}: Let $\phi(x)$ be a predicate containing variable $x$.
 Then $a = b, \phi(a) \vdash \phi(b)$.
 \end{tightemize}
 (Recall that rules of inference are statements of the form $A_1, A_2, \ldots, A_n \vdash B$.
 But when $n = 0$, we simply write the rule as $B$. \texttt{id=} is one such rule.)
 
+Using \texttt{repl=}, we can prove symmetry of $=$, i.e.,
+$a = b \vdash b = a$ (use $\phi(x): x = a$).
+Let's name this result \texttt{symm=}.
 Using \texttt{repl=}, we can prove transitivity of $=$, i.e.,
 $a = b, b = c \vdash a = c$ (use $b = c$ and $\phi(x): a = x$;
 see \cref{thm:trn-eq} in \cref{sec:misc-proofs} for details).
