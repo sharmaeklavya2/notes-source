@@ -1,12 +1,12 @@
 # 1 - Introduction
 
-* Definition of Standard form and canonical form
+* Definition of standard form and canonical form
 * Converting to standard and canonical forms
 * Min-cost multi-commodity flow
 * Economic Lot-Sizing Problem
 * Assortment Optimization
-* Pattern classification
-* max, max and absolute values in LPs
+* Linear binary classifier
+* min, max and absolute values in LPs
 * L1 regression
 * Compressed sensing
 * Cutting stock
