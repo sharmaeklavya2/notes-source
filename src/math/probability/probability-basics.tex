@@ -1,0 +1,255 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\DeclareMathOperator{\MGF}{MGF}
+\DeclareMathOperator{\Cov}{Cov}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{Basics of Probability}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\begin{definition}[Probability Space]
+A probability space is a triple $(\Omega, \Fcal, P)$ where
+\begin{itemize}
+\item $\Omega$ is the sample space, also called the set of all outcomes.
+\item $\Fcal$ is a $\sigma$-algebra over $\Omega$. $\Fcal$ is called the set of all events.
+\item $P: \Fcal \mapsto [0, 1]$ is a measure over $(\Omega, \Fcal)$
+    (i.e., $P$ is $\sigma$-additive) such that $P(\Omega) = 1$.
+    $P$ is called the probability measure.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Inclusion-Exclusion Principle]
+\[ \Pr\left(\bigcup_{i=1}^n A_i\right)
+= \sum_{k=1}^n (-1)^{k+1} \sum_{1 \le i_1 < \cdots < i_k \le n} \Pr(A_{i_1} \cap \cdots \cap A_{i_k}). \]
+\end{theorem}
+
+\begin{theorem}
+For randvars $X$ and $Y$, $\E(X + Y) = \E(X) + \E(Y)$.
+\end{theorem}
+
+\begin{theorem}
+For independent randvars $X_1, \ldots, X_n$, $\E(X_1 \ldots X_n) = \E(X_1) \ldots \E(X_n)$.
+\end{theorem}
+
+\begin{theorem}
+For a non-negative randvar $X$,
+\[ \E(X) = \begin{cases} \displaystyle \sum_{i=0}^{\infty} \Pr(X > i) & \textrm{ if $X$ is discrete}
+\\[1.2em] \displaystyle \int_0^{\infty} \Pr(X > x) dx & \textrm{ if $X$ is continuous} \end{cases}. \]
+\end{theorem}
+
+\begin{definition}
+\begin{align*}
+\Cov(X, Y) &\defeq \E((X-\E(X))(Y-\E(Y))) = \E(XY) - \E(X)\E(Y)
+\\ \Var(X) &\defeq \Cov(X, X) = \E((X-\E(X))^2) = \E(X^2) - \E(X)^2
+\end{align*}
+\end{definition}
+
+\begin{theorem}
+\[ \Var\left(\sum_{i=1}^n X_i\right) = \sum_{i=1}^n \Var(X_i) + 2\sum_{1 \le i < j \le n} \Cov(X_i, X_j). \]
+\end{theorem}
+
+\begin{theorem}
+Let $\MGF_t(X) \defeq \E(e^{tX})$. Then $\MGF_t$ uniquely determines $X$'s CDF.
+\end{theorem}
+
+\begin{theorem}[Change of variables]
+Let $X \in \mathbb{R}^n$ be a continuous random vector.
+Let $g: \mathbb{R}^n \mapsto \mathbb{R}^n$ be a bijective function
+having continuous partial derivatives.
+Then $f_{g(X)}(y) = f_X(x)|J_g(x)|^{-1}$, where $x \defeq g^{-1}(y)$
+and $J_g$ is the Jacobian of $g$
+(i.e., $J_g(x)[i,j] \defeq \partial g(x)_i/\partial x_j$).
+\end{theorem}
+
+\section{Probability Distributions}
+
+\begin{table}[!ht]
+\centering
+\caption{Discrete Probability Distributions}
+\defaultaddspace=0.8em
+\abovetopsep=4pt
+\begin{tabular}{lccccc}
+\toprule Distribution
+    & $\Pr(X = x)$
+    % & $\Pr(X \le x)$
+    & $\E(X)$
+    & $\Var(X)$
+    & $\MGF_t(X)$
+\\ \midrule $\operatorname{Bernouilli}(p)$
+    & $p^x(1-p)^{1-x}$
+    % & --
+    & $p$
+    & $p(1-p)$
+    & $pe^t + 1-p$
+\\[\defaultaddspace] $\operatorname{Binomial}(n, p)$
+    & $\displaystyle \binom{n}{x}p^x(1-p)^{n-x}$
+    % & --
+    & $np$
+    & $np(1-p)$
+    & $(pe^t + 1-p)^n$
+\\[\defaultaddspace] $\operatorname{Geometric}(p)$
+    & $(1-p)^{x-1}p$
+    % & $1 - (1-p)^x$
+    & $1/p$
+    & $(1-p)/p^2$
+    & $\displaystyle \frac{pe^t}{1-(1-p)e^t}$
+\\[\defaultaddspace] $\operatorname{Poisson}(\lambda)$
+    & $e^{-\lambda}\lambda^x/x!$
+    % & --
+    & $\lambda$
+    & $\lambda$
+    & $\displaystyle \exp(\lambda(e^t-1))$
+% \\[\defaultaddspace] $\operatorname{NegBinom}(n, p)$
+\\ \bottomrule
+\end{tabular}
+\label{table:disc-distr}
+\end{table}
+
+\begin{theorem}[Poisson approximates Binomial]
+Let $\lambda \in \mathbb{R}_{\ge 0}$ and $k \in \mathbb{Z}_{\ge 0}$ be constants.
+Let $X_n \sim \operatorname{Binom}(n, \lambda/n)$.
+Then $\lim_{n \to \infty} \Pr(X_n = k) = e^{-\lambda}\lambda^k/k!$.
+\end{theorem}
+
+\begin{table}[!ht]
+\centering
+\caption{Continuous Probability Distributions}
+\defaultaddspace=0.8em
+\abovetopsep=4pt
+\begin{tabular}{lccccc}
+\toprule Distribution
+    & $f_X(x)$
+    % & $\Pr(X \le x)$
+    & $\E(X)$
+    & $\Var(X)$
+    & $\MGF_t(X)$
+\\ \midrule $\operatorname{Uniform}(a, b)$
+    & $\displaystyle \frac{\mathbf{1}(a \le x \le b)}{b-a}$
+    % & $1 - e^{\lambda x}$
+    & $\displaystyle \frac{a+b}{2}$
+    & $\displaystyle \frac{(b-a)^2}{12}$
+    & $\displaystyle \frac{e^{bt} - e^{at}}{(b-a)t}$
+\\[\defaultaddspace] $\operatorname{Exponential}(\lambda)$
+    & $\lambda e^{-\lambda x}$
+    % & $1 - e^{\lambda x}$
+    & $1/\lambda$
+    & $1/\lambda^2$
+    & $\lambda/(\lambda - t)$
+\\[\defaultaddspace] $\operatorname{Gamma}(n, \lambda)$
+    & $\displaystyle \frac{(\lambda x)^{n-1}}{(n-1)!} \lambda e^{-\lambda x}$
+    % & --
+    & $n/\lambda$
+    & $n/\lambda^2$
+    & $\displaystyle \left(1-\frac{t}{\lambda}\right)^{-n}$
+\\[\defaultaddspace] $\operatorname{Normal}(\mu, \sigma^2)$
+    & $\displaystyle \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$
+    % & --
+    & $\mu$
+    & $\sigma^2$
+    & $\exp(\mu t + \sigma^2t^2/2)$
+\\ \bottomrule
+\end{tabular}
+\label{table:cont-distr}
+\end{table}
+
+\begin{theorem}[Scaling normal]
+$X \sim N(\mu, \sigma^2) \implies aX + b \sim N(a\mu + b, a^2\sigma^2)$.
+\end{theorem}
+
+\subsection{Sum of Random Variables}
+
+\begin{theorem}[Convolution]
+\[ f_{X+Y}(z) = \begin{cases}
+\displaystyle \sum_{y \in D} f_{X, Y}(z - y, y) = \sum_{x \in D} f_{X, Y}(x, z-x)
+    & \textrm{ discrete}
+\\[1.2em] \displaystyle
+\int_{-\infty}^{\infty} f_{X, Y}(z - y, y) dy = \int_{-\infty}^{\infty} f_{X, Y}(x, z-x) dx
+    & \textrm{ continuous}
+\end{cases}. \]
+\end{theorem}
+
+\begin{theorem}
+Let $X_1, \ldots, X_n$ be independent. Then
+$\MGF_t\left(\sum_{i=1}^n X_i\right) = \prod_{i=1}^n \MGF_t(X_i)$.
+\end{theorem}
+
+\begin{theorem}
+Let $X_1, \ldots, X_n$ be independent. Let $Y \defeq \sum_{i=1}^n X_i$. Then
+\begin{itemize}
+\item $X_i \sim \operatorname{Bernouilli}(p)
+    \implies Y \sim \operatorname{Binomial}(n, p)$.
+\item $X_i \sim \operatorname{Poisson}(\lambda_i) \implies
+    Y \sim \operatorname{Poisson}\left(\sum_{i=1}^n \lambda_i\right)$.
+\item $X_i \sim \operatorname{Exponential}(\lambda) \implies
+    Y \sim \operatorname{Gamma}(n, \lambda)$.
+\end{itemize}
+\end{theorem}
+
+\section{Inequalities and Limits}
+
+\begin{theorem}[Markov]
+For non-negative randvar $X$, $\Pr(X \ge a) \le \E(X)/a$.
+\end{theorem}
+
+\begin{theorem}[Chebyshev]
+$\displaystyle \Pr(|X-\E(X)| \ge a) \le \frac{\Var(X)}{a^2}$.
+\end{theorem}
+
+\begin{theorem}[One-sided Chebyshev]
+\begin{align*}
+\Pr(X-\E(X) \ge a) &\le \frac{\Var(X)}{\Var(X)+a^2}
+& \Pr(X-\E(X) \le -a) &\le \frac{\Var(X)}{\Var(X)+a^2}
+\end{align*}
+\end{theorem}
+
+\begin{theorem}[Strong law of large lumbers]
+Let $X_1, X_2, \ldots$ be IID randvars having mean $\mu$.
+Let $Y_n \defeq \frac{1}{n} \sum_{i=1}^n X_i$ for all $i \in [n]$. Let
+\[ E \defeq \left\{\omega \in \Omega: \lim_{n \to \infty} Y_n(\omega) = \mu\right\}. \]
+Then $\Pr(E) = 1$.
+\end{theorem}
+
+\begin{definition}
+Let $Z$ be a random variable and $S \defeq [X_1, X_2, \ldots]$ be an infinite sequence
+of random variables. We say that $S$ converges to $Z$ if
+$\lim_{n \to \infty} F_{X_n}(x) = F_Z(x)$ for all $x \in \mathbb{R}$ where $F_Z$ is continuous.
+\end{definition}
+
+\begin{theorem}[Central Limit Theorem]
+Let $X_1, X_2, \ldots$ be IID randvars having mean $\mu$ and variance $\sigma^2$.
+Let $Y_n \defeq \sqrt{n}\left(\frac{1}{n}\sum_{i=1}^n X_i - \mu\right)$.
+Then $[Y_1, Y_2, \ldots]$ converges to $N(0, \sigma^2)$.
+\end{theorem}
+
+\begin{theorem}[Jensen's inequality]
+If $X$ is a random variable and $f$ is a convex function, then $f(\E(X)) \le \E(f(X))$.
+\end{theorem}
+
+\begin{theorem}[Cauchy-Schwarz inequality]
+For random variables $X$ and $Y$, $|\E(XY)|^2 \le \E(X^2)\E(Y^2)$
+and $|\Cov(X,Y)|^2 \le \Var(X)\Var(Y)$.
+\end{theorem}
+
+%\addMyBib{}
+
+\end{document}
