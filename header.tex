@@ -20,64 +20,7 @@
     urlcolor={blue!50!black}
 }
 
-% THEOREMS
-
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
-\newtheorem{example}{Example}
-\newtheorem{corollary}{Corollary}[theorem]
-\newtheorem{lemma}[theorem]{Lemma}
-
-% SHORTHANDS
-
-\newcommand*{\Th}{^{\textrm{th}}}
-\newcommand*{\WLoG}{Without loss of generality}
-\newcommand*{\wLoG}{without loss of generality}
-\newcommand*{\wrt}{with respect to}
-
-% SYMBOLS
-
-\let\eps\epsilon
-\newcommand*{\defeq}{:=}
-
-\newcommand*{\Bhat}{\widehat{B}}
-\newcommand*{\Chat}{\widehat{C}}
-\newcommand*{\Jhat}{\widehat{J}}
-\newcommand*{\Shat}{\widehat{S}}
-\newcommand*{\Yhat}{\widehat{Y}}
-\newcommand*{\bhat}{\widehat{b}}
-\newcommand*{\xhat}{\widehat{x}}
-\newcommand*{\yhat}{\widehat{y}}
-\newcommand*{\zhat}{\widehat{z}}
-
-\newcommand*{\Btild}{\widetilde{B}}
-\newcommand*{\Ctild}{\widetilde{C}}
-\newcommand*{\Jtild}{\widetilde{J}}
-\newcommand*{\Stild}{\widetilde{S}}
-\newcommand*{\Ytild}{\widetilde{Y}}
-\newcommand*{\btild}{\widetilde{b}}
-\newcommand*{\xtild}{\widetilde{x}}
-\newcommand*{\ytild}{\widetilde{y}}
-\newcommand*{\ztild}{\widetilde{z}}
-
-% MATH
-
-\newcommand*{\floor}[1]{\left\lfloor #1 \right\rfloor}
-\newcommand*{\smallfloor}[1]{\lfloor #1 \rfloor}
-\newcommand*{\ceil}[1]{\left\lceil #1 \right\rceil}
-\newcommand*{\smallceil}[1]{\lceil #1 \rceil}
-\newcommand*{\abs}[1]{\left\lvert #1 \right\rvert}
-\newcommand*{\smallabs}[1]{\lvert #1 \rvert}
-\newcommand*{\norm}[1]{\left\lVert #1 \right\rVert}
-\newcommand*{\smallnorm}[1]{\lVert #1 \rVert}
-\newcommand*{\Z}{\mathbb{Z}}
-\DeclareMathOperator*{\E}{E}
-\DeclareMathOperator*{\Var}{Var}
-\DeclareMathOperator*{\argmin}{argmin}
-\DeclareMathOperator*{\argmax}{argmax}
-\DeclareMathOperator{\poly}{poly}
-\DeclareMathOperator{\opt}{opt}
-\newcommand*{\OPT}{\mathrm{OPT}}
+\input{macros.tex}
 
 % INITIALIZATIONS
 
