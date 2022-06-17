@@ -17,6 +17,8 @@ parser.add_argument('--force', action='store_true', default=False,
     help="Build even if source was not updated")
 parser.add_argument('--dry-run', action='store_true', default=False,
     help="Only print commands; do not run them")
+parser.add_argument('--no-date', dest='use_SDE_envvar', action='store_false', default=True,
+    help='do not set the SOURCE_DATE_EPOCH envvar')
 ARGS = parser.parse_args(None if __name__ == '__main__' else ['output'])
 
 
@@ -233,6 +235,8 @@ def process_tree(ipath, opath, action, filter=None):
 
 
 def main():
+    if ARGS.use_SDE_envvar:
+        os.environ['SOURCE_DATE_EPOCH'] = '0'
     success = process_tree('src', ARGS.out_dir, process_by_ext)
     if global_warn_count:
         print(global_warn_count, 'warnings')
