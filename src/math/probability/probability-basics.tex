@@ -250,6 +250,29 @@ For random variables $X$ and $Y$, $|\E(XY)|^2 \le \E(X^2)\E(Y^2)$
 and $|\Cov(X,Y)|^2 \le \Var(X)\Var(Y)$.
 \end{theorem}
 
+\section{Conditional Probability}
+
+\begin{definition}
+Let $X$ and $Y$ be continuous randvars.
+Let $f_{Y \mid X}(y \mid x) \defeq f_{X,Y}(x, y) / f_X(x)$.
+$f_{Y \mid X}$ is called the \emph{density function of $Y$ conditioned on $X$}.
+Then $\E(Y \mid X=x) = \int_{-\infty}^{\infty} y f_{Y \mid X}(y \mid x) dx$.
+\end{definition}
+
+\begin{definition}
+Let $X$ and $Y$ be randvars and $A$ be an event.
+Let $g(x) \defeq \Pr(A \mid X=x)$ and $h(x) \defeq \E(Y \mid X=x)$.
+Then $\Pr(A \mid X) \defeq g(X)$ and $\E(Y \mid X) \defeq h(X)$.
+\end{definition}
+
+\begin{theorem}
+$\E(\Pr(A \mid X)) = \Pr(A)$ and $\E(\E(Y \mid X)) = \E(Y)$.
+\end{theorem}
+
+\begin{theorem}
+$\Var(Y) = \E(\Var(Y \mid X)) + \Var(\E(Y \mid X))$.
+\end{theorem}
+
 %\addMyBib{}
 
 \end{document}
