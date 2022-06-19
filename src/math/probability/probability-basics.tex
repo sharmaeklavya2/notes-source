@@ -273,6 +273,39 @@ $\E(\Pr(A \mid X)) = \Pr(A)$ and $\E(\E(Y \mid X)) = \E(Y)$.
 $\Var(Y) = \E(\Var(Y \mid X)) + \Var(\E(Y \mid X))$.
 \end{theorem}
 
+\section{Binomial Coefficient}
+
+The binomial coefficient $\binom{n}{k}$ is the number of subsets of $\{1, 2, \ldots, n\}$ of size $k$,
+where $n \in \mathbb{Z}_{\ge 0}$ and $k \in \mathbb{Z}$.
+
+\begin{itemize}
+\item $\displaystyle \binom{n}{k} = \binom{n}{n-k} = \begin{cases}
+    0 & \textrm{ if } k < 0 \textrm{ or } k > n
+    \\ \frac{n!}{k!(n-k)!} & \textrm{ if } 0 \le k \le n \end{cases}$.
+\item Additive recursion: For $n \ge 1$, $\displaystyle \binom{n}{k}
+    = \binom{n-1}{k} + \binom{n-1}{k-1}
+    = \binom{n+1}{k+1} - \binom{n}{k+1}$.
+\item Decrement: For $n \ge 1$, $\displaystyle \binom{n}{k}
+    = \frac{n}{k} \binom{n-1}{k-1}
+    = \frac{n}{n-k} \binom{n-1}{k}
+    = \frac{n-k+1}{k} \binom{n}{k-1}$.
+\item Sum 1: $\displaystyle \sum_{i=k}^n \binom{i}{k}\binom{n}{i}x^i = \binom{n}{k}x^k(1+x)^{n-k}$.
+Set $k=0$ to get $\displaystyle \sum_{i=0}^n \binom{n}{i}x^i = (1+x)^n$.
+\item Sum 2: $\displaystyle \sum_{i=0}^p \binom{m}{i}\binom{n}{p-i} = \binom{m+n}{p}$.
+\item Sum 3: $\displaystyle \sum_{i=k}^{n-b} \binom{i}{k}\binom{n-i}{b} = \binom{n+1}{k+b+1}$.
+Set $b=0$ to get $\displaystyle \sum_{i=k}^{n} \binom{i}{k} = \binom{n+1}{k+1}$.
+\end{itemize}
+
+\section{Other useful results}
+
+\[ \forall x \in \mathbb{R},\quad \frac{x-1}{x} \le \ln x \le x-1 \quad\textrm{and}\quad e^x \ge 1 + x. \]
+\[ \forall n \ge 1, \quad \left(\sum_{i=1}^n \frac{1}{i}\right) - \ln n \in [1/n, 1]. \]
+\[ \textrm{Stirling's approximation: For } n \ge 1,\quad
+    \frac{n!}{n^{n+\frac{1}{2}}e^{-n}} \in [\sqrt{2\pi}, e]. \]
+\[ \forall a \in \mathbb{\mathbb{Z}}, \forall b \in \mathbb{Z}_{>0},\quad
+    \ceil{\frac{a}{b}} = \floor{\frac{a-1}{b}}+1 \quad\textrm{and}\quad
+    \floor{\frac{a}{b}} = \ceil{\frac{a+1}{b}}-1. \]
+
 %\addMyBib{}
 
 \end{document}
