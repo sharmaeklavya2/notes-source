@@ -306,6 +306,14 @@ Set $b=0$ to get $\displaystyle \sum_{i=k}^{n} \binom{i}{k} = \binom{n+1}{k+1}$.
     \ceil{\frac{a}{b}} = \floor{\frac{a-1}{b}}+1 \quad\textrm{and}\quad
     \floor{\frac{a}{b}} = \ceil{\frac{a+1}{b}}-1. \]
 
+\begin{theorem}[Generalization of Geometric series]
+For $0 \le a \le b$,
+\[ \sum_{i=0}^{\infty} \binom{b+i}{a}p^i
+    = \frac{1}{1-p}\sum_{i=0}^a \binom{b}{i}\left(\frac{p}{1-p}\right)^{a-i}. \]
+On setting $b = a$, we get
+\[ \sum_{i=0}^{\infty} \binom{a+i}{a}p^i = \frac{1}{(1-p)^{a+1}}. \]
+\end{theorem}
+
 %\addMyBib{}
 
 \end{document}
