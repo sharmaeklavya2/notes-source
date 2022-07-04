@@ -1,0 +1,348 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{float}
+\usepackage{array}
+\usepackage{comment}
+%\usepackage{tikz}
+\usepackage[shortlabels]{enumitem}
+\usepackage[hypertexnames=false,bookmarksnumbered=true,final]{hyperref}
+%\usepackage{algorithm,algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\newcommand*{\thmdepurl}[1]{https://sharmaeklavya2.github.io/theoremdep/nodes#1}
+\newcommand*{\thmdephref}[2]{\href{\thmdepurl{#1}}{#2}}
+\newenvironment*{tightemize}{\begin{itemize}[noitemsep]}{\end{itemize}}
+
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\rank}{rank}
+\newcommand*{\zerovec}{\mathbf{0}}
+\DeclareMathOperator{\rows}{rows}
+\DeclareMathOperator{\cols}{cols}
+\DeclareMathOperator{\nullSpace}{nullSpace}
+\DeclareMathOperator{\nullity}{nullity}
+
+\title{Linear Algebra Cheat Sheet for OR}
+\author{Eklavya Sharma}
+\date{\empty}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document contains a list of all linear algebra results
+that I needed for my Operations Research coursework at UIUC.
+The target audience of this document is Operations Research students.
+It can be helpful to \href{https://en.wikipedia.org/wiki/Memory_paging}{page}
+these results into your brain before a linear-algebra-heavy exam/project,
+and proving these results yourself (except those marked DWAP) is a good exercise.
+\end{abstract}
+
+%\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+Notation:
+\begin{tightemize}
+\item DWAP abbreviates ``Don't Worry About the Proof".
+\item For any integer $n \ge 0$, define $[n] \defeq \{1, 2, \ldots, n\}$.
+\end{tightemize}
+
+\tableofcontents
+
+\section{Vector Spaces}
+\label{sec:vector-space}
+
+\subsection{Field}
+
+\begin{definition}[Field]
+A field is a set $F$ equipped with two operations $+$ and $\times$ that satisfy some special properties.
+(you don't need to know the properties, unless you want to be a pure mathematician,
+in which case you can find them \thmdephref{/abstract-algebra/rings/field.html}{here}).
+\\ Every field has two special elements, called the additive identity (usually denoted by 0),
+and the multiplicative identity (usually denoted by 1).
+\end{definition}
+
+\begin{theorem}[DWAP]
+The following are fields:
+$\mathbb{Q}$ (the set of rational numbers),
+$\mathbb{R}$ (the set of real numbers),
+$\mathbb{C}$ (the set of complex numbers).
+\end{theorem}
+
+\begin{theorem}[DWAP]
+$\mathbb{Z}_p \defeq \{0, 1, \ldots, p-1\}$ is a field when $p$ is prime,
+where $+$ and $\times$ are addition and multiplication modulo $p$.
+\end{theorem}
+
+\subsection{Vector Space}
+
+\begin{definition}
+A vector space $V$ over a field $F$ is a set with
+a vector addition operation ($V \times V \mapsto V$)
+and a scalar multiplication operation ($F \times V \mapsto V$)
+which satisfies some special properties.
+(you don't need to know the properties, unless you want to be a pure mathematician,
+in which case you can find them \thmdephref{/linear-algebra/vector-spaces/vector-space.html}{here}).
+\\ Every vector space has a special vector, called the additive identity, denoted by $\zerovec$.
+\begin{comment}
+\begin{itemize}
+\item Properties of $+$:
+\begin{itemize}
+\item \textbf{Additive closure}: $\forall x \in V, \forall y \in V, x + y \in V$.
+\item \textbf{Associativity}: $\forall x,y,z \in V, (x+y)+z = x+(y+z)$.
+\item \textbf{Commutativity}: For each $x, y \in V$, $x + y = y + x$.
+\item \textbf{Identity}: There exists a special vector in $V$,
+    denoted as $\zerovec$, called the \emph{additive identity} of $V$,
+    such that $\forall x \in V$, $x + \zerovec = x$.
+    (It can be proved that the additive identity is unique.)
+\item \textbf{Inverse}: For each $x \in V$, there exists another vector in $V$,
+    denoted as $-x$, called the \emph{additive inverse} of $x$,
+    such that $x + (-x) = \zerovec$.
+    (It can be proved that for a given $x$, the additive inverse is unique.)
+\end{itemize}
+\item Properties of scalar multiplication:
+\begin{itemize}
+\item \textbf{Associativity}: $\forall a \in F, \forall b \in F, \forall x \in V, a(bx) = (ab)x$.
+\item \textbf{Unit scalar}: $\forall x \in V, 1x = x$,
+    where $1$ is the multiplicative identity of $F$.
+\end{itemize}
+\item Distributivity:
+\begin{itemize}
+\item $\forall a \in F, \forall b \in F, \forall x \in V, (a+b)x = (ax + bx)$.
+\item $\forall a \in F, \forall x \in V, \forall y \in V, a(x+y) = (ax + ay)$.
+\end{itemize}
+\end{itemize}
+\end{comment}
+The elements of $V$ are called vectors. The elements of $F$ are called scalars.
+\end{definition}
+
+\begin{definition}[Subspace]
+Let $V$ be a vector space. $U$ is called a subspace of $V$ if
+$U \subseteq V$ and $U$ is also a vector space.
+\end{definition}
+
+\begin{comment}
+\begin{lemma}[\thmdephref{/linear-algebra/vector-spaces/zero.html}{Zeros in vector space}, DWAP]
+For $a, 0$ in field $F$ and $x, \zerovec$ in vector space $V$,
+$ax = 0 \iff a=0 \textrm{ or } x=\zerovec$.
+\end{lemma}
+\end{comment}
+
+\begin{theorem}[DWAP]
+The set of all polynomials over field $F$ forms a vector space.
+\end{theorem}
+
+\begin{theorem}[DWAP]
+For a field $F$, $F^d$ is a vector space.
+\end{theorem}
+
+\begin{definition}[Linear and affine combinations]
+Let $V$ be a vector space over field $F$.
+Let $X \defeq \{x^{(i)}: i \in [k]\}$, where $x^{(i)} \in V$.
+Let $y = \sum_{i=1}^k \alpha_i x^{(i)}$, where $\alpha_i \in F$.
+\begin{tightemize}
+\item $y$ is a called a \emph{linear combination} of $X$.
+\item If $\sum_{i=1}^k \alpha_i = 1$, then
+    $y$ is called an \emph{affine} combination of $X$.
+\end{tightemize}
+\end{definition}
+
+\begin{definition}[Span]
+$\Span(X)$ is defined as the set of all linear combinations of $X$.
+For sets $X$ and $Y$ of vectors, $X$ is called a spanning set of $Y$ if $Y \subseteq \Span(X)$.
+\end{definition}
+
+\begin{lemma}
+If $X$ spans $S$, then $X$ also spans $\Span(S)$.
+\end{lemma}
+
+\begin{theorem}[DWAP]
+Let $X$ be a finite subset of $F^d$, where $F$ is a field. Then $\Span(X)$ is a vector space.
+\end{theorem}
+
+\subsection{Linear Independence and Basis}
+
+\begin{definition}[Linear independence]
+A set $\{x_1, x_2, \ldots, x_n\}$ of vectors over field $F$
+is called \emph{linearly independent} iff
+\[ \forall (\alpha_1, \ldots, \alpha_n) \in F^n,
+\left( \sum_{i=1}^n \alpha_i x_i = 0 \implies (\alpha_i = 0 \;\forall i \in [n])\right). \]
+\end{definition}
+
+\begin{lemma}[Incrementing a linearly independent set]
+\label{thm:vecsp:inc-linindep}
+Let $X$ be a linearly independent set of vectors and $y$ be a vector.
+If $y \not\in \Span(X)$, then $X \cup \{y\}$ is linearly independent.
+\end{lemma}
+
+\begin{lemma}[Decrementing a linearly dependent set]
+\label{thm:vecsp:dec-lindep}
+Let $X$ be a linearly dependent set of vectors.
+Then $\exists x \in X$ such that $\Span(X) = \Span(X - \{x\})$.
+\end{lemma}
+
+\begin{theorem}[DWAP]
+\label{thm:vecsp:larger-than-span-is-dep}
+Let $X$ be a spanning set of vector space $V$.
+If $Y \subseteq V$ and $|Y| > |X|$, then $Y$ is linearly dependent.
+\end{theorem}
+
+\begin{definition}[Basis]
+Let $S$ be a subset of vector space $V$.
+Then $X \subseteq S$ is a basis of $S$ iff (the following definitions are equivalent):
+\begin{tightemize}
+\item $X$ is linearly independent and spans $S$.
+\item $X$ is the largest linearly independent subset of $S$.
+\item $X$ is a maximal linearly independent subset of $S$.
+\item $X$ is the smallest spanning subset of $S$.
+\item $X$ is a minimal spanning subset of $S$.
+\end{tightemize}
+\end{definition}
+Equivalence of these definitions can be proven using
+\cref{thm:vecsp:larger-than-span-is-dep,thm:vecsp:inc-linindep,thm:vecsp:dec-lindep}.
+
+\begin{lemma}
+If $X$ is a basis of $S$, then $X$ is also a basis of $\Span(S)$.
+\end{lemma}
+
+\begin{lemma}
+Let $F$ be a field. Let $e^{(i)} \in F^d$ be a vector whose $i\Th$ coordinate is 1
+and other coordinates are 0. Then $E \defeq \{e^{(i)}: i \in [d]\}$ is a basis of $F^d$.
+($E$ is called the \emph{standard basis} of $F^d$.)
+\end{lemma}
+
+\begin{theorem}
+All bases of $S$ have the same size. This size is called the rank of $S$ (denoted as $\rank(S)$).
+If $S$ is a vector space, it's called the dimension of $S$ (denoted as $\dim(S)$).
+\end{theorem}
+
+\begin{theorem}
+Let $X$ be a set of $\rank(S)$ vectors. Then
+\[ X \textrm{ is a basis of } S \iff X \textrm{ is linearly independent } \iff X \textrm{ spans } S. \]
+\end{theorem}
+
+\begin{theorem}[Coordinatization]
+Let $B \defeq \{b^{(1)}, b^{(2)}, \ldots, b^{(k)}\}$ be a basis of vector space $V$.
+Then $\forall x \in V$ there is a unique tuple $(\alpha_1, \alpha_2, \ldots, \alpha_k)$
+such that $x = \sum_{i=1}^k \alpha_ib^{(i)}$.
+\end{theorem}
+
+\subsection{Affine Independence}
+
+\begin{definition}
+A set $\{x_1, x_2, \ldots, x_n\}$ of vectors over field $F$
+is called \emph{linearly independent} iff
+\[ \forall (\alpha_1, \ldots, \alpha_n) \in F^n,
+\left( \left(\sum_{i=1}^n \alpha_i = 0 \textrm{ and } \sum_{i=1}^n \alpha_i x_i = 0 \right)
+    \implies (\alpha_i = 0 \;\forall i \in [n])\right). \]
+\end{definition}
+
+\begin{theorem}
+The set $\{x^{(i)}: i \in [n]\}$ of vectors is affinely independent iff
+$\{x^{(i)} - x^{(n)}: i \in [n-1]\}$ is linearly independent.
+\end{theorem}
+
+\begin{theorem}
+The set $\{x^{(i)}: i \in [n]\}$ of vectors from $F^d$ is affinely independent iff
+$\{(x^{(i)}, 1): i \in [n]\}$ is linearly independent.
+\end{theorem}
+
+\section{Matrices}
+
+\begin{definition}[row space, column space]
+Let $F$ be a field and $A \in F^{m \times n}$ be a matrix,
+Let $\rows(A)$ be the set of all row vectors of $A$,
+and $\cols(A)$ be the set of all column vectors of $A$. Then
+\begin{tightemize}
+\item $\operatorname{rowSpace}(A) \defeq \Span(\rows(A))$,
+\item $\operatorname{colSpace}(A) \defeq \Span(\cols(A))$,
+\item $\rank(A) \defeq \operatorname{rowRank}(A) \defeq \rank(\rows(A))$,
+\item $\operatorname{colRank}(A) \defeq \rank(\cols(A))$.
+\end{tightemize}
+\end{definition}
+
+\begin{theorem}[DWAP]
+For any matrix $A$, $\operatorname{rowRank}(A) = \operatorname{colRank}(A)$.
+\end{theorem}
+
+\begin{definition}[Nullspace and nullity]
+For a matrix $A \in F^{m \times n}$, $\nullSpace(A) \defeq \{x \in F^n: Ax = 0\}$
+and $\nullity(A) \defeq \dim(\nullSpace(A))$.
+\end{definition}
+
+\begin{theorem}[Rank-nullity theorem, DWAP]
+$\rank(A) + \nullity(A) = |\cols(A)|$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+We can show that row space and nullspace are not affected by elementary row operations on $A$.
+Hence, we can assume that $A$ is in Reduced-Row Echelon Form.
+There are $\rank(A)$ pivot columns in $A$.
+Given any value of non-pivot variables, we can compute the value of pivot variables
+such that $Ax = 0$. Hence, $\nullity(A) = |\cols(A)| - \rank(A)$.
+\end{proof}
+
+\begin{theorem}[DWAP]
+If $V$ is a subspace of $F^d$, then $\exists A$ such that $V = \nullSpace(A)$.
+\end{theorem}
+
+\begin{theorem}[DWAP]
+Basic results on matrix multiplication:
+\begin{tightemize}
+\item Matrix multiplication is associative, i.e., $(AB)C = A(BC)$.
+\item $(AB)^T = B^TA^T$.
+\item $|AB| = |A||B|$ if $A$ and $B$ are square ($|A|$ is the determinant of $A$).
+\item $(AB)^{-1} = B^{-1}A^{-1}$ if $A$ and $B$ are invertible.
+\end{tightemize}
+\end{theorem}
+
+\begin{theorem}[Matrix singularity, DWAP]
+Let $A \in F^{n \times n}$. The following are equivalent:
+\begin{tightemize}
+\item $\rank(A) = n$.
+\item 0 is the unique solution to $Ax = 0$.
+\item $|A| \neq 0$ ($|A|$ is the determinant of $A$).
+\item $A$ is invertible, i.e., $\exists B \in F^{n \times n}$ such that $AB = BA = I$.
+\end{tightemize}
+\end{theorem}
+
+\section{Miscellaneous}
+
+\begin{definition}[$p$-norms]
+For $x \in \mathbb{R}^d$,
+\begin{align*}
+\|x\|_p &\defeq \left(\sum_{i=1}^d |x_i|^p\right)^{1/p}
+& \|x\|_{\infty} &\defeq \max_{i=1}^d |x_i|
+& \|x\| &\defeq \|x\|_2
+\end{align*}
+\end{definition}
+
+\begin{definition}[Linear combinations]
+Let $V$ be a vector space over field $\mathbb{R}$.
+Let $X \defeq \{x^{(i)}: i \in [k]\}$, where $x^{(i)} \in V$.
+Let $y = \sum_{i=1}^k \alpha_i x^{(i)}$, where $\alpha_i \in F$.
+\begin{tightemize}
+\item $y$ is a called a \emph{linear combination} of $X$.
+\item If $\alpha_i \ge 0$ for all $i \in [k]$, then
+    $y$ is a called a non-negative linear combination of $X$.
+\item If $\sum_{i=1}^k \alpha_i = 1$, then
+    $y$ is called an \emph{affine} combination of $X$.
+\item A non-negative affine combination is called a convex combination.
+\end{tightemize}
+
+\end{definition}
+\begin{theorem}[\thmdephref{/linear-algebra/inner-product-spaces/cauchy-schwarz-inequality.html}{Cauchy-Schwarz inequality}]
+$\forall x, y \in \mathbb{R}^d$, $|x^Ty| \le \|x\|\|y\|$.
+\end{theorem}
+
+%\bibliographystyle{plainurl}
+%\bibliography{bibdb}
+
+\end{document}
