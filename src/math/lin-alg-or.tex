@@ -235,6 +235,29 @@ Then $\forall x \in V$ there is a unique tuple $(\alpha_1, \alpha_2, \ldots, \al
 such that $x = \sum_{i=1}^k \alpha_ib^{(i)}$.
 \end{theorem}
 
+\subsection{Elementary Operations}
+
+\begin{definition}
+For a sequence $X \defeq [x_1, \ldots, x_n]$ of vectors (over field $F$),
+an elementary operation is one of the following:
+\begin{tightemize}
+\item For $i \neq j$ and $\alpha \in F$, replace $x_i$ by $x_i + \alpha x_j$.
+\item For $i \in [n]$ and $\alpha \in F - \{0\}$, replace $x_i$ by $\alpha x_i$.
+\item For $i \neq j$, swap $x_i$ and $x_j$.
+\end{tightemize}
+\end{definition}
+
+\begin{lemma}[Reversibililty]
+Let $X$ be a set of vectors. Let $Y$ be the vectors obtained by applying
+an elementary operation on $X$. Then $X$ can be obtained
+by applying an elementary operation to $Y$.
+\end{lemma}
+
+\begin{lemma}
+For a set $X$ of vectors, applying elementary operations doesn't change
+$\Span(X)$ or $\rank(X)$.
+\end{lemma}
+
 \subsection{Affine Independence}
 
 \begin{definition}
@@ -256,6 +279,11 @@ $\{(x^{(i)}, 1): i \in [n]\}$ is linearly independent.
 \end{theorem}
 
 \section{Matrices}
+
+\begin{lemma}[Matrix of elementary rowops]
+For a sequence $S$ of elementary operations, there is a unique matrix $R$ such that
+applying $S$ to rows of any matrix $A$ gives us $RA$.
+\end{lemma}
 
 \begin{definition}[row space, column space]
 Let $F$ be a field and $A \in F^{m \times n}$ be a matrix,
