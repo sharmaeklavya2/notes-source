@@ -46,8 +46,9 @@ for the course IE 410 at UIUC in Fall 2021.
 * Definition: infinitely often.
 * Definition: almost everywhere.
 * Lemma: {A a.e.} ⊆ {A i.o}.
+* Lemma: not({A a.e.}) = {not(A) i.o}.
 * Borel-Cantelli Lemma (with proof): `∑_(i≥0) p_i` is finite implies P(A i.o.) = 0.
-* Theorem: `∑_(i≥0) p_i = ∞` implies P(A i.o) = 1.
+* Theorem: `∑_(i≥0) p_i = ∞` implies P(A i.o) = 1 for ind events A.
 
 ## Limiting probabilities
 
@@ -58,8 +59,9 @@ for the course IE 410 at UIUC in Fall 2021.
 * Theorem (without proof): For an irreducible ergodic markov chain, limiting probabilities π exist
     and are unique solutions to 'π = πP and sum(π) = 1'.
 * Theorem (without proof): If π is the limiting probability distr, then the expected time between
-    revisits to j is π_j.
-* Theorem (without proof): rank(I-P) = n-1, where n is the number of states.
+    revisits to j is 1/π_j.
+* Theorem (without proof): For ergodic irreducible markov chains,
+    rank(I-P) = n-1, where n is the number of states.
 * Example: `P(i, j) = {p_i if j=0, 1-p_i if j=i+1, 0 otherwise}`. Is 0 positive recurrent?
     * Special cases: p_i = p, p_i = (i+1)/(i+2).
 * Example: random walk with infinite number of states and probability p of going right. Positive Recurrence?
