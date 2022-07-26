@@ -16,6 +16,8 @@
 
 \DeclareMathOperator{\MGF}{MGF}
 \DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\infOft}{io}
+\DeclareMathOperator{\almEv}{ae}
 
 \author{Eklavya Sharma}
 \date{\empty}
@@ -80,6 +82,27 @@ Then $f_{g(X)}(y) = f_X(x)|J_g(x)|^{-1}$, where $x \defeq g^{-1}(y)$
 and $J_g$ is the Jacobian of $g$
 (i.e., $J_g(x)[i,j] \defeq \partial g(x)_i/\partial x_j$).
 \end{theorem}
+
+\begin{definition}
+Let $A = [A_1, A_2, \ldots]$ be an infinite sequence of events. Then
+\begin{align*}
+\infOft(A) &= \lim_{m \to \infty} \bigcup_{i=m}^{\infty} A_i
+    = \bigcap_{m=1}^{\infty} \bigcup_{i=m}^{\infty} A_i
+& \almEv(A) &= \lim_{m \to \infty} \bigcap_{i=m}^{\infty} A_i
+    = \bigcup_{m=1}^{\infty} \bigcap_{i=m}^{\infty} A_i.
+\end{align*}
+$\infOft(A)$ are the outcomes in $\Omega$ for which infinitely many events in $A$ happen.
+$\almEv(A)$ are the outcomes in $\Omega$ for which all except finitely many events in $A$ happen.
+\end{definition}
+
+\begin{lemma}[Borel-Cantelli]
+$\sum_{i=1}^{\infty} \Pr(A_i) \neq \infty \implies \Pr(\infOft(A)) = 0$.
+\end{lemma}
+
+\begin{lemma}
+(Events in $A$ are independent and
+$\sum_{i=1}^{\infty} \Pr(A_i) = \infty$) $\implies \Pr(\infOft(A)) = 1$.
+\end{lemma}
 
 \section{Probability Distributions}
 
