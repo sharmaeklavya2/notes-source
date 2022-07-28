@@ -31,7 +31,7 @@ for the course IE 410 at UIUC in Fall 2021.
 * Definition: recurrent state: P(eventually being re-visited) = 1. Non-recurrent state is called transient.
 * Theorem: If a state is recurrent, then it is visited infinitely often with probability 1.
 * Theorem: For a transient state, if P(eventual revisit) = f,
-    then P(revisited exactly k times) = f^(k-1) * (1-f),
+    then P(revisited exactly k times) = f^k * (1-f),
     so E(eventual revisits) = 1/(1-f).
 * Theorem: A state is recurrent iff expected number of revisits is infinite.
 * Theorem: E(eventual revisits) = `∑_{n≥0} P^n(i,i)`.
