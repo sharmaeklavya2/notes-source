@@ -1,0 +1,71 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+%\usepackage{booktabs}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+%\def\colorscheme{dark}
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{Linear Programming Counterexamples}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\section{Shapes}
+
+\begin{example}[Square Pyramid]
+\label{ex:pyramid-1}
+Let
+\begin{align*}
+P &\defeq \{(x, y, z): \max(|x|, |y|) \le z, z \le 1\}
+\\ &= \{(x, y, z): x \le z, -x \le z, y \le z, -y \le z, z \le 1\}.
+\end{align*}
+Then $P$ is an (inverted) square pyramid.
+The base of the pyramid is $[-1, 1]^2 \times \{1\}$.
+Its vertices are $(0, 0, 0)$, $(-1, -1, 1)$, $(-1, 1, 1)$, $(1, -1, 1)$, $(1, 1, 1)$.
+\end{example}
+
+\begin{example}[Square Pyramid]
+\label{ex:pyramid-2}
+Let
+\[ P \defeq \{(x, y, z): x \le z, y \le z, x \ge 0, y \ge 0, z \ge 0\}. \]
+Then $P$ is an (inverted) square pyramid.
+The base of the pyramid is $[0, 1]^2 \times \{1\}$.
+Its vertices are $(0, 0, 0)$, $(0, 0, 1)$, $(0, 1, 1)$, $(1, 0, 1)$, $(1, 1, 1)$.
+\end{example}
+
+\section{Degeneracy vs Redundancy}
+
+\begin{example}[Redundancy $\nRightarrow$ Degeneracy]
+Let $P \defeq \{(x, y): 0 \le x \le 1, 0 \le y \le 1\}$.
+Then every extreme-point is non-degenerate.
+Adding the constraint $y \le 2$ doesn't add degeneracy but adds redundancy.
+\end{example}
+
+\begin{example}[Degeneracy $\nRightarrow$ Redundancy]
+Let $P \defeq \{(x, y): y \le x, y \le -x, y \ge 0\}$ (so $P = \{(0, 0)\}$).
+Then $(0, 0)$ is a degenerate extreme point, but no constraint is redundant.
+\end{example}
+
+\begin{example}[Degeneracy $\nRightarrow$ Redundancy]
+Let $P$ be a square pyramid (c.f.~\cref{ex:pyramid-1}).
+Then there is a degenerate extreme point but no constraint is redundant.
+\end{example}
+
+%\addMyBib{}
+
+\end{document}
