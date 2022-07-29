@@ -19,6 +19,7 @@ parser.add_argument('--dry-run', action='store_true', default=False,
     help="Only print commands; do not run them")
 parser.add_argument('--no-date', dest='use_SDE_envvar', action='store_false', default=True,
     help='do not set the SOURCE_DATE_EPOCH envvar')
+parser.add_argument('--verbose', action='store_true', default=False)
 ARGS = parser.parse_args(None if __name__ == '__main__' else ['output'])
 
 
@@ -103,7 +104,9 @@ def process_tex_file(ifpath, odpath):
     pdf_path = pjoin(odpath, name + '.pdf')
 
     if not (ARGS.force or is_source_updated(ifpath, pdf_path)):
-        print(' Skipped ' + ifpath)
+        if ARGS.verbose:
+            print(' Skipped ' + ifpath)
+        status = 2
     else:
         print('Building ' + ifpath)
 
@@ -118,7 +121,8 @@ def process_tex_file(ifpath, odpath):
             run_check(pdflatex_args, stdout=subprocess.DEVNULL)
         except subprocess.CalledProcessError as e:
             print(e, file=sys.stderr)
-            return False
+            return 0
+        status = 1
 
     if ARGS.clean:
         for ext in TRASH_EXTS:
@@ -132,7 +136,7 @@ def process_tex_file(ifpath, odpath):
                 except FileNotFoundError:
                     pass
 
-    return True
+    return status
 
 
 def process_md_file(ifpath, odpath):
@@ -146,7 +150,9 @@ def process_md_file(ifpath, odpath):
     html_path = pjoin(odpath, name + '.html')
 
     if not (ARGS.force or is_source_updated(ifpath, html_path)):
-        print(' Skipped ' + ifpath)
+        if ARGS.verbose:
+            print(' Skipped ' + ifpath)
+        return 2
     else:
         print('Building ' + ifpath)
         os.makedirs(odpath, exist_ok=True)
@@ -158,8 +164,7 @@ def process_md_file(ifpath, odpath):
             output = template.format(style=style, body=body)
             with open(html_path, 'w') as fp:
                 fp.write(output)
-
-    return True
+        return 1
 
 
 def process_dot_file(ifpath, odpath):
@@ -173,7 +178,9 @@ def process_dot_file(ifpath, odpath):
     svg_path = pjoin(odpath, name + '.svg')
 
     if not (ARGS.force or is_source_updated(ifpath, svg_path)):
-        print(' Skipped ' + ifpath)
+        if ARGS.verbose:
+            print(' Skipped ' + ifpath)
+        return 2
     else:
         print('Building ' + ifpath)
         os.makedirs(odpath, exist_ok=True)
@@ -191,8 +198,7 @@ def process_dot_file(ifpath, odpath):
                 global_warn_count += 1
                 print('WARNING: dot files will not be processed')
                 print('WARNING: make sure you have dot (graphviz) installed')
-
-    return True
+    return 1
 
 
 FUNC_BY_EXT = {
@@ -207,7 +213,9 @@ def process_by_ext(ifpath, odpath):
     if ext in FUNC_BY_EXT:
         return FUNC_BY_EXT[ext](ifpath, odpath)
     else:
-        return True
+        if ARGS.verbose:
+            print(' Ignoring ' + ifpath)
+        return 3
 
 
 def process_tree(ipath, opath, action, filter=None):
@@ -217,30 +225,36 @@ def process_tree(ipath, opath, action, filter=None):
     opath: Path to output directory or file.
     action: Function to call on each input file.
     filter: Function which decides whether to process a file/directory or not.
+
+    Returns a tuple (n_failed, n_success, n_skipped)
     """
 
-    success = True
+    status_agg = [0] * 4
     for entry in os.scandir(ipath):
         if filter is None or filter(entry):
             if entry.is_file():
-                success2 = action(entry.path, opath)
-                if not success2:
-                    success = False
+                status = action(entry.path, opath)
+                if status == 0:
                     print('{} failed'.format(entry.path), file=sys.stderr)
+                status_agg[status] += 1
             elif entry.is_dir():
-                process_tree(pjoin(ipath, entry.name), pjoin(opath, entry.name), action, filter)
+                status_agg2 = process_tree(pjoin(ipath, entry.name), pjoin(opath, entry.name),
+                    action, filter)
+                for i in range(len(status_agg)):
+                    status_agg[i] += status_agg2[i]
             else:
                 raise Exception('Encountered a strange file: ' + entry.path)
-    return success
+    return status_agg
 
 
 def main():
     if ARGS.use_SDE_envvar:
         os.environ['SOURCE_DATE_EPOCH'] = '0'
-    success = process_tree('src', ARGS.out_dir, process_by_ext)
+    status_agg = process_tree('src', ARGS.out_dir, process_by_ext)
     if global_warn_count:
         print(global_warn_count, 'warnings')
-    if not success:
+    print('{} failed, {} built, {} skipped, {} ignored'.format(*status_agg))
+    if status_agg[0]:
         sys.exit(2)
 
 
