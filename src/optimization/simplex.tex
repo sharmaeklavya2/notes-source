@@ -488,7 +488,7 @@ by applying elementary row operations given by $R$ (see \cref{thm:upd-Y}),
 and update $z$ and $c[J]^T\bline$ as per \cref{thm:upd-z}.
 All of these operations can be done together as a pivoting operation
 on the following matrix, called the tableau:
-\[ \begin{bmatrix} c - z & c[J]^T\bline \\[0.5em] Y & \bline \end{bmatrix}. \]
+\[ \begin{bmatrix} c - z & -c[J]^T\bline \\[0.5em] Y & \bline \end{bmatrix}. \]
 The time per iteration is, therefore, $O(mn)$.
 We can reduce this to $O(m(n-m))$ if we observe that when we pivot on row $r$ and column $k$,
 then $m-1$ entries in $Y[r,*]$ are 0 (by \cref{thm:YJ-is-I}).
