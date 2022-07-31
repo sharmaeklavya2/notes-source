@@ -66,6 +66,35 @@ Let $P$ be a square pyramid (c.f.~\cref{ex:pyramid-1}).
 Then there is a degenerate extreme point but no constraint is redundant.
 \end{example}
 
+\section{Simplex Method}
+
+\begin{example}
+Let $b \in \mathbb{R}_{\ge 0}$ and $a \in \mathbb{R}^n$, where $0 < a_1 < a_2 < \ldots < a_n$.
+Consider the LP \[ \max_{x \ge 0}\quad a^Tx \quad\textrm{where}\quad \sum_{i=1}^n x_i \le b. \]
+Clearly, the optimal solution is $[0, 0, \ldots, 0, b]$.
+In standard form, the LP becomes
+\[ \min_{x \ge 0}\quad \sum_{i=1}^n (-a_i)x_i \quad\textrm{where}\quad \sum_{i=1}^{n+1} x_i = b. \]
+Suppose our initial basis is $\{x_{n+1}\}$. For ease of notation, let $x_0 \defeq x_{n+1}$.
+
+If we run the simplex method with Bland's rule (variable of lowest index enters basis),
+then there will be $n$ iterations, where in the $i\Th$ iteration,
+$x_i$ enters the basis and $x_{i-1}$ leaves the basis.
+Hence, we visit each of the $n+1$ bases.
+If $b > 0$, each basis corresponds to a unique BFS.
+If $b = 0$, all bases correspond to the same BFS $\mathbf{0}$.
+
+If we run the simplex method with Dantzig's rule (variable of most negative reduced cost enters basis),
+then there will be just 1 iteration where $x_n$ enters and $x_{n+1}$ leaves.
+\end{example}
+
+\begin{example}
+For the following LP, where $b \in \mathbb{R}_{\ge 0}$, the optimal solution is $(b, 0)$.
+\[ \max_{x \ge 0, y \ge 0}\quad 2x+3y \quad\textrm{where}\quad x + 2y \le b. \]
+Bland's rule takes 1 iteration but Dantzig's rule takes 2 iterations.
+There are 3 bases. When $b > 0$, each base corresponds to a different BFS.
+When $b = 0$, all bases correspond to the same BFS $\mathbf{0}$.
+\end{example}
+
 %\addMyBib{}
 
 \end{document}
