@@ -25,7 +25,7 @@
 \maketitle
 \setlength{\parskip}{0.2em}
 
-\section{Shapes}
+\section{Polyhedra}
 
 \begin{example}[Square Pyramid]
 \label{ex:pyramid-1}
@@ -48,7 +48,24 @@ The base of the pyramid is $[0, 1]^2 \times \{1\}$.
 Its vertices are $(0, 0, 0)$, $(0, 0, 1)$, $(0, 1, 1)$, $(1, 0, 1)$, $(1, 1, 1)$.
 \end{example}
 
-\section{Degeneracy vs Redundancy}
+\begin{example}[Introducing degeneracy by changing RHS to 0]
+Let $P \defeq \{x: (a_i^Tx = b_i \forall i \in E) \textrm{ and } (a_i^Tx \le b_i \forall i \in E)\}$.
+Let $D \defeq \{x: (a_i^Tx = 0 \forall i \in E) \textrm{ and } (a_i^Tx \le 0 \forall i \in E)\}$.
+Then $D$ is the set of directions of $P$. If $P$ is bounded, then $D = \{0\}$.
+Now all bases of $D$ correspond to the same point.
+If $P$ has multiple bases, then $0$ is a degenerate point of $D$.
+Furthermore, the simplex method can be made to run on $P$ and $D$ with the same pivots.
+\end{example}
+
+\begin{example}[Non-extreme point with $n$ active constraints]
+Let $P \defeq \{(x, y): x + y \ge 1, x + y \le 1, x \ge 0, y \ge 0\}$.
+No constraint is redundant.
+$(1,0)$ and $(0,1)$ are degenerate BFSes of $P$.
+Their midpoint, $(1/2, 1/2)$, is not an extreme point, but has 2 active constraints
+(which are linearly dependent).
+\end{example}
+
+\subsection{Degeneracy vs Redundancy}
 
 \begin{example}[Redundancy $\nRightarrow$ Degeneracy]
 Let $P \defeq \{(x, y): 0 \le x \le 1, 0 \le y \le 1\}$.
