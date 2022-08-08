@@ -157,7 +157,7 @@ def process_md_file(ifpath, odpath):
         print('Building ' + ifpath)
         os.makedirs(odpath, exist_ok=True)
         markdown, template, style = get_markdown_and_template()
-        if markdown is not None:
+        if markdown is not None and not ARGS.dry_run:
             with open(ifpath) as fp:
                 input = fp.read()
             body = markdown.convert(input)
@@ -183,10 +183,13 @@ def process_dot_file(ifpath, odpath):
         return 2
     else:
         print('Building ' + ifpath)
-        os.makedirs(odpath, exist_ok=True)
+        if ARGS.dry_run:
+            print(DRYRUN_PROMPT + ' '.join(['mkdir', '-p', odpath]))
+        else:
+            os.makedirs(odpath, exist_ok=True)
         args = ['dot', '-Tsvg', ifpath, '-o', svg_path]
         try:
-            subprocess.check_call(args)
+            run_check(args)
         except FileNotFoundError as e:
             global global_dot_error
             print('error while running dot:', file=sys.stderr)
