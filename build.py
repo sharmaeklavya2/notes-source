@@ -12,6 +12,8 @@ import shlex
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('out_dir', help='Path to output directory')
+parser.add_argument('--theme', choices=['dark', 'light', 'sepia'],
+    help='Colorscheme to use for LaTeX documents')
 parser.add_argument('--no-clean', action='store_false', dest='clean', default=True,
     help="Do not remove temporary files from output directory")
 parser.add_argument('--force', action='store_true', default=False,
@@ -103,6 +105,10 @@ def process_tex_file(ifpath, odpath):
     name = os.path.splitext(os.path.basename(ifpath))[0]
     aux_path = pjoin(odpath, name + '.aux')
     pdf_path = pjoin(odpath, name + '.pdf')
+    if ARGS.theme is None:
+        main_arg = ifpath
+    else:
+        main_arg = '\\def\\colorscheme{' + ARGS.theme + '}\\input{' + ifpath + '}'
 
     if not (ARGS.force or is_source_updated(ifpath, pdf_path)):
         if ARGS.verbose:
@@ -113,7 +119,7 @@ def process_tex_file(ifpath, odpath):
 
         os.makedirs(odpath, exist_ok=True)
         pdflatex_args = ['pdflatex', '-interaction=batchmode',
-            '-output-directory=' + odpath, ifpath]
+            '-output-directory=' + odpath, main_arg]
 
         try:
             run_check(pdflatex_args, stdout=subprocess.DEVNULL)
