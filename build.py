@@ -7,6 +7,7 @@ import os
 from os.path import join as pjoin
 import argparse
 import subprocess
+import shlex
 
 
 parser = argparse.ArgumentParser(description=__doc__)
@@ -41,14 +42,14 @@ def is_source_updated(source, dest):
 
 def run(cmd, **kwargs):
     if ARGS.dry_run:
-        print(DRYRUN_PROMPT + ' '.join(cmd))
+        print(DRYRUN_PROMPT + shlex.join(cmd))
     else:
         return subprocess.call(cmd, **kwargs)
 
 
 def run_check(cmd, **kwargs):
     if ARGS.dry_run:
-        print(DRYRUN_PROMPT + ' '.join(cmd))
+        print(DRYRUN_PROMPT + shlex.join(cmd))
     else:
         return subprocess.check_call(cmd, **kwargs)
 
@@ -184,7 +185,7 @@ def process_dot_file(ifpath, odpath):
     else:
         print('Building ' + ifpath)
         if ARGS.dry_run:
-            print(DRYRUN_PROMPT + ' '.join(['mkdir', '-p', odpath]))
+            print(DRYRUN_PROMPT + shlex.join(['mkdir', '-p', odpath]))
         else:
             os.makedirs(odpath, exist_ok=True)
         args = ['dot', '-Tsvg', ifpath, '-o', svg_path]
