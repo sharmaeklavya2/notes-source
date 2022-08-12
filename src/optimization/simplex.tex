@@ -8,16 +8,22 @@
 \newcommand*{\todotext}[1]{\textcolor{red}{#1}}
 \newenvironment*{tightemize}{\begin{itemize}[noitemsep,topsep=0pt]}{\end{itemize}}
 \renewcommand{\algorithmiccomment}[1]{\hfill\textcolor{gray}{\texttt{//} \textit{#1}}}
+\algnewcommand{\LineComment}[1]{\State \textcolor{gray}{\texttt{//} \textit{#1}}}
 
 \newcommand*{\Jcomp}{\overline{J}}
 \newcommand*{\bline}{\overline{b}}
 \newcommand*{\btildline}{\overline{\btild}}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\stdLP}{stdLP}
+\DeclareMathOperator{\direction}{direction}
 \DeclareMathOperator{\solve}{\mathtt{solve}}
 \DeclareMathOperator{\pivot}{\mathtt{pivot}}
 \DeclareMathOperator{\assert}{\mathtt{assert}}
-\DeclareMathOperator{\naiveSimplex}{\mathtt{naiveSimplex}}
+\DeclareMathOperator{\simplex}{\mathtt{simplex}}
+\DeclareMathOperator{\simplexInit}{\mathtt{simplexInit}}
+\DeclareMathOperator{\simplexMove}{\mathtt{simplexMove}}
+\DeclareMathOperator{\updateDS}{\mathtt{updateDS}}
 
 \title{The Simplex Method}
 
@@ -27,8 +33,6 @@
 \setlength{\parskip}{0.4em}
 
 This document describes the \emph{simplex method} for solving linear programs.
-The following result (proof omitted for brevity) will help us
-focus on a special case of linear programming.
 
 \section{Preliminaries}
 
@@ -94,6 +98,11 @@ We call $C$ the \emph{horizontal concatenation} of $A$ and $B$.
 We can similarly define horizontal concatenation of more than two matrices.
 We can similarly define vertical concatenation of $A$ and $B$,
 which we denote as $\begin{bmatrix}A\\B\end{bmatrix}$.
+
+\begin{definition}
+Let $\stdLP(A, b, c)$ denote this LP:
+\[ \min_{x \ge 0}\; c^Tx \quad\textrm{where}\quad Ax = b. \]
+\end{definition}
 
 \section{Bases}
 
@@ -169,51 +178,102 @@ Hence, $J$ is a feasible basis and $\solve(J) = \xhat$.
 
 \section{The Simplex Algorithm}
 
+See \cref{algo:simplex} for the description of the simplex algorithm.
+The input to the algorithm is $(A, b, c, J)$, where $J$ is a feasible basis of $Ax = b$.
+The algorithm initializes a data structure $D$ using $J$
+(by calling the subroutine $\simplexInit$),
+and then iteratively updates $J$ and the data structure $D$
+(by calling subroutines $\simplexMove$ and $\updateDS$).
+Specifically, if the \texttt{status} output by $\simplexMove$ is \texttt{move},
+then it outputs a pair $(k, r)$ of integers, where $k \in [n] - J$ and $r \in [m]$.
+It then sets the $r\Th$ element of $J$ to $k$.
+We say that $J[r]$ \emph{leaves the basis} and $k$ \emph{enters the basis}.
+
 \begin{algorithm}[H]
-\caption{$\naiveSimplex(A, b, c, J)$:
-Here $A \in \mathbb{R}^{m \times n}$ and $J$ is a feasible basis
-for the standard LP given by $A$, $b$, $c$.}
+\caption{$\simplex(A, b, c, J)$:
+$A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$, $c \in \mathbb{R}^n$,
+and $J$ is a feasible basis for $\stdLP(A, b, c)$.
+}
 \begin{algorithmic}[1]
+\LineComment{contains some \href{https://docs.python.org/3/reference/simple\_stmts.html\#assignment-statements}{Python assignment syntax}}
+\State $D = \simplexInit(A, b, c, J)$
 \While{true}
-    \State $B = A[*,J]$
-    \State \label{alg-line:naive-simplex:Y}$Y = B^{-1}A$  \Comment{If $B$ isn't invertible, throw an exception}
-    \State $\bline = B^{-1}b$
-    \State \label{alg-line:naive-simplex:bline-positive}$\assert(\bline \ge 0)$
-    \State $z = Y^Tc[J]$
-    \If{$c - z \ge 0$}
-        \State \Return $(\textrm{optimal}, \solve(J))$
+    \State \texttt{status, *outs} = $\simplexMove(D, J)$
+    \LineComment{\texttt{status} can be \texttt{optimal}, \texttt{unbounded}, or \texttt{move}.}
+    \LineComment{\texttt{outs} is a list}
+    \If{\texttt{status == move}}
+        \State $(k, r, \delta)$ = \texttt{outs}
+        \State\label{alg-line:simplex:J}$J[r] = k$
+        \State $D = \updateDS(D, J, k, r)$
+    \Else
+        \State \Return $(\texttt{status}, J, \texttt{*outs})$
     \EndIf
-    \State Find $k \in [n]$ such that $c_k - z_k < 0$.
-    \State \label{alg-line:naive-simplex:y}Define $y \in \mathbb{R}^n$ as
-        $\displaystyle y_t = \begin{cases}
-            -Y[i, k] & \textrm{ if } t = j_i
-            \\ 1 & \textrm{ if } t = k
-            \\ 0 & \textrm{ otherwise}
-        \end{cases}$.
-    \If{$Y[*, k] \le 0$}\label{alg-line:naive-simplex:Y-neg}
-        \State \Return $(\textrm{unbounded}, \solve(J), y)$, where
-    \EndIf
-    \State $\displaystyle r = \argmin_{i \in [m]: Y[i, k] > 0} \frac{\bline_i}{Y[i, k]}$
-    \State $\delta = \bline_r/Y[r, k]$
-    \State \label{alg-line:naive-simplex:J}$J[r] = k$  \Comment{change the $r\Th$ entry in $J$ to $k$.}
 \EndWhile
 \end{algorithmic}
-\label{algo:naive-simplex}
+\label{algo:simplex}
 \end{algorithm}
+
+There are different variants of the simplex algorithm, depending on what
+data structure $D$ they maintain.
+We will look at 3 variants: naive simplex, tableau simplex, and revised simplex.
+In the \emph{naive simplex method}, we set $D \defeq (A, b, c)$.
+Hence, $\simplexInit$ and $\updateDS$ are trivial for naive simplex.
+The main advantage of tableau and revised over naive is that they speed up $\simplexMove$.
+
+\begin{definition}
+Let $J \defeq [j_1, \ldots, j_m]$ be a basis of $\stdLP(A, b, c)$,
+where $A \in \mathbb{R}^{m \times n}$, and let $k \in [n] - J$.
+Let $B \defeq A[*,J]$ and $Y \defeq B^{-1}A$.
+Then define $\direction(J, k) \in \mathbb{R}^n$ as the vector $y$ where
+\[ y_t = \begin{cases}
+    -Y[i, k] & \textrm{ if } t = j_i
+    \\ 1 & \textrm{ if } t = k
+    \\ 0 & \textrm{ otherwise}
+    \end{cases}. \]
+\end{definition}
+
+The core of the simplex algorithm is $\simplexMove$,
+which tells us how to move from one basis to another.
+$\simplexMove$ is described in \cref{algo:simplexMove}.
+Specifically, when $\simplexMove(D, J)$ outputs $(\mathtt{move}, k, r, \delta)$,
+it moves from $\solve(J)$ to $\solve(J) + \delta\direction(J, k)$ (we will prove this soon).
+
+\begin{algorithm}[H]
+\caption{$\simplexMove(D, J)$:
+$J$ is a feasible basis of $\stdLP(A, b, c)$.}
+\begin{algorithmic}[1]
+\State Let $B \defeq A[*, J]$, $Y \defeq B^{-1}A$, $\bline \defeq B^{-1}b$, and $z = Y^Tc[J]$.
+\LineComment{We will lazily compute $B$, $Y$, $\bline$, and $z$ using $D$.}
+\If{$c - z \ge 0$}
+    \State\label{alg-line:simplexMove:opt}\Return $(\mathtt{optimal}, \solve(J), c[J]^T\bline)$
+\EndIf
+\State Find $k \in [n]$ such that $c_k - z_k < 0$.
+\If{$Y[*, k] \le 0$}\label{alg-line:simplexMove:Y-neg}
+    \State\label{alg-line:simplexMove:unb}%
+\Return $(\mathtt{unbounded}, \solve(J), \direction(J, k), k)$
+\EndIf
+\State $\displaystyle r = \argmin_{i \in [m]: Y[i, k] > 0} \frac{\bline_i}{Y[i, k]}$
+\State $\delta = \bline_r/Y[r, k]$
+\State \Return $(\mathtt{move}, k, r, \delta)$.
+\end{algorithmic}
+\label{algo:simplexMove}
+\end{algorithm}
+
+Since $\simplexMove$ requires $J$ to be a feasible basis of $\stdLP(A, b, c)$,
+and we're changing $J$ in line \ref{alg-line:simplex:J}, we need to prove
+that after this change, $J$ continues to be a feasible basis of $\stdLP(A, b, c)$.
 
 \begin{theorem}
 \label{thm:simplex-optimal}
-If $\naiveSimplex$ outputs $(\textrm{optimal}, \xhat)$,
+If $\simplex$ outputs $(\mathtt{optimal}, J, \xhat, \beta)$,
 then $\xhat$ is a BFS of the LP and an optimal solution to the LP.
+Furthermore, $\xhat = \solve(J)$ and $\beta = c^T\xhat$.
 \end{theorem}
 \begin{proof}
-If $\naiveSimplex$ outputs $(\textrm{optimal}, \xhat)$ in an iteration, then
-the algorithm didn't fail at
-\cref{alg-line:naive-simplex:Y,alg-line:naive-simplex:bline-positive}, so
-$\rank(B) = m$ and $\bline \ge 0$ in that iteration.
-This implies that $J$ is a feasible basis in that iteration.
-Hence, by \cref{thm:basis-gives-bfs}, $\xhat = \solve(J)$ is a BFS of the LP.
-Note that $c^T\xhat = c[J]^T\xhat[J] = c[J]^T\bline$.
+By line \ref{alg-line:simplexMove:opt} of $\simplexMove$,
+$\xhat = \solve(J)$ and $\beta = c[J]^T\bline$.
+Hence, $\xhat$ is a BFS by \cref{thm:basis-gives-bfs} and $c^T\xhat = \beta$.
+Now we just need to prove that $\xhat$ is optimal.
 
 Let $\Jcomp = [n] - J$. Let $N = A[*,\Jcomp]$.
 Let $x_B = x[J]$ and $x_N = x[\Jcomp]$. Then
@@ -231,8 +291,7 @@ c^Tx &= c[J]^Tx_B + c[\Jcomp]^Tx_N
 \[ z[\Jcomp]^T = (c[J]^TY)[\Jcomp] = c[J]^TB^{-1}A[*,\Jcomp] = c[J]^TB^{-1}N. \]
 \[ \implies c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N. \]
 From the non-negativity constraints, we know that $x_N \ge 0$.
-We also know that $c-z \ge 0$, since $\naiveSimplex$ returned
-$(\textrm{optimal}, \xhat)$.
+We also know that $c-z \ge 0$, since $\simplexMove$'s output status is \texttt{optimal}.
 Hence, for every feasible $x$, we have
 $c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N \ge c[J]^T\bline = c^T\xhat$.
 Hence, $\xhat$ is an optimal solution to the LP.
@@ -240,7 +299,7 @@ Hence, $\xhat$ is an optimal solution to the LP.
 
 \begin{lemma}
 \label{thm:zJ-eq-cJ}
-$z[J] = c[J]$ (before $J$ changes at \cref{alg-line:naive-simplex:J}).
+$z[J] = c[J]$.
 \end{lemma}
 \begin{proof}
 \[ z[J]^T = c[J]^T(B^{-1}A)[*,J] = c[J]^TB^{-1}A[*,J] = c[J]^T.  \qedhere \]
@@ -260,12 +319,9 @@ Then $Y[i, j_p] = \begin{cases}1 & \textrm{ if } p = i
 \\ 0 & \textrm{ if } p \neq i\end{cases}. \qedhere \]
 \end{proof}
 
-We will now show that the simplex algorithm moves in the direction $y$ in each iteration,
-and $y$ is a direction in the nullspace of $A$ in which the cost $c^Ty$ reduces.
-
 \begin{lemma}
 \label{thm:y-in-nullsp}
-$Yy = Ay = 0$.
+Let $y = \direction(J, k)$. Then $Yy = Ay = 0$.
 \end{lemma}
 \begin{proof}
 \begin{align*}
@@ -279,7 +335,7 @@ $Yy = Ay = 0$.
 
 \begin{lemma}
 \label{thm:y-reduces-cost}
-$c^Ty = c_k - z_k < 0$.
+Let $y \defeq \direction(J, k)$. Then $c^Ty = c_k - z_k < 0$.
 \end{lemma}
 \begin{proof}
 \begin{align*}
@@ -292,21 +348,19 @@ c^Ty &= \sum_{j=1}^n c_jy_j = c_ky_k + \sum_{p=1}^m c_{j_p}y_{j_p}
 
 \begin{theorem}
 \label{thm:simplex-unbounded}
-If $\naiveSimplex$ outputs $(\textrm{unbounded}, \xhat, y)$,
+If $\simplex$ outputs $(\textrm{unbounded}, J, \xhat, y, k)$,
 then the LP's cost reduces along the ray $\{\xhat + \lambda y: \lambda \ge 0\}$
 and the ray is feasible, which implies that the LP is unbounded.
+Furthermore, $y \ge 0$, $\xhat = \solve(J)$, and $y = \direction(J, k)$.
 \end{theorem}
 \begin{proof}
-Since $\naiveSimplex$ didn't fail at
-\cref{alg-line:naive-simplex:Y,alg-line:naive-simplex:bline-positive},
-we know that $\rank(B) = m$ and $\bline \ge 0$.
-Hence, $J$ is a feasible basis.
-So, by \cref{thm:basis-gives-bfs}, we know that $\xhat = \solve(J)$ is a BFS of the LP.
+By line \cref{alg-line:simplexMove:unb} of $\simplexMove$,
+we know that $\xhat = \solve(J)$ and $y = \direction(J, k)$.
 
 By \cref{thm:y-in-nullsp}, we know that $Ay = 0$.
 Hence, $A(\xhat + \lambda y) = A\xhat = b$.
-Since $\naiveSimplex$ returned $(\textrm{unbounded}, \xhat, y)$,
-we get that $Y[*,k] \le 0$ (by \cref{alg-line:naive-simplex:Y-neg}).
+Since $\simplexMove$ returned $(\textrm{unbounded}, \xhat, y, k)$,
+we get that $Y[*,k] \le 0$ (by \cref{alg-line:simplexMove:Y-neg}).
 Hence, $y \ge 0$ and so $\xhat + \lambda y \ge \xhat \ge 0$.
 Hence, $\xhat + \lambda y$ is feasible for the LP for all $\lambda \ge 0$.
 
@@ -315,16 +369,11 @@ Hence, moving along the ray will reduce cost indefinitely.
 This implies that the LP is unbounded.
 \end{proof}
 
-Suppose $\naiveSimplex$ doesn't return an output in an iteration.
-Then it will change $J$ to, say, $\Jtild$ in that iteration
-(at \cref{alg-line:naive-simplex:J}).
-We will show that $\Jtild$ is also a feasible basis of the LP,
-and hence, $\naiveSimplex$ will not fail at
-\cref{alg-line:naive-simplex:Y,alg-line:naive-simplex:bline-positive}.
-
 \begin{lemma}
 \label{thm:simplex-new-basis}
-Suppose $\naiveSimplex$ changes $J$ to $\Jtild$ in an iteration.
+Suppose $\simplexMove(D, J)$ outputs $(\mathtt{move}, k, r, \delta)$.
+Let $\Jtild$ be the new sequence obtained by changing $J[r]$ to $k$
+(at line \ref{alg-line:simplex:J} of $\simplex$).
 Then $\Jtild$ is a basis of the LP.
 \end{lemma}
 \begin{proof}
@@ -349,11 +398,15 @@ Hence, $\rank(\Btild) = m$, so $\Jtild$ is a basis.
 
 \begin{lemma}
 \label{thm:simplex-feasible-basis}
-Suppose $\naiveSimplex$ changes $J$ to $\Jtild$ in an iteration.
-Let $\xhat = \solve(J)$ and $\xtild = \xhat + \delta y$.
-Then $\xtild = \solve(\Jtild)$ and $\Jtild$ is a feasible basis.
+Suppose $\simplexMove(D, J)$ outputs $(\mathtt{move}, k, r, \delta)$.
+Let $\Jtild$ be the new sequence obtained by changing $J[r]$ to $k$
+(at line \ref{alg-line:simplex:J} of $\simplex$).
+Then $\Jtild$ is a feasible basis of the LP.
+Furthermore, let $y = \direction(J, k)$, $\xhat = \solve(J)$, and $\xtild = \xhat + \delta y$.
+Then $\xtild = \solve(\Jtild)$.
 \end{lemma}
 \begin{proof}
+Let $y \defeq \direction(J, k)$.
 By \cref{thm:y-in-nullsp}, we get that $Ay = 0$.
 Hence, $A\xtild = A\xhat + \delta (Ay) = A\xhat = b$.
 
@@ -378,31 +431,58 @@ Since $\xtild \ge 0$, we get that $\Btild^{-1}b \ge 0$.
 Hence, $\Jtild$ is a feasible basis.
 \end{proof}
 
-\section{The Tableau Method and the Revised Simplex method}
+This completes the correctness of $\simplex$.
 
-The naive simplex method has a large running time of $O(m^2(m + n))$,
+\section{Implementations of Simplex}
+
+The naive simplex method has a large running time of $O(m^2(m + n))$ per iteration,
 since we compute $B^{-1}$, $Y$, $\bline$ and $z$ afresh in each iteration.
-The tableau method and the revised simplex method are two ways to get around this problem.
+We will now see how the tableau method and the revised simplex method
+improve the running time per iteration.
+
+In the Tableau method, the data structure $D$ is
+\[ \begin{bmatrix} c - z & -c[J]^T\bline \\[0.5em] Y & \bline \end{bmatrix}, \]
+where the rows are numbered from 0 instead of 1.
+In the Revised simplex method, the data structure $D$ is given by
+the pair $(D_1, D_2)$, where $D_1 \defeq (A, b, c)$ and
+\[ D_2 \defeq \begin{bmatrix} c[J]^TB^{-1} & -c[J]^T\bline \\ B^{-1} & \bline \end{bmatrix}, \]
+where the rows are numbered from 0 instead of 1.
+It is easy to see that we can quickly compute $Y$, $\bline$, and $c-z$
+in $\simplexMove$ in both methods.
+$\simplexInit$ is implemented in the obvious straightforward way.
+We will now see how to implement $\updateDS$ using elementary row operations.
+
+\begin{definition}[pivoting]
+Let $A \in \mathbb{R}^{m \times n}$ be a matrix, $i \in [m]$, and $j \in [n]$
+such that $A[i, j] \neq 0$. Then pivoting is the operation of applying
+elementary row operations to $A$ to get a new matrix $\Ahat \in \mathbb{R}^{m \times n}$
+such that $\Ahat[i, j] = 1$ and $\Ahat[i', j] = 0$ for all $i' \in [m] - \{i\}$.
+\end{definition}
+
+In the tableau method, $\updateDS(D, J, k, r)$ is performed by pivoting $D$ at $(r, k)$.
+In the revised simplex method, $\updateDS(D, J, k, r)$ is performed by
+horizontally concatenating the column
+$\begin{bmatrix}c_k - z_k \\ Y[*, k] \end{bmatrix}$ to $D_2$,
+(which becomes the $(m+2)\Th$ column), pivoting at $(r, m+2)$,
+and then discarding the $(m+2)\Th$ column.
 
 Let $J$ be a feasible basis of the LP.
-Let $B = A[*,J]$, $Y = B^{-1}A$, $\bline = B^{-1}b$ and $z = Y^Tc[J]$.
-Suppose $c_k - z_k < 0$ for some $k \in [n] - \Jtild$ and $Y[r,k] > 0$ for some $r \in [m]$.
-Assume \wLoG{} that $r = \argmin_{i \in [m]: Y[i,k] > 0} \frac{\bline_i}{Y[i,k]}$.
-Let $\Jtild$ be a sequence obtained by changing the $r\Th$ element of $J$ to $k$.
+Let $B \defeq A[*,J]$, $Y \defeq B^{-1}A$, $\bline \defeq B^{-1}b$ and $z \defeq Y^Tc[J]$.
+Based on how $k$ and $r$ are chosen, we know that $c_k - z_k < 0$,
+$Y[r,k] > 0$, and $r \in \argmin_{i \in [m]: Y[i,k] > 0} \frac{\bline_i}{Y[i,k]}$.
+Let $\Jtild$ be the sequence obtained by changing the $r\Th$ element of $J$ to $k$.
 By \cref{thm:simplex-feasible-basis}, $\Jtild$ is a feasible basis.
-Let $\Btild = A[*,\Jtild]$, $\Ytild = \Btild^{-1}A$, $\btildline = \Btild^{-1}b$
-and $\ztild = \Ytild^Tc[\Jtild]$.
+Let $\Btild \defeq A[*,\Jtild]$, $\Ytild \defeq \Btild^{-1}A$, $\btildline \defeq \Btild^{-1}b$
+and $\ztild \defeq \Ytild^Tc[\Jtild]$.
 We will now see how to compute $\Ytild$, $\ztild$ and $\btildline$
-from $\Ytild$, $z$ and $\bline$.
+from $Y$, $z$ and $\bline$.
 
 Define the matrix $\Yhat$ as
 \[ \Yhat[i,j] = \begin{cases}
 \displaystyle \frac{Y[r,j]}{Y[r,k]} & \textrm{ if } i = r
 \\[1em] \displaystyle Y[i,j] - \frac{Y[i,k]}{Y[r,k]}Y[r,j] & \textrm{ if } i \neq r
 \end{cases}. \]
-Note that $\Yhat$ is obtained from $Y$ by elementary row operations.
-This is called \emph{pivoting}, and $Y[r,*]$ is a column vector where
-the $r\Th$ entry is 1 and the others are 0.
+Note that $\Yhat$ is obtained from $Y$ by pivoting on $(r, k)$.
 Let $R$ be the matrix of these row operations. Then $\Yhat = RY$.
 We can find $R$ by applying these row operations to the $m$-by-$m$ identity matrix.
 \begin{align*}
@@ -479,40 +559,17 @@ So, $\zhat = c[\Jtild]^T\Btild^{-1}A = c[\Jtild]^T\Ytild = \ztild$
 and $\eta = c[\Jtild]^T\Btild^{-1}b = c[\Jtild]^T\btildline$.
 \end{proof}
 
-\subsection{Tableau method}
-
-Note that $c[J]^T\bline = c^T\solve(J)$.
-In the tableau method, we compute $B^{-1}$, $Y$, $\bline$, $z$ and $c[J]^T\bline$ in the first iteration.
-In subsequent iterations, we update $Y$ and $\bline$
-by applying elementary row operations given by $R$ (see \cref{thm:upd-Y}),
-and update $z$ and $c[J]^T\bline$ as per \cref{thm:upd-z}.
-All of these operations can be done together as a pivoting operation
-on the following matrix, called the tableau:
-\[ \begin{bmatrix} c - z & -c[J]^T\bline \\[0.5em] Y & \bline \end{bmatrix}. \]
-The time per iteration is, therefore, $O(mn)$.
-We can reduce this to $O(m(n-m))$ if we observe that when we pivot on row $r$ and column $k$,
-then $m-1$ entries in $Y[r,*]$ are 0 (by \cref{thm:YJ-is-I}).
-The space complexity is $O(mn)$.
-
-\subsection{Revised simplex method}
-
-In the revised simplex method, we compute $B^{-1}$ in the first iteration.
-Henceforth, we will assume that $B^{-1}$ is available in the beginning of each iteration
-and we need to update it at the end of each iteration.
-
+In the revised simplex method, we can obtain further speedup in $\simplexMove$.
 Compute $c[J]^TB^{-1}$ by multiplying $c[J]^T$ and $B^{-1}$.
 Then we iterate over $j \in [n] - \Jtild$, and compute $z_j = (c[J]^TB^{-1})A[*,j]$.
 We stop iterating when we find a suitable $k \in [n] - \Jtild$ such that $c_k - z_k < 0$,
 or if $c_j - z_j \ge 0$ for all $j \in [n] - \Jtild$.
-
-Next, we compute $u = B^{-1}A[*,k]$ and $\bline = B^{-1}b$. Note that $u = Y[*,k]$.
-Then we continue from \cref{alg-line:naive-simplex:y} onwards
-(i.e., compute $y$, $\delta$ and $r$, and update $\Jtild$).
+Next, we compute $u = B^{-1}A[*,k]$ and $\bline = B^{-1}b$.
 At the end of the iteration, we can update $B^{-1}$ using row operations as per \cref{thm:upd-Y}.
 This is possible since $R$ is defined by $u$.
 
 The time taken is $O(m(t+m))$, where $t$ is the number of variables
 that need to be considered till we find $k$. Note that $t \le n-m$.
-The space complexity (in addition to storing the input) is $O(m^2)$.
+The space complexity of revised simplex (in addition to storing the input) is $O(m^2)$.
 
 \end{document}
