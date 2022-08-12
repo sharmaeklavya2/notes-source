@@ -281,8 +281,8 @@ then $\xhat$ is a BFS of the LP and an optimal solution to the LP.
 Furthermore, $\xhat = \solve(J)$ and $\beta = c^T\xhat$.
 \end{theorem}
 \begin{proof}[Proof sketch]
-For any feasible $x$, we can show that $c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N$.
-Since $c[J]^T\bline = c^T\xhat$, $x_N \ge 0$, and $c - z \ge 0$,
+For any feasible $x$, we can show that $c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx[\Jcomp]$.
+Since $c[J]^T\bline = c^T\xhat$, $x[\Jcomp] \ge 0$, and $c - z \ge 0$,
 we get $c^Tx \ge c^T\xhat$.
 \end{proof}
 \begin{longProof}
@@ -351,7 +351,7 @@ Let $y = \direction(J, k)$. Then $Yy = Ay = 0$.
 
 \begin{lemma}
 \label{thm:y-reduces-cost}
-Let $y \defeq \direction(J, k)$. Then $c^Ty = c_k - z_k < 0$.
+Let $y \defeq \direction(J, k)$. Then $c^Ty = c_k - z_k$.
 \end{lemma}
 \begin{longProof}
 \begin{align*}
@@ -380,7 +380,7 @@ we get that $Y[*,k] \le 0$ (by \cref{alg-line:simplexMove:Y-neg}).
 Hence, $y \ge 0$ and so $\xhat + \lambda y \ge \xhat \ge 0$.
 Hence, $\xhat + \lambda y$ is feasible for the LP for all $\lambda \ge 0$.
 
-By \cref{thm:y-reduces-cost}, we know that $c^Ty < 0$,
+By \cref{thm:y-reduces-cost}, we know that $c^Ty = c_k - z_k < 0$,
 Hence, moving along the ray will reduce cost indefinitely.
 This implies that the LP is unbounded.
 \end{longProof}
@@ -426,7 +426,7 @@ We can show that $A\xtild = b$, $\xtild \ge 0$, and $\xtild_j = 0$ when $j \not\
 Let $\Btild \defeq A[*,\Jtild]$. Then
 $b = A\xtild = A[*,\Jtild]\xtild[\Jtild] = \Btild\xtild[\Jtild]$.
 So, $\xtild[\Jtild] = \Btild^{-1}b$, which implies $\xtild = \solve(\Jtild)$.
-Also, $c^T(\xtild - \xhat) = \delta(c^Ty) \le 0$ by \cref{thm:y-reduces-cost}.
+Also, $c^T(\xtild - \xhat) = \delta(c^Ty) = \delta(c_k - z_k) \le 0$ by \cref{thm:y-reduces-cost}.
 \end{proof}
 \begin{longProof}
 By \cref{thm:y-in-nullsp}, we get that $Ay = 0$.
@@ -452,7 +452,7 @@ Furthermore, $\xtild[[n] - \Jtild] = 0$, so $\xtild = \solve(\Jtild)$.
 Since $\xtild \ge 0$, we get that $\Btild^{-1}b \ge 0$.
 Hence, $\Jtild$ is a feasible basis.
 
-Also, $c^T(\xtild - \xhat) = \delta(c^Ty) \le 0$ by \cref{thm:y-reduces-cost}.
+Also, $c^T(\xtild - \xhat) = \delta(c^Ty) = \delta(c_k - z_k) \le 0$ by \cref{thm:y-reduces-cost}.
 Hence, $c^T\xtild \le c^T\xhat$.
 \end{longProof}
 
@@ -470,7 +470,7 @@ In the Tableau method, the data structure $D$ is
 where the rows are numbered from 0 instead of 1.
 In the Revised simplex method, the data structure $D$ is given by
 the pair $(D_1, D_2)$, where $D_1 \defeq (A, b, c)$ and
-\[ D_2 \defeq \begin{bmatrix} c[J]^TB^{-1} & -c[J]^T\bline \\ B^{-1} & \bline \end{bmatrix}, \]
+\[ D_2 \defeq \begin{bmatrix} -c[J]^TB^{-1} & -c[J]^T\bline \\ B^{-1} & \bline \end{bmatrix}, \]
 where the rows are numbered from 0 instead of 1.
 It is easy to see that we can quickly compute $Y$, $\bline$, and $c-z$
 in $\simplexMove$ in both methods.
