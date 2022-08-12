@@ -25,6 +25,14 @@
 \DeclareMathOperator{\simplexMove}{\mathtt{simplexMove}}
 \DeclareMathOperator{\updateDS}{\mathtt{updateDS}}
 
+\ifdefined\shortVersion
+\excludecomment{inLongVersion}
+\excludecomment{longProof}
+\else
+\newenvironment*{inLongVersion}{}{}
+\newenvironment*{longProof}{\begin{proof}}{\end{proof}}
+\fi
+
 \title{The Simplex Method}
 
 \begin{document}
@@ -46,6 +54,7 @@ Here $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$ and $c \in \mathbb{R}
 We will also assume \wLoG{} that
 $\href{https://sharmaeklavya2.github.io/theoremdep/nodes/linear-algebra/matrices/rank.html}{\rank}(A) = m$.
 
+\begin{inLongVersion}
 Read the following concepts at TheoremDep (\url{https://sharmaeklavya2.github.io/theoremdep/}):
 \begin{tightemize}
 \item \href{\thmdepUrl/convexity/polyhedra/bfs.html}{Basic feasible solution (BFS)}
@@ -54,6 +63,7 @@ Read the following concepts at TheoremDep (\url{https://sharmaeklavya2.github.io
 \item \href{\thmdepUrl/convexity/polyhedra/orth-lp.html}{LP in orthant is optimized at BFS}
 \end{tightemize}
 Due to the last point above, we will focus on finding an optimal solution that is also a BFS.
+\end{inLongVersion}
 
 \begin{lemma}
 \label{thm:replace-vector-in-basis}
@@ -61,22 +71,22 @@ Let $B = [u_1, u_2, \ldots, u_n]$ be a basis of a vector space $V$.
 Let $w = \sum_{i=1}^n \lambda_i u_i$.
 Then $B' = B - \{u_r\} \cup \{w\}$ is a basis of $V$ iff $\lambda_r \neq 0$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 (See \url{\thmdepUrl/linear-algebra/vector-spaces/basis/replace-vector.html}.)
-\end{proof}
+\end{longProof}
 
+\begin{inLongVersion}
 \begin{lemma}
 For any matrix $A$, we have $\rank(A) = \rank(A^T)$.
 \end{lemma}
-\begin{proof}
-(TODO: find proof)
-\end{proof}
+\end{inLongVersion}
 
 \subsection{Notation}
 
 For any non-negative integer $n$, let $[n] \defeq \{1, 2, \ldots, n\}$
 (or $[n] \defeq [1, 2, \ldots, n]$, depending on the context).
 
+\begin{inLongVersion}
 Let $v \in \mathbb{R}^n$ and $A \in \mathbb{R}^{m \times n}$.
 Let $i \in [m]$ and $j \in [n]$.
 Then the $j\Th$ element of $v$ is denoted as $v_j$ or $v[j]$.
@@ -98,6 +108,7 @@ We call $C$ the \emph{horizontal concatenation} of $A$ and $B$.
 We can similarly define horizontal concatenation of more than two matrices.
 We can similarly define vertical concatenation of $A$ and $B$,
 which we denote as $\begin{bmatrix}A\\B\end{bmatrix}$.
+\end{inLongVersion}
 
 \begin{definition}
 Let $\stdLP(A, b, c)$ denote this LP:
@@ -129,7 +140,7 @@ we can find a feasible basis $J$ that minimizes $c^T\solve(J)$, and then return 
 Let $J$ be a feasible basis and $\xhat = \solve(J)$.
 Then $\xhat$ is a BFS of the LP.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 It's trivial to see that $\xhat \ge 0$. Let $B = A[*,J]$ and $N = A[*,\Jcomp]$. Then
 \[ A\xhat = B\xhat[J] + N\xhat[\Jcomp] = B(B^{-1}b) = b. \]
 Hence, $\xhat$ is feasible for the LP.
@@ -147,14 +158,14 @@ The first equation follows from the fact that rank is unaffected by row operatio
 The third equation follows from the fact that $J$ is a basis.
 Since the coefficient matrix of tight constraints of $\xhat$ has rank $n$,
 $\xhat$ is a BFS of the LP.
-\end{proof}
+\end{longProof}
 
 \begin{lemma}
 \label{thm:bfs-gives-basis}
 Let $\xhat$ be a BFS of the LP. Then there exists a feasible basis $J$
 such that $\xhat = \solve(J)$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 Since $\xhat$ is a BFS, there exist $n$ linearly independent constraints that are tight at $\xhat$.
 $m$ of these are the equality constraints, whose coefficient matrix is $A$.
 The rest are inequality constraints.
@@ -174,7 +185,7 @@ $b = A\xhat = B\xhat[J] + N\xhat[\Jcomp] = B\xhat[J]$.
 Hence, $\xhat[J] = B^{-1}b$. Since $\xhat$ is feasible for the LP,
 we get $\xhat \ge 0 \implies \xhat[J] \ge 0 \implies B^{-1}b \ge 0$.
 Hence, $J$ is a feasible basis and $\solve(J) = \xhat$.
-\end{proof}
+\end{longProof}
 
 \section{The Simplex Algorithm}
 
@@ -269,7 +280,12 @@ If $\simplex$ outputs $(\mathtt{optimal}, J, \xhat, \beta)$,
 then $\xhat$ is a BFS of the LP and an optimal solution to the LP.
 Furthermore, $\xhat = \solve(J)$ and $\beta = c^T\xhat$.
 \end{theorem}
-\begin{proof}
+\begin{proof}[Proof sketch]
+For any feasible $x$, we can show that $c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N$.
+Since $c[J]^T\bline = c^T\xhat$, $x_N \ge 0$, and $c - z \ge 0$,
+we get $c^Tx \ge c^T\xhat$.
+\end{proof}
+\begin{longProof}
 By line \ref{alg-line:simplexMove:opt} of $\simplexMove$,
 $\xhat = \solve(J)$ and $\beta = c[J]^T\bline$.
 Hence, $\xhat$ is a BFS by \cref{thm:basis-gives-bfs} and $c^T\xhat = \beta$.
@@ -295,14 +311,14 @@ We also know that $c-z \ge 0$, since $\simplexMove$'s output status is \texttt{o
 Hence, for every feasible $x$, we have
 $c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx_N \ge c[J]^T\bline = c^T\xhat$.
 Hence, $\xhat$ is an optimal solution to the LP.
-\end{proof}
+\end{longProof}
 
 \begin{lemma}
 \label{thm:zJ-eq-cJ}
 $z[J] = c[J]$.
 \end{lemma}
 \begin{proof}
-\[ z[J]^T = c[J]^T(B^{-1}A)[*,J] = c[J]^TB^{-1}A[*,J] = c[J]^T.  \qedhere \]
+$z[J]^T = c[J]^T(B^{-1}A)[*,J] = c[J]^TB^{-1}A[*,J] = c[J]^T$.
 \end{proof}
 \Cref{thm:zJ-eq-cJ} implies that $k \not\in J$, since $c_k - z_k < 0$.
 
@@ -313,17 +329,17 @@ Let $J = [j_1, j_2, \ldots, j_m]$.
 Then $Y[i, j_p] = \begin{cases}1 & \textrm{ if } p = i
 \\ 0 & \textrm{ if } p \neq i\end{cases}$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 \[ Y[*, J] = (B^{-1}A)[*, J] = B^{-1}A[*, J] = B^{-1}B = I. \]
 \[ Y[i, j_p] = Y[*, J][i, p] = I[i, p] = \begin{cases}1 & \textrm{ if } p = i
 \\ 0 & \textrm{ if } p \neq i\end{cases}. \qedhere \]
-\end{proof}
+\end{longProof}
 
 \begin{lemma}
 \label{thm:y-in-nullsp}
 Let $y = \direction(J, k)$. Then $Yy = Ay = 0$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 \begin{align*}
 (Yy)_i &= \sum_{j=1}^n Y[i, j]y_j
 = \sum_{p=1}^m Y[i, j_p]y_{j_p} + Y[i, k]y_k
@@ -331,20 +347,20 @@ Let $y = \direction(J, k)$. Then $Yy = Ay = 0$.
 = -Y[i, k] + Y[i, k] = 0.
 \end{align*}
 \[ Ay = B^{-1}Yy = B^{-1}0 = 0. \qedhere \]
-\end{proof}
+\end{longProof}
 
 \begin{lemma}
 \label{thm:y-reduces-cost}
 Let $y \defeq \direction(J, k)$. Then $c^Ty = c_k - z_k < 0$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 \begin{align*}
 c^Ty &= \sum_{j=1}^n c_jy_j = c_ky_k + \sum_{p=1}^m c_{j_p}y_{j_p}
 = c_k - \sum_{p=1}^m c_{j_p}Y[p, k]
 \\ &= c_k - \sum_{p=1}^m Y^T[k, p]c[J]_p
 = c_k - (Y^Tc[J])_k = c_k - z_k < 0.
 \qedhere \end{align*}
-\end{proof}
+\end{longProof}
 
 \begin{theorem}
 \label{thm:simplex-unbounded}
@@ -353,7 +369,7 @@ then the LP's cost reduces along the ray $\{\xhat + \lambda y: \lambda \ge 0\}$
 and the ray is feasible, which implies that the LP is unbounded.
 Furthermore, $y \ge 0$, $\xhat = \solve(J)$, and $y = \direction(J, k)$.
 \end{theorem}
-\begin{proof}
+\begin{longProof}
 By line \cref{alg-line:simplexMove:unb} of $\simplexMove$,
 we know that $\xhat = \solve(J)$ and $y = \direction(J, k)$.
 
@@ -367,7 +383,7 @@ Hence, $\xhat + \lambda y$ is feasible for the LP for all $\lambda \ge 0$.
 By \cref{thm:y-reduces-cost}, we know that $c^Ty < 0$,
 Hence, moving along the ray will reduce cost indefinitely.
 This implies that the LP is unbounded.
-\end{proof}
+\end{longProof}
 
 \begin{lemma}
 \label{thm:simplex-new-basis}
@@ -403,10 +419,16 @@ Let $\Jtild$ be the new sequence obtained by changing $J[r]$ to $k$
 (at line \ref{alg-line:simplex:J} of $\simplex$).
 Then $\Jtild$ is a feasible basis of the LP.
 Furthermore, let $y = \direction(J, k)$, $\xhat = \solve(J)$, and $\xtild = \xhat + \delta y$.
-Then $\xtild = \solve(\Jtild)$.
+Then $\xtild = \solve(\Jtild)$ and $c^T\xtild \le c^T\xhat$.
 \end{lemma}
-\begin{proof}
-Let $y \defeq \direction(J, k)$.
+\begin{proof}[Proof sketch]
+We can show that $A\xtild = b$, $\xtild \ge 0$, and $\xtild_j = 0$ when $j \not\in \Jtild$.
+Let $\Btild \defeq A[*,\Jtild]$. Then
+$b = A\xtild = A[*,\Jtild]\xtild[\Jtild] = \Btild\xtild[\Jtild]$.
+So, $\xtild[\Jtild] = \Btild^{-1}b$, which implies $\xtild = \solve(\Jtild)$.
+Also, $c^T(\xtild - \xhat) = \delta(c^Ty) \le 0$ by \cref{thm:y-reduces-cost}.
+\end{proof}
+\begin{longProof}
 By \cref{thm:y-in-nullsp}, we get that $Ay = 0$.
 Hence, $A\xtild = A\xhat + \delta (Ay) = A\xhat = b$.
 
@@ -429,7 +451,10 @@ Hence, $\xtild[\Jtild] = \Btild^{-1}b$.
 Furthermore, $\xtild[[n] - \Jtild] = 0$, so $\xtild = \solve(\Jtild)$.
 Since $\xtild \ge 0$, we get that $\Btild^{-1}b \ge 0$.
 Hence, $\Jtild$ is a feasible basis.
-\end{proof}
+
+Also, $c^T(\xtild - \xhat) = \delta(c^Ty) \le 0$ by \cref{thm:y-reduces-cost}.
+Hence, $c^T\xtild \le c^T\xhat$.
+\end{longProof}
 
 This completes the correctness of $\simplex$.
 
@@ -502,7 +527,7 @@ R[i,j] &= \begin{cases}
 \label{thm:upd-Y}
 $\Btild^{-1} = RB^{-1}$ and $\Ytild = RY$ and $\btildline = R\bline$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 Let $J = [j_1, j_2, \ldots, j_m]$. $\Jtild = J - \{j_r\} \cup \{k\}$.
 By \cref{thm:YJ-is-I}, we get that $Y[*,J] = \Ytild[*,\Jtild] = I$.
 We will try to show that $\Yhat[*,\Jtild] = I$.
@@ -525,7 +550,7 @@ Hence, $\Yhat[*,\Jtild] = I$.
 Hence, $\Btild^{-1} = RB^{-1}$.
 \[ \Ytild = \Btild^{-1}A = RB^{-1}A = RY. \]
 \[ \btildline = \Btild^{-1}b = RB^{-1}b = R\bline. \qedhere \]
-\end{proof}
+\end{longProof}
 
 Define $\zhat \in \mathbb{R}^n$ and $\eta$ as
 \begin{align*}
@@ -537,7 +562,7 @@ Define $\zhat \in \mathbb{R}^n$ and $\eta$ as
 \label{thm:upd-z}
 $\zhat = \ztild$ and $\eta = c[\Jtild]^T\btildline$.
 \end{lemma}
-\begin{proof}
+\begin{longProof}
 Let $J = [j_1, j_2, \ldots, j_m]$. Then $\Jtild = J - \{j_r\} \cup \{k\}$.
 Let $i \in [m] - \{r\}$. Then
 \[ \zhat[\Jtild]_i = \zhat_{j_i} = z_{j_i} + \frac{c_k - z_k}{Y[r,k]} Y[r,j_i] = z_{j_i}. \]
@@ -557,7 +582,7 @@ Let $u^T = c[J]^TB^{-1} + \alpha B^{-1}[r,*]$. Then $\zhat^T = u^TA$ and $\eta =
 Hence, $u^T = c[\Jtild]^T\Btild^{-1}$.
 So, $\zhat = c[\Jtild]^T\Btild^{-1}A = c[\Jtild]^T\Ytild = \ztild$
 and $\eta = c[\Jtild]^T\Btild^{-1}b = c[\Jtild]^T\btildline$.
-\end{proof}
+\end{longProof}
 
 In the revised simplex method, we can obtain further speedup in $\simplexMove$.
 Compute $c[J]^TB^{-1}$ by multiplying $c[J]^T$ and $B^{-1}$.
