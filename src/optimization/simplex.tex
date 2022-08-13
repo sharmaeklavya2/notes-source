@@ -1,8 +1,24 @@
-\input{header.tex}
-\usepackage[shortlabels]{enumitem}
-%\usepackage{setspace}
+\documentclass[a4paper, 12pt, fleqn]{article}
 
-%\onehalfspacing
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{url}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{subcaption}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+\usepackage[shortlabels]{enumitem}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
 
 \newcommand*{\thmdepUrl}{https://sharmaeklavya2.github.io/theoremdep/nodes}
 \newcommand*{\todotext}[1]{\textcolor{red}{#1}}
@@ -16,14 +32,17 @@
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\Span}{span}
 \DeclareMathOperator{\stdLP}{stdLP}
+\DeclareMathOperator{\stdDLP}{stdDLP}
 \DeclareMathOperator{\direction}{direction}
 \DeclareMathOperator{\solve}{\mathtt{solve}}
+\DeclareMathOperator{\dualSolve}{\mathtt{dualSolve}}
 \DeclareMathOperator{\pivot}{\mathtt{pivot}}
 \DeclareMathOperator{\assert}{\mathtt{assert}}
 \DeclareMathOperator{\simplex}{\mathtt{simplex}}
 \DeclareMathOperator{\simplexInit}{\mathtt{simplexInit}}
 \DeclareMathOperator{\simplexMove}{\mathtt{simplexMove}}
 \DeclareMathOperator{\updateDS}{\mathtt{updateDS}}
+\DeclareMathOperator{\sorted}{\mathtt{sorted}}
 
 \ifdefined\shortVersion
 \excludecomment{inLongVersion}
@@ -596,5 +615,228 @@ This is possible since $R$ is defined by $u$.
 The time taken is $O(m(t+m))$, where $t$ is the number of variables
 that need to be considered till we find $k$. Note that $t \le n-m$.
 The space complexity of revised simplex (in addition to storing the input) is $O(m^2)$.
+
+\section{Duality}
+
+\begin{definition}[Dual LP]
+The dual LP of $\stdLP(A, b, c)$ is defined to be the following LP:
+\[ \max_w\; b^Tw \quad\textrm{where}\quad A^Tw \le c. \]
+We denote this LP as $\stdDLP(A, b, c)$.
+\end{definition}
+
+\begin{definition}[dual feasible basis]
+Let $J$ be a basis of $\stdLP(A, b, c)$.
+$J$ is called \emph{dual feasible} if $c - z \ge 0$,
+where $B \defeq A[*,J]$ and $z^T \defeq c[J]^TB^{-1}A$.
+Define $\dualSolve(J)$ as $(c[J]^TB^{-1})^T$.
+(Note that $z = A^T\dualSolve(J)$).
+\end{definition}
+
+\begin{lemma}
+\label{thm:dbasis-gives-dbfs}
+Let $J$ be a dual feasible basis and $\what \defeq \dualSolve(J)$.
+Then $\what$ is a BFS of $\stdDLP(A, b, c)$.
+\end{lemma}
+\begin{longProof}
+$A^T[J, *]\what = B^T(c[J]^TB^{-1})^T = c[J]$. Hence, $m$ constraints in $A^Tw \le c$ are tight.
+Furthermore, $\rank(A^T[J, *]) = \rank(B) = m$, so the tight constraints have $\rank(m)$.
+Hence, $\what$ is a BFS of $\stdDLP(A, b, c)$.
+\end{longProof}
+
+\begin{lemma}
+\label{thm:dbfs-gives-dbasis}
+Let $\what$ be a BFS of $\stdDLP(A, b, c)$.
+Then there exists a dual feasible basis $J$ of $\stdLP(A, b, c)$
+such that $\what = \dualSolve(J)$.
+\end{lemma}
+\begin{longProof}
+Since $\what$ is a BFS, it has $m$ linearly independent tight constraints in $\stdDLP(A, b, c)$.
+Let $J$ be the indices of those constraints. Then $\rank(A[*,J]) = m$, so $J$ is a basis.
+Furthermore, $c[J] = A^T[J,*]\what$, so $\what^T = B^{-1}c[J]^T$, where $B \defeq A[*,J]$
+Hence, $\what = \dualSolve(J)$.
+$J$ is also dual feasible, since $c - z = c - A^T\what \ge 0$.
+\end{longProof}
+
+\begin{lemma}
+Let $J$ be a basis of $\stdLP(A, b, c)$.
+Let $\xhat \defeq \solve(J)$ and $\what \defeq \dualSolve(J)$.
+Then $c^T\xhat = b^T\what = c[J]^T\bline$.
+Furthermore, if $J$ is both feasible and dual feasible,
+then $\xhat$ and $\what$ are optimal solutions to
+$\stdLP(A, b, c)$ and $\stdDLP(A, b, c)$, respectively.
+\end{lemma}
+\begin{longProof}
+Optimality of $\xhat$ and $\what$ follows from the weak duality theorem for LPs.
+\end{longProof}
+
+\section{Properties of Solutions}
+
+\begin{definition}[degeneracy]
+Let $A \in \mathbb{R}^{m \times n}$. Let $J$ be a basis of $\stdLP(A, b, c)$.
+Let $B \defeq A[*,J]$ and $z^T \defeq c[J]^TB^{-1}b$.
+\begin{itemize}
+\item A solution $\xhat$ to $Ax = b$ is called \emph{degenerate}
+    for $\stdLP(A, b, c)$ if $|\support(\xhat)| < m$.
+\item $\what \in \mathbb{R}^m$ is called \emph{degenerate}
+    for $\stdDLP(A, b, c)$ if $|\support(c-A^Tw)| < n-m$.
+\item $J$ is called \emph{primal degenerate} if $(B^{-1}b)_i = 0$ for some $i \in [m]$.
+\item $J$ is called \emph{dual degenerate} if $(c-z)_j = 0$ for some $j \in [n] - J$.
+\end{itemize}
+\end{definition}
+
+\begin{lemma}
+Let $J$ be a basis of $\stdLP(A, b, c)$.
+Then $\solve(J)$ is degenerate iff $J$ is primal degenerate,
+and $\dualSolve(J)$ is degenerate iff $J$ is dual degenerate.
+\end{lemma}
+
+\subsection{Multiple Bases for Same Point}
+
+\begin{lemma}
+\label{thm:2-basis-implies-degen}
+Let $J_1$ and $J_2$ be two bases of $\stdLP(A, b, c)$ such that
+$\sorted(J_1) \neq \sorted(J_2)$ and $\xhat \defeq \solve(J_1) = \solve(J_2)$.
+Then $\xhat$ is degenerate for $\stdLP(A, b, c)$.
+\end{lemma}
+
+\begin{lemma}
+\label{thm:2-dbasis-implies-degen}
+Let $J_1$ and $J_2$ be two bases of $\stdLP(A, b, c)$ such that
+$\sorted(J_1) \neq \sorted(J_2)$ and $\what \defeq \dualSolve(J_1) = \dualSolve(J_2)$.
+Then $\what$ is degenerate for $\stdDLP(A, b, c)$.
+\end{lemma}
+
+The converse of \cref{thm:2-basis-implies-degen,thm:2-dbasis-implies-degen} is not true.
+\begin{example}
+Let $A = \begin{bmatrix}1 & 0 & 0 \\ 0 & 1 & 0\end{bmatrix}$,
+$b = [0, 0]^T$, and $c = [0, 0, 0]^T$.
+Then $J = [0, 1]$ is the unique basis (up to permutation) of $\stdLP(A, b, c)$.
+However, both $\solve(J) = [0, 0, 0]$ and $\dualSolve(J) = [0, 0]$ are degenerate.
+\end{example}
+
+\subsection{Degeneracy and Optimality}
+
+\begin{lemma}[dual non-degen $\implies$ unique primal opt]
+Let $J$ be a dual feasible and dual non-degenerate basis of $\stdLP(A, b, c)$.
+Let $\xhat \defeq \solve(J)$. Let $P$ be the set of feasible solutions to $\stdLP(A, b, c)$.
+Then $c^T\xhat < \min_{x \in P - \{\xhat\}} c^Tx$.
+(Hence, if $J$ is feasible, then $\xhat$ is a unique optimum of $\stdLP(A, b, c)$.)
+\end{lemma}
+\begin{proof}[Proof sketch]
+For any $x \in P$, we can show that $c^Tx = c[J]^T\bline + (c-z)[\Jcomp]^Tx[\Jcomp]$.
+Since $c[J]^T\bline = c^T\xhat$, $x[\Jcomp] \ge 0$, $x[\Jcomp] \neq 0$ (since $x \neq \xhat$),
+and $(c - z)[\Jcomp] > 0$ (by dual feasibility and dual non-degeneracy of $J$),
+we get $c^Tx > c^T\xhat$.
+\end{proof}
+
+\begin{lemma}[primal non-degen $\implies$ unique dual opt]
+Let $J$ be a primal feasible and primal non-degenerate basis of $\stdLP(A, b, c)$.
+Let $\what \defeq \dualSolve(J)$ and $\xhat \defeq \solve(J)$.
+Let $Q$ be the set of feasible solutions to $\stdDLP(A, b, c)$.
+Then $b^T\what > \max_{w \in Q - \{\what\}} b^Tw$.
+(Hence, if $J$ is dual feasible, then $\what$ is a unique optimum of $\stdDLP(A, b, c)$.)
+\end{lemma}
+\begin{proof}
+Let $w \in Q - \{\what\}$. So, $c^T - w^TA \ge 0$.
+Suppose $(c^T - w^TA)[J] = 0$. Then $w^T = B^{-1}c[J] = \what$, which is not possible.
+Hence, $\exists j \in J$ such that $c_j - (w^TA)_j > 0$.
+
+We have $b^Tw = w^TA\xhat = (w^TA)[J]\bline$ and $b^T\what = c[J]^T\bline$.
+Since $J$ is feasible and primal non-degenerate, $\bline > 0$. Hence,
+$b^T\what - b^Tw = (c[J] - w^TA)[J]\bline \ge (c_j - (w^TA)_j)\bline_j > 0$.
+\end{proof}
+
+\begin{lemma}[primal non-degen and dual degen $\implies$ non-unique primal opt]
+Let $J$ be a feasible basis of $\stdLP(A, b, c)$ that is primal non-degenerate and dual degenerate.
+Let $\xhat \defeq \solve(J)$. Then $\exists$ a feasible solution $\xtild$ to $\stdLP(A, b, c)$
+such that $\xtild \neq \xhat$ and $c^T\xtild = c^t\xhat$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Find $k$ such that $c_k - z_k = 0$ and then try to pivot.
+\end{proof}
+\begin{longProof}
+Since $J$ is dual degenerate, $\exists k \not\in J$ such that $c_k - z_k = 0$.
+Let $d \defeq \direction(J, k)$. Then $Ad = 0$ by \cref{thm:y-in-nullsp}
+and $c^Td = c_k - z_k = 0$ by \cref{thm:y-reduces-cost}.
+Since $J$ is primal non-degenerate, $\bline > 0$.
+
+Pick $\eps > 0$ such that $\bline_i \ge \eps Y[i, k]$.
+Let $\xtild \defeq \xhat + \eps d$. Then $A\xtild = b$ and $c^T\xtild = c^T\xhat$.
+For $j \in \Jcomp - \{k\}$, $\xtild_j = \xhat_j \ge 0$. $\xtild_k = \xhat_k + \eps > 0$.
+Let $J \defeq [j_1, \ldots, j_m]$. Then $\xtild[j_i] = \bline_i - \eps Y[i,k] \ge 0$.
+Hence, $\xtild \ge 0$. Hence, $\xtild$ is feasible for $\stdLP(A, b, c)$.
+\end{longProof}
+
+\begin{lemma}[primal degen and dual non-degen $\implies$ non-unique dual opt]
+Let $J$ be a dual feasible basis of $\stdLP(A, b, c)$ that is primal degenerate and dual non-degenerate.
+Let $\xhat \defeq \solve(J)$ and $\what \defeq \solve(J)$.
+Then $\exists$ a dual feasible solution $\wtild$ to $\stdDLP(A, b, c)$
+such that $\wtild \neq \what$ and $b^T\wtild = b^t\what$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Find $r$ such that $\bline_r = 0$ and then try to pivot.
+\end{proof}
+\begin{longProof}
+Since $J$ is primal degenerate, $\exists r$ such that $\bline_r = 0$.
+Pick $\eps > 0$ such that $(c-z)[\Jcomp]^T + \eps Y[r,\Jcomp] \ge 0$.
+This is possible since $(c-z)[\Jcomp] > 0$, since $J$ is dual feasible and dual non-degenerate.
+Let $v^T \defeq B^{-1}[r,*]$. Let $\wtild \defeq \what - \eps v$.
+$v^Tb = B^{-1}[r,*]b = \bline_r = 0$. Hence, $\wtild^Tb = \what^Tb$.
+
+$v^TA = B^{-1}[r,*]A = (B^{-1}A)[r,*] = Y[r,*]$.
+$c^T - \wtild^TA = c^T - \what^TA + \eps v^TA = (c-z)^T + \eps Y[r,*]$.
+Let $J \defeq [j_1, \ldots, j_m]$. Then
+$(c^T - \wtild^TA)[j_i] = (c-z)[j_i] + \eps Y[r,j_i]$.
+By \cref{thm:zJ-eq-cJ}, $(c-z)[j_i] = 0$.
+By \cref{thm:YJ-is-I}, $Y[r,j_i] \ge 0$.
+Hence, $(c^T - \wtild^TA)[J] \ge 0$. Given how we chose $\eps$,
+we get $(c^T - \wtild^TA)[\Jcomp] \ge 0$. Hence, $A^T\wtild \le c$.
+Hence, $\wtild$ is feasible for $\stdDLP(A, b, c)$.
+\end{longProof}
+
+\begin{example}
+Let $b = 0$, $c = (0, 0)$. Let $J$ be any basis of $\stdLP(A, b, c)$ ($|J| = 1$).
+Let $\xhat \defeq \solve(J)$ and $\what \defeq \dualSolve(J)$.
+$\bline = B^{-1}b = 0$, so $\xhat = (0, 0)$, which is feasible for $\stdLP(A, b, c)$.
+$\what^T = c[J]^TB^{-1} = 0$, so $\what = 0$.
+$c - A^T\what = (0, 0)$, so $\what$ is feasible for $\stdDLP(A, b, c)$.
+Hence, $J$ is primal feasible and dual feasible.
+Since $\bline = 0$, $J$ is primal degenerate.
+Since $(c - A^T\what)[J] = 0$, $J$ is dual degenerate.
+
+Let $P$ and $Q$ be the set of feasible solutions to the primal and dual LPs, respectively.
+Since the objective function is 0 for both LPs,
+unique primal optimal solution exists iff $P = \{(0, 0)\}$,
+and unique dual optimal solution exists iff $Q = \{0\}$.
+\begin{itemize}
+\item If $A = [1, 1]$, then $P = \{(0, 0)\}$ and $Q = (-\infty, 0]$.
+\item If $A = [1, -1]$, then $P = \{(x, x): x \ge 0\}$ and $Q = \{0\}$.
+\item If $A = [1, 0]$, then $P = \{(0, y): y \ge 0\}$ and $Q = (-\infty, 0]$.
+\end{itemize}
+\end{example}
+
+\begin{table}[ht]
+\centering
+\caption{Unique primal optimum?}
+\label{table:upo-degen}
+\begin{tabular}{|c|c|c|}
+\hline & dual degen & dual non-degen
+\\ \hline primal degen & depends & yes
+\\ \hline primal non-degen & no & yes
+\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Unique dual optimum?}
+\label{table:udo-degen}
+\begin{tabular}{|c|c|c|}
+\hline & dual degen & dual non-degen
+\\ \hline primal degen & depends & no
+\\ \hline primal non-degen & yes & yes
+\\ \hline
+\end{tabular}
+\end{table}
 
 \end{document}
