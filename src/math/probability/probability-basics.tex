@@ -118,31 +118,31 @@ $\sum_{i=1}^{\infty} \Pr(A_i) = \infty$) $\implies \Pr(\infOft(A)) = 1$.
     & $\E(X)$
     & $\Var(X)$
     & $\MGF_t(X)$
-\\ \midrule $\operatorname{Bernouilli}(p)$
+\\ \midrule $\opname{Bernouilli}(p)$
     & $p^x(1-p)^{1-x}$
     % & --
     & $p$
     & $p(1-p)$
     & $pe^t + 1-p$
-\\[\defaultaddspace] $\operatorname{Binomial}(n, p)$
+\\[\defaultaddspace] $\opname{Binomial}(n, p)$
     & $\displaystyle \binom{n}{x}p^x(1-p)^{n-x}$
     % & --
     & $np$
     & $np(1-p)$
     & $(pe^t + 1-p)^n$
-\\[\defaultaddspace] $\operatorname{Geometric}(p)$
+\\[\defaultaddspace] $\opname{Geometric}(p)$
     & $(1-p)^{x-1}p$
     % & $1 - (1-p)^x$
     & $1/p$
     & $(1-p)/p^2$
     & $\displaystyle \frac{pe^t}{1-(1-p)e^t}$
-\\[\defaultaddspace] $\operatorname{Poisson}(\lambda)$
+\\[\defaultaddspace] $\opname{Poisson}(\lambda)$
     & $e^{-\lambda}\lambda^x/x!$
     % & --
     & $\lambda$
     & $\lambda$
     & $\displaystyle \exp(\lambda(e^t-1))$
-% \\[\defaultaddspace] $\operatorname{NegBinom}(n, p)$
+% \\[\defaultaddspace] $\opname{NegBinom}(n, p)$
 \\ \bottomrule
 \end{tabular}
 \label{table:disc-distr}
@@ -150,7 +150,7 @@ $\sum_{i=1}^{\infty} \Pr(A_i) = \infty$) $\implies \Pr(\infOft(A)) = 1$.
 
 \begin{theorem}[Poisson approximates Binomial]
 Let $\lambda \in \mathbb{R}_{\ge 0}$ and $k \in \mathbb{Z}_{\ge 0}$ be constants.
-Let $X_n \sim \operatorname{Binom}(n, \lambda/n)$.
+Let $X_n \sim \opname{Binom}(n, \lambda/n)$.
 Then $\lim_{n \to \infty} \Pr(X_n = k) = e^{-\lambda}\lambda^k/k!$.
 \end{theorem}
 
@@ -166,25 +166,25 @@ Then $\lim_{n \to \infty} \Pr(X_n = k) = e^{-\lambda}\lambda^k/k!$.
     & $\E(X)$
     & $\Var(X)$
     & $\MGF_t(X)$
-\\ \midrule $\operatorname{Uniform}(a, b)$
+\\ \midrule $\opname{Uniform}(a, b)$
     & $\displaystyle \frac{\mathbf{1}(a \le x \le b)}{b-a}$
     % & $1 - e^{\lambda x}$
     & $\displaystyle \frac{a+b}{2}$
     & $\displaystyle \frac{(b-a)^2}{12}$
     & $\displaystyle \frac{e^{bt} - e^{at}}{(b-a)t}$
-\\[\defaultaddspace] $\operatorname{Exponential}(\lambda)$
+\\[\defaultaddspace] $\opname{Exponential}(\lambda)$
     & $\lambda e^{-\lambda x}$
     % & $1 - e^{\lambda x}$
     & $1/\lambda$
     & $1/\lambda^2$
     & $\lambda/(\lambda - t)$
-\\[\defaultaddspace] $\operatorname{Gamma}(n, \lambda)$
+\\[\defaultaddspace] $\opname{Gamma}(n, \lambda)$
     & $\displaystyle \frac{(\lambda x)^{n-1}}{(n-1)!} \lambda e^{-\lambda x}$
     % & --
     & $n/\lambda$
     & $n/\lambda^2$
     & $\displaystyle \left(1-\frac{t}{\lambda}\right)^{-n}$
-\\[\defaultaddspace] $\operatorname{Normal}(\mu, \sigma^2)$
+\\[\defaultaddspace] $\opname{Normal}(\mu, \sigma^2)$
     & $\displaystyle \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}$
     % & --
     & $\mu$
@@ -219,24 +219,24 @@ $\MGF_t\left(\sum_{i=1}^n X_i\right) = \prod_{i=1}^n \MGF_t(X_i)$.
 \begin{theorem}
 Let $X_1, \ldots, X_n$ be independent. Let $Y \defeq \sum_{i=1}^n X_i$. Then
 \begin{itemize}
-\item $X_i \sim \operatorname{Bernouilli}(p)
-    \implies Y \sim \operatorname{Binomial}(n, p)$.
-\item $X_i \sim \operatorname{Poisson}(\lambda_i) \implies
-    Y \sim \operatorname{Poisson}\left(\sum_{i=1}^n \lambda_i\right)$.
-\item $X_i \sim \operatorname{Exponential}(\lambda) \implies
-    Y \sim \operatorname{Gamma}(n, \lambda)$.
+\item $X_i \sim \opname{Bernouilli}(p)
+    \implies Y \sim \opname{Binomial}(n, p)$.
+\item $X_i \sim \opname{Poisson}(\lambda_i) \implies
+    Y \sim \opname{Poisson}\left(\sum_{i=1}^n \lambda_i\right)$.
+\item $X_i \sim \opname{Exponential}(\lambda) \implies
+    Y \sim \opname{Gamma}(n, \lambda)$.
 \end{itemize}
 \end{theorem}
 
 \subsection{Exponential Distribution}
 
 \begin{theorem}
-Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \operatorname{Expo}(\lambda_i)$.
+Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \opname{Expo}(\lambda_i)$.
 Let $Z \defeq \min_{i=1}^n X_i$ and $E$ be the event $X_1 < X_2 < \ldots < X_n$.
 Let $\beta \defeq \lambda_1 + \ldots + \lambda_n$. Then
 \begin{itemize}
 \item $\Pr(X_i = Z) = \lambda_i/\beta$.
-\item $Z \sim \operatorname{Expo}(\beta)$.
+\item $Z \sim \opname{Expo}(\beta)$.
 \item $E$ and $Z$ are independent.
 \end{itemize}
 \end{theorem}
