@@ -29,7 +29,7 @@
 
 \begin{definition}[Stochastic Process]
 Let $\Tcal \subseteq \mathbb{R}$. For any $t \in \Tcal$,
-let $X_t$ be a random variable with support $D$.
+let $X_t$ (or $X(t)$) be a random variable with support $D$.
 Then $X \defeq \{X_t: t \in \Tcal\}$ is called a
 \emph{stochastic process} on state-space $D$ and time $\Tcal$.
 Usually, $\Tcal$ is either $\mathbb{Z}_{\ge 0}$ (discrete-time)
@@ -176,5 +176,31 @@ $x_jP(j, i) = x_iP(i, j)$ for all states $i$ and $j$, and $\sum_i x_i = 1$.
 \begin{theorem}
 If the transition function of markov chain $X$ is symmetric, then $X$ is time-reversible.
 \end{theorem}
+
+\section{Counting Process}
+
+\begin{definition}[Counting Process]
+Let $N$ be a stochastic process on state space $\mathbb{Z}_{\ge 0}$ and time $\mathbb{R}_{\ge 0}$.
+Then $N$ is called a counting process if $N(0) = 0$ and $N(t)$ is monotone in $t$,
+i.e., $t_1 < t_2 \implies N(t_1) \le N(t_2)$.
+\end{definition}
+
+\begin{definition}[Independent increments]
+A counting process $N$ has \emph{independent increments} iff
+for any two disjoint intervals $(u_1, v_1]$ and $(u_2, v_2]$ in $\mathbb{R}_{\ge 0}$,
+the random variables $N(v_1) - N(u_1)$ and $N(v_2) - N(u_2)$ are independent.
+\end{definition}
+
+\begin{definition}[Stationary increments]
+A counting process $N$ has \emph{stationary increments} iff for any $u \le v$,
+the random variables $N(v) - N(u)$ and $N(v-u)$ have the same distribution.
+\end{definition}
+
+\section{Poisson Process}
+
+\begin{definition}[Poisson process]
+A counting process $N$ is a Poisson process with rate $\lambda$ if
+$N$ has independent and stationary increments and $N(t) \sim \operatorname{Poisson}(\lambda t)$.
+\end{definition}
 
 \end{document}
