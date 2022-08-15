@@ -228,6 +228,19 @@ Let $X_1, \ldots, X_n$ be independent. Let $Y \defeq \sum_{i=1}^n X_i$. Then
 \end{itemize}
 \end{theorem}
 
+\subsection{Exponential Distribution}
+
+\begin{theorem}
+Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \operatorname{Expo}(\lambda_i)$.
+Let $Z \defeq \min_{i=1}^n X_i$ and $E$ be the event $X_1 < X_2 < \ldots < X_n$.
+Let $\beta \defeq \lambda_1 + \ldots + \lambda_n$. Then
+\begin{itemize}
+\item $\Pr(X_i = Z) = \lambda_i/\beta$.
+\item $Z \sim \operatorname{Expo}(\beta)$.
+\item $E$ and $Z$ are independent.
+\end{itemize}
+\end{theorem}
+
 \section{Inequalities and Limits}
 
 \begin{theorem}[Markov]
