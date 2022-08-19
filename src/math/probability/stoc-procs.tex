@@ -212,16 +212,25 @@ For a counting process $N$ with arrival times $S$, $N(t) \ge n \iff S_n \le t$.
 \section{Poisson Process}
 
 \begin{definition}[Poisson process]
-A counting process $N$ is a Poisson process with rate $\lambda$ if
-$N$ has independent and stationary increments and $N(t) \sim \Poisson(\lambda t)$.
+A counting process $N$ is a Poisson process with rate function
+$\lambda: \mathbb{R}_{\ge 0} \mapsto \mathbb{R}_{\ge 0}$ if
+$N$ has independent increments and $N(t_2)-N(t_1) \sim \Poisson(\mu)$,
+where $\mu \defeq \int_{t_1}^{t_2} \lambda(t) dt$.
+$N$ is called \emph{homogeneous} if $\lambda(t) = \lambda(0)$ for all $t$,
+otherwise it is called \emph{inhomogeneous}.
+For a homogeneous process, we denote $\lambda(0)$ by $\lambda$.
 \end{definition}
 
+\begin{lemma}
+A Poisson process $N$ is homogeneous iff it has stationary increments.
+\end{lemma}
+
 \begin{theorem}[Alternative definition of Poisson process]
-A counting process $N$ is a Poisson process with rate $\lambda$ iff
+A counting process $N$ is a Poisson process with continuous rate function $\lambda$ iff
 $N$ has independent and stationary increments and
-$\Pr(N(t) = 1) = \lambda t + o(t)$ and $\Pr(N(t) \ge 2) = o(t)$.
+$\Pr(N(t+h)-N(t) = 1) = \lambda(t) h + o(h)$ and $\Pr(N(t+h)-N(t) \ge 2) = o(h)$.
 \end{theorem}
-\begin{proof}[Proof sketch]
+\begin{proof}[Proof sketch for homogeneous]
 Let $g(u,t) \defeq \MGF_u(N(t)) = \E(e^{uN(t)})$.
 Show $g(u,t) = 1 + \lambda t(e^u-1) + o(t)$ straightforwardly.
 Use calculus to show that $g(u,t) = \exp(e^{\lambda t}(e^u-1))$
@@ -230,32 +239,36 @@ Conclude that $N(t) \sim \Poisson(\lambda t)$ since $g(u,t)$ is MGF of $\Poisson
 \end{proof}
 
 \begin{lemma}
-For a Poisson process $N$,
+For a homogeneous Poisson process $N$,
 \[ \Pr(N(s)=a \mid N(s+t)=a+b) = \binom{a+b}{a}\left(\frac{s}{s+t}\right)^a\left(\frac{t}{s+t}\right)^b. \]
 \end{lemma}
 
 \begin{theorem}
-Let $N$ be a counting process. Then $N$ is a Poisson process with rate $\lambda$
+Let $N$ be a counting process. Then $N$ is a homogeneous Poisson process with rate $\lambda$
 iff all interarrival times are independent and distributed $\Expo(\lambda)$.
 \end{theorem}
 
 \begin{theorem}[Decomposition theorem 1]
 Let $K$ be a finite set, and let $\{N_i: i \in K\}$ be independent Poisson processes,
-where $N_i$ has rate $\lambda_i$. Let $N \defeq \sum_{i \in K}N_i$.
-Then $N$ is a Poisson process with rate $\sum_{i \in K} \lambda_i$.
+where $N_i$ has rate function $\lambda_i$. Let $N \defeq \sum_{i \in K}N_i$.
+Then $N$ is a Poisson process with rate function $\sum_{i \in K} \lambda_i$.
 \end{theorem}
 
 \begin{theorem}[Decomposition theorem 2]
-Let $N$ be a Poisson process with rate $\lambda$. Let $K$ be a finite set (called set of labels).
-Suppose the $j\Th$ event receives label $L_j \in K$, where $\Pr(L_j = i) = p_i$
+Let $N$ be a Poisson process with rate function $\lambda$. Let $K$ be a finite set (called set of labels).
+Suppose the $j\Th$ event receives label $L_j \in K$, where $\Pr(L_j = i) = p_i(S_j)$
+for some function $p_i: \mathbb{R}_{\ge 0} \mapsto \mathbb{R}_{\ge 0}$,
 and $\{N, L_1, L_2, \ldots\}$ are independent.
 For $i \in K$, let $N_i(t)$ be the number of events having label $i$, i.e,
-$N_i(t) = \sum_{j=1}^{N(t)} \boolone(L_j = i)$. Then $N_i$ is a Poisson process with rate $\lambda p_i$.
-Furthermore, all $N_i$ are independent and $N_i(t) \mid N(t) \sim \opname{Binom}(N(t), p_i)$.
+$N_i(t) = \sum_{j=1}^{N(t)} \boolone(L_j = i)$.
+Then $N_i$ is a Poisson process with rate function $p_i \lambda$.
+Furthermore, all $N_i$ are independent and if all $p_i$ are constant, then
+$N_i(t) \mid N(t) \sim \opname{Binom}(N(t), p_i)$.
 \end{theorem}
 
 \begin{lemma}
-Let $N^{(1)}$ and $N^{(2)}$ be independent Poisson procs with rates $\lambda_1$ and $\lambda_2$. Then
+Let $N^{(1)}$ and $N^{(2)}$ be independent homogeneous Poisson processes
+with rates $\lambda_1$ and $\lambda_2$. Then
 \[ \Pr(S^{(1)}_n < S^{(2)}_m) = \sum_{i=n}^{n+m-1} \binom{n+m-1}{i}
     \frac{\lambda_1^i\lambda_2^{n+m-1-i}}{(\lambda_1 + \lambda_2)^{n+m-1}}. \]
 \end{lemma}
