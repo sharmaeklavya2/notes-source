@@ -16,6 +16,9 @@
 \input{macros.tex}
 
 \DeclareMathOperator{\boolone}{\mathbf{1}}
+\DeclareMathOperator{\MGF}{MGF}
+\DeclareMathOperator{\Poisson}{\opname{Poisson}}
+\DeclareMathOperator{\Expo}{\opname{Expo}}
 
 \author{Eklavya Sharma}
 \date{\empty}
@@ -196,11 +199,75 @@ A counting process $N$ has \emph{stationary increments} iff for any $u \le v$,
 the random variables $N(v) - N(u)$ and $N(v-u)$ have the same distribution.
 \end{definition}
 
+\begin{definition}[Arrival and interarrival times]
+For a counting process $N$, for $i \in \mathbb{Z}_{\ge 0}$,
+define the $i\Th$ arrival time $S_i \defeq \min_{t \ge 0} (N(t) = i)$.
+For $i \in \mathbb{Z}_{\ge 1}$, define the $i\Th$ interarrival time $T_i \defeq S_i - S_{i-1}$.
+\end{definition}
+
+\begin{lemma}
+For a counting process $N$ with arrival times $S$, $N(t) \ge n \iff S_n \le t$.
+\end{lemma}
+
 \section{Poisson Process}
 
 \begin{definition}[Poisson process]
 A counting process $N$ is a Poisson process with rate $\lambda$ if
-$N$ has independent and stationary increments and $N(t) \sim \opname{Poisson}(\lambda t)$.
+$N$ has independent and stationary increments and $N(t) \sim \Poisson(\lambda t)$.
 \end{definition}
+
+\begin{theorem}[Alternative definition of Poisson process]
+A counting process $N$ is a Poisson process with rate $\lambda$ iff
+$N$ has independent and stationary increments and
+$\Pr(N(t) = 1) = \lambda t + o(t)$ and $\Pr(N(t) \ge 2) = o(t)$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Let $g(u,t) \defeq \MGF_u(N(t)) = \E(e^{uN(t)})$.
+Show $g(u,t) = 1 + \lambda t(e^u-1) + o(t)$ straightforwardly.
+Use calculus to show that $g(u,t) = \exp(e^{\lambda t}(e^u-1))$
+(find derivative w.r.t $t$ by computing $\lim_{h \to 0} (g(u,t+h)-g(u,t))/h$; this gets rid of $o(h)$).
+Conclude that $N(t) \sim \Poisson(\lambda t)$ since $g(u,t)$ is MGF of $\Poisson(\lambda t)$.
+\end{proof}
+
+\begin{lemma}
+For a Poisson process $N$,
+\[ \Pr(N(s)=a \mid N(s+t)=a+b) = \binom{a+b}{a}\left(\frac{s}{s+t}\right)^a\left(\frac{t}{s+t}\right)^b. \]
+\end{lemma}
+
+\begin{theorem}
+Let $N$ be a counting process. Then $N$ is a Poisson process with rate $\lambda$
+iff all interarrival times are independent and distributed $\Expo(\lambda)$.
+\end{theorem}
+
+\begin{theorem}[Decomposition theorem 1]
+Let $K$ be a finite set, and let $\{N_i: i \in K\}$ be independent Poisson processes,
+where $N_i$ has rate $\lambda_i$. Let $N \defeq \sum_{i \in K}N_i$.
+Then $N$ is a Poisson process with rate $\sum_{i \in K} \lambda_i$.
+\end{theorem}
+
+\begin{theorem}[Decomposition theorem 2]
+Let $N$ be a Poisson process with rate $\lambda$. Let $K$ be a finite set (called set of labels).
+Suppose the $j\Th$ event receives label $L_j \in K$, where $\Pr(L_j = i) = p_i$
+and $\{N, L_1, L_2, \ldots\}$ are independent.
+For $i \in K$, let $N_i(t)$ be the number of events having label $i$, i.e,
+$N_i(t) = \sum_{j=1}^{N(t)} \boolone(L_j = i)$. Then $N_i$ is a Poisson process with rate $\lambda p_i$.
+Furthermore, all $N_i$ are independent and $N_i(t) \mid N(t) \sim \opname{Binom}(N(t), p_i)$.
+\end{theorem}
+
+\begin{lemma}
+Let $N^{(1)}$ and $N^{(2)}$ be independent Poisson procs with rates $\lambda_1$ and $\lambda_2$. Then
+\[ \Pr(S^{(1)}_n < S^{(2)}_m) = \sum_{i=n}^{n+m-1} \binom{n+m-1}{i}
+    \frac{\lambda_1^i\lambda_2^{n+m-1-i}}{(\lambda_1 + \lambda_2)^{n+m-1}}. \]
+\end{lemma}
+\begin{proof}[Proof sketch]
+Model as a continuous markov chain with state space $(n_1, n_2)$,
+where $n_i$ is the number of events of $N^{(i)}$ that have occurred.
+\end{proof}
+
+\begin{theorem}[arrival times distributed as order statistics]
+Let $X = [X_1, X_2, \ldots, X_n]$ be IID uniform variables over $[0, t]$.
+Let $U = \opname{sorted}(X)$. Let $S = [S_1, S_2, \ldots, S_n]$.
+Then conditioned on $N(t) = n$, the distribution of $S$ and $U$ are identical.
+\end{theorem}
 
 \end{document}
