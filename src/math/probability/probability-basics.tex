@@ -14,6 +14,7 @@
 \hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
 \input{macros.tex}
 
+\DeclareMathOperator{\boolone}{\mathbf{1}}
 \DeclareMathOperator{\MGF}{MGF}
 \DeclareMathOperator{\Cov}{Cov}
 \DeclareMathOperator{\infOft}{io}
@@ -148,12 +149,6 @@ $\sum_{i=1}^{\infty} \Pr(A_i) = \infty$) $\implies \Pr(\infOft(A)) = 1$.
 \label{table:disc-distr}
 \end{table}
 
-\begin{theorem}[Poisson approximates Binomial]
-Let $\lambda \in \mathbb{R}_{\ge 0}$ and $k \in \mathbb{Z}_{\ge 0}$ be constants.
-Let $X_n \sim \opname{Binom}(n, \lambda/n)$.
-Then $\lim_{n \to \infty} \Pr(X_n = k) = e^{-\lambda}\lambda^k/k!$.
-\end{theorem}
-
 \begin{table}[!ht]
 \centering
 \caption{Continuous Probability Distributions}
@@ -194,6 +189,25 @@ Then $\lim_{n \to \infty} \Pr(X_n = k) = e^{-\lambda}\lambda^k/k!$.
 \end{tabular}
 \label{table:cont-distr}
 \end{table}
+
+\begin{theorem}[Poisson approximates Binomial]
+Let $\lambda \in \mathbb{R}_{\ge 0}$ and $k \in \mathbb{Z}_{\ge 0}$ be constants.
+Let $X_n \sim \opname{Binom}(n, \lambda/n)$.
+Then $\lim_{n \to \infty} \Pr(X_n = k) = e^{-\lambda}\lambda^k/k!$.
+\end{theorem}
+
+\begin{theorem}[Binomial over Poisson]
+Let $N \sim \opname{Poisson}(\lambda)$ and $M \mid N \sim \opname{Binom}(N, p)$.
+Then $M \sim \opname{Poisson}(\lambda p)$.
+\end{theorem}
+
+\begin{theorem}[Poisson decomposition]
+Let $X_1, X_2, \ldots$ be IID randvars, where $\Pr(X_j = i) = p_i$ for $i \in [k]$ and all $j$,
+and $\sum_{i=1}^k p_i = 1$.
+Let $N \sim \opname{Poisson}(\lambda)$ where $\{N, X_1, X_2, \ldots\}$ is independent.
+Let $N_i \defeq \sum_{j=1}^N \boolone(X_j = i)$. Then
+$\{N_1, \ldots, N_k\}$ is independent and $N_i \mid N \sim \opname{Binom}(N, p_i)$.
+\end{theorem}
 
 \begin{theorem}[Scaling normal]
 $X \sim N(\mu, \sigma^2) \implies aX + b \sim N(a\mu + b, a^2\sigma^2)$.
