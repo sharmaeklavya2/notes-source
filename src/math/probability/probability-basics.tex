@@ -288,12 +288,14 @@ and $|\Cov(X,Y)|^2 \le \Var(X)\Var(Y)$.
 
 \section{Conditional Probability}
 
-\begin{definition}
-Let $X$ and $Y$ be continuous randvars.
-Let $f_{Y \mid X}(y \mid x) \defeq f_{X,Y}(x, y) / f_X(x)$.
-$f_{Y \mid X}$ is called the \emph{density function of $Y$ conditioned on $X$}.
-Then $\E(Y \mid X=x) = \int_{-\infty}^{\infty} y f_{Y \mid X}(y \mid x) dx$.
-\end{definition}
+\begin{theorem}
+Let $X$ and $Y$ be randvars (either of them can be discrete or continuous).
+Let $f_X$ and $f_Y$ be their distribution functions (either PMF or PDF), respectively.
+Let $f_{X,Y}$ be their joint distribution function.
+Let $g_x$ be the distribution function of $Y$ conditioned on $X=x$.
+Then $g_x(y) = f_{X,Y}(x, y) / f_X(x)$.
+We denote $g_x(y)$ by $f_{Y \mid X}(y \mid x)$.
+\end{theorem}
 
 \begin{definition}
 Let $X$ and $Y$ be randvars and $A$ be an event.
