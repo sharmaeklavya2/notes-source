@@ -46,7 +46,8 @@ Let $X \defeq [X_0, X_1, \ldots]$ be a stochastic process
 on state-space $D$ and time $\mathbb{Z}_{\ge 0}$.
 $X$ is called a discrete-time markov chain if
 $\Pr(X_{t+1}=d \mid X_t, X_{t-1}, \ldots, X_0) = \Pr(X_{t+1}=d \mid X_t)$.
-If $\Pr(X_{t+1}=d \mid X_t) = \Pr(X_1=d \mid X_0)$, then $X$ is called \emph{time-homogeneous}.
+If $\Pr(X_{t+1}=v \mid X_t=u) = \Pr(X_1=v \mid X_0=u)$ for all $t, u, v$,
+then $X$ is called \emph{time-homogeneous}.
 \end{definition}
 
 \begin{definition}[Transition function]
