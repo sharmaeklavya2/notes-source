@@ -346,4 +346,53 @@ Then $P_i = (\pi_i/\nu_i)/(\sum_j \pi_j/\nu_j)$ and $\pi_i = P_i\nu_i/(\sum_j P_
 A CTMC is time-reversible iff the corresponding embedded discrete-time MC is time-reversible.
 \end{definition}
 
+\subsection{Birth and Death Process}
+
+\begin{definition}
+A birth-and-death (B\&D) process is a TH CTMC $X$ on state space $\mathbb{Z}_{\ge 0}$ where
+$q_{i,j} = 0$ if $j \not\in \{i-1, i+1\}$. Let $\lambda_i \defeq q_{i,i+1}$ for $i \ge 0$,
+$\mu_i \defeq q_{i,i-1}$ for $i \ge 1$, $\mu_0 \defeq 0$.
+
+$X(t)$ is called the \emph{population} at time $t$,
+$\lambda_i$ is called the \emph{birth rate} at population $i$,
+and $\mu_i$ is called the \emph{death rate} at population $i$.
+\end{definition}
+
+\begin{lemma}
+Let $X$ be a B\&D process where $X(0)=n$.
+Let $T_n$ be the time to reach state $n+1$, i.e., $T_n \defeq \min_{t \ge 0} (X(t) = n+1)$. Then
+\begin{align*}
+\E(T_n) &= \frac{1}{\lambda_n} + \frac{\mu_n}{\lambda_n}\E(T_{n-1})
+= \frac{1}{\lambda_n}\sum_{i=0}^n \prod_{j=1}^i \frac{\mu_{n-j+1}}{\lambda_{n-j}}.
+\\ \Var(T_n) &= \frac{1}{\lambda_n(\lambda_n + \mu_n)^2} + \frac{\mu_n}{\lambda_n}\Var(T_{i-1})
+    + \frac{\mu_n}{\lambda_n + \mu_n}(\E(T_{n-1}) + \E(T_n))^2
+\end{align*}
+\end{lemma}
+\begin{proof}[Proof sketch]
+Let $I_i = \boolone(\textrm{next transition goes to state } i+1)$.
+Let $X_i$ be the transition time out of state $i$.
+Then $I_i \sim \opname{Bernouilli}(\lambda_i/(\mu_i + \lambda_i))$,
+$X_i \sim \Expo(\lambda_i + \mu_i)$, and
+\begin{align*}
+\E(T_i \mid I_i) &= \E(X_i) + (1-I_i)(\E(T_{i-1}) + \E(T_i))),
+\\ \Var(T_i \mid I_i) &= \Var(X_i) + (1-I_i)(\Var(T_{i-1}) + \Var(T_i)).
+\qedhere \end{align*}
+\end{proof}
+
+CKBE for B\&D:
+\[ \frac{dP_{i,j}(t)}{dt} = \mu_iP_{i-1,j}(t) + \lambda_iP_{i+1,j}(t) - (\lambda_i + \mu_i)P_{i,j}(t). \]
+
+CKFE for B\&D:
+\[ \frac{dP_{i,j}(t)}{dt} = \mu_{j+1}P_{i,j+1}(t) + \lambda_{j-1}P_{i,j-1}(t) - (\lambda_j + \mu_j)P_{i,j}(t). \]
+
+\begin{theorem}[Limiting Probabilities]
+Let $X$ be an irreducible B\&D process on state space $D \subseteq \mathbb{Z}_{\ge 0}$ where $0 \in D$.
+For $n \in D$, let $\alpha_n \defeq \prod_{i=1}^n \frac{\lambda_{i-1}}{\mu_i}$.
+If $\sum_{i \in D} \alpha_i$ is finite, then
+$P_i = \alpha_iP_0$, and $P_0 = 1/\sum_{i \in D} \alpha_i$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Use \cref{thm:ctmc:limprob} and add adjacent equations.
+\end{proof}
+
 \end{document}
