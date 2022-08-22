@@ -219,6 +219,17 @@ $\{N_1, \ldots, N_k\}$ is independent and $N_i \mid N \sim \opname{Binom}(N, p_i
 $X \sim N(\mu, \sigma^2) \implies aX + b \sim N(a\mu + b, a^2\sigma^2)$.
 \end{theorem}
 
+\begin{theorem}[Competing exponentials]
+Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \opname{Expo}(\lambda_i)$.
+Let $Z \defeq \min_{i=1}^n X_i$ and $E$ be the event $X_1 < X_2 < \ldots < X_n$.
+Let $\beta \defeq \lambda_1 + \ldots + \lambda_n$. Then
+\begin{itemize}
+\item $\Pr(X_i = Z) = \lambda_i/\beta$.
+\item $Z \sim \opname{Expo}(\beta)$.
+\item $E$ and $Z$ are independent.
+\end{itemize}
+\end{theorem}
+
 \subsection{Sum of Random Variables}
 
 \begin{theorem}[Convolution]
@@ -247,19 +258,6 @@ Let $X_1, \ldots, X_n$ be independent. Let $Y \defeq \sum_{i=1}^n X_i$. Then
     Y \sim \opname{Gamma}(n, \lambda)$.
 \item $X_i \sim \opname{Geometric}(p) \implies
     Y \sim \opname{NegBinom}(n, p)$.
-\end{itemize}
-\end{theorem}
-
-\subsection{Exponential Distribution}
-
-\begin{theorem}
-Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \opname{Expo}(\lambda_i)$.
-Let $Z \defeq \min_{i=1}^n X_i$ and $E$ be the event $X_1 < X_2 < \ldots < X_n$.
-Let $\beta \defeq \lambda_1 + \ldots + \lambda_n$. Then
-\begin{itemize}
-\item $\Pr(X_i = Z) = \lambda_i/\beta$.
-\item $Z \sim \opname{Expo}(\beta)$.
-\item $E$ and $Z$ are independent.
 \end{itemize}
 \end{theorem}
 
