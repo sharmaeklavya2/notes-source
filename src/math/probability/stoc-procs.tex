@@ -210,6 +210,27 @@ For $i \in \mathbb{Z}_{\ge 1}$, define the $i\Th$ interarrival time $T_i \defeq 
 For a counting process $N$ with arrival times $S$, $N(t) \ge n \iff S_n \le t$.
 \end{lemma}
 
+\begin{definition}[Stopping time]
+\label{defn:stopping-time}
+Let $X = [X_1, X_2, \ldots]$ be a sequence of random variables.
+The random variable $N$ is called a stopping time for $X$ if for all $n \ge 0$,
+(the following two definitions are equivalent):
+\begin{itemize}
+\item $N = n$ is independent of $X_{n+1}, X_{n+2}, \ldots$.
+\item $N \le n$ is independent of $X_{n+1}, X_{n+2}, \ldots$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Wald's identity]
+Let $X = [X_1, X_2, \ldots]$ be a sequence of random variables where $\E(X_i) = \mu$ for all $i$.
+Let $N$ be a stopping time for $X$. Then
+\[ \E\left(\sum_{i=1}^N X_i\right) = \mu\E(N). \]
+\end{theorem}
+\begin{proof}[Proof sketch]
+For all $i$, $N \ge i$ is independent of $X_i$, and
+$\displaystyle \sum_{i=1}^N X_i = \sum_{i=1}^{\infty} X_i\boolone(N \ge i)$.
+\end{proof}
+
 \section{Poisson Process}
 
 \begin{definition}[Poisson process]
@@ -393,6 +414,94 @@ $P_i = \alpha_iP_0$, and $P_0 = 1/\sum_{i \in D} \alpha_i$.
 \end{theorem}
 \begin{proof}[Proof sketch]
 Use \cref{thm:ctmc:limprob} and add adjacent equations.
+\end{proof}
+
+\section{Renewal Theory}
+
+\begin{definition}
+Let $[X_1, X_2, \ldots]$ be a sequence of IID non-negative randvars, called \emph{interarrival times},
+such that $\Pr(X_1 = 0) < 1$ and $\Pr(X_1 = \infty) = 0$.
+Let $S_n \defeq \sum_{i=1}^n X_i$ (called \emph{arrival times}). Let $N(t) \defeq \max_n (S_n \le t)$.
+Then $N$ is called a \emph{renewal process} (note that it is a counting process).
+
+We let $F$ and $f$ denote the CDF and PDF/PMF of $X_1$, respectively.
+We let $F^{(n)}$ and $f^{(n)}$ denote the CDF and PDF/PMF of $S_n$, respectively.
+
+Let $R_i$ be the \emph{reward} obtained at time $X_i$ for all $i \ge 1$,
+where all $R_i$ are independent. Let $R(t) \defeq \sum_{i=1}^{N(t)} R_i$.
+Then $R$ is called a \emph{renewal reward process}.
+\end{definition}
+
+\begin{lemma}
+For all $t \ge 0$, $\Pr(N(t) = \infty) = 0$. $\Pr(\lim_{t \to \infty} N(t) = \infty) = 1$.
+\end{lemma}
+\begin{proof}
+Let $\mu \defeq \E(X_1)$. $\mu > 0$ since $\Pr(X_n = 0) < 1$.
+\[ \Pr\left(\lim_{t \to \infty} \frac{S_n}{n} = \mu\right) = 1.  \tag{strong law of large numbers} \]
+\[ N(t) = \infty \iff (\forall n, S_n \le t) \implies \lim_{t \to \infty} \frac{S_n}{n} = 0. \]
+$\Pr(N(\infty) = \infty) = 1$ since $\Pr(X_1 = \infty) = 0$.
+\end{proof}
+
+\begin{definition}
+For a renewal process $N$, let $m_N(t) \defeq \E(N(t))$.
+Then $m_N$ is called the \emph{mean-value function} of $N$.
+(If $N$ is clear from context, we will write $m$ instead of $m_N$.)
+\end{definition}
+
+\begin{lemma}
+$m(t) = \sum_{n=1}^{\infty} \Pr(S_n \le t) = \sum_{n=1}^{\infty} F^{(n)}(t)$.
+\end{lemma}
+
+\begin{theorem}
+$m$ uniquely characterizes $F$.
+\end{theorem}
+
+\begin{lemma}
+$m(t)$ is finite for all $t$.
+\end{lemma}
+
+\begin{theorem}[Renewal equation]
+When interarrival times are continuous randvars,
+\[ m(t) = F(t) + \int_0^t m(t-x)f(x)dx. \]
+\end{theorem}
+\begin{proof}[Proof sketch]
+Let $N'(t) \defeq \max_n \left( \sum_{i=2}^{n+1} X_i \le t \right)$.
+Then $N$ and $N'$ are identically distributed and
+\[ N(t) = \begin{cases} 1 + N'(t-X_1) & \textrm{ if } X_1 \le t
+\\ 0 & \textrm{ if } X_1 > t \end{cases}. \]
+Finally, $m(t) = \E(\E(N(t) \mid X_1))$.
+\end{proof}
+
+\begin{theorem}[Limit theorems]
+For a renewal process $N$ with $\mu \defeq \E(X_1)$,
+\begin{align*}
+& \Pr\left(\lim_{t \to \infty} \frac{N(t)}{t} = \frac{1}{\mu}\right) = 1.
+&& \lim_{t \to \infty} \frac{m(t)}{t} = \frac{1}{\mu}.
+\end{align*}
+\end{theorem}
+
+\begin{theorem}[Limit theorems for rewards]
+For a renewal process $N$ with rewards $\{R_i: i \in \mathbb{Z}_{\ge 1}\}$,
+let $\alpha \defeq \E(R_1)$ and $\mu \defeq \E(X_1)$. Then
+\begin{align*}
+& \Pr\left(\lim_{t \to \infty} \frac{R(t)}{t} = \frac{\alpha}{\mu}\right) = 1.
+&& \lim_{t \to \infty} \frac{\E(R(t))}{t} = \frac{\alpha}{\mu}.
+\end{align*}
+\end{theorem}
+
+\begin{theorem}[Central limit theorem for renewals]
+For a renewal process $N$ with $\mu \defeq \E(X_1)$ and $\sigma^2 \defeq \Var(X_1)$,
+the random variable
+\[ \lim_{t \to \infty} \frac{N(t) - t/\mu}{\sqrt{t\sigma^2/\mu^3}} \]
+tends to the standard normal distribution.
+\end{theorem}
+
+\begin{lemma}[Stopping time]
+Let $X = [X_1, X_2, \ldots]$ be the sequence of interarrival times for renewal process $N$.
+Then $N(t)+1$ is a stopping time for $X$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+$N(t)+1 \le n \iff S_n > t$.
 \end{proof}
 
 \end{document}
