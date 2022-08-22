@@ -135,8 +135,14 @@ $\sum_{i=1}^{\infty} \Pr(A_i) = \infty$) $\implies \Pr(\infOft(A)) = 1$.
     & $(1-p)^{x-1}p$
     % & $1 - (1-p)^x$
     & $1/p$
-    & $(1-p)/p^2$
+    & $\displaystyle \frac{1-p}{p^2}$
     & $\displaystyle \frac{pe^t}{1-(1-p)e^t}$
+\\[\defaultaddspace] $\opname{NegBinom}(n, p)$
+    & $\displaystyle \binom{x-1}{n-1}p^n(1-p)^{x-n}$
+    % & --
+    & $n/p$
+    & $\displaystyle \frac{n(1-p)}{p^2}$
+    & $\displaystyle \left(\frac{pe^t}{1-(1-p)e^t}\right)^n$
 \\[\defaultaddspace] $\opname{Poisson}(\lambda)$
     & $e^{-\lambda}\lambda^x/x!$
     % & --
@@ -239,6 +245,8 @@ Let $X_1, \ldots, X_n$ be independent. Let $Y \defeq \sum_{i=1}^n X_i$. Then
     Y \sim \opname{Poisson}\left(\sum_{i=1}^n \lambda_i\right)$.
 \item $X_i \sim \opname{Exponential}(\lambda) \implies
     Y \sim \opname{Gamma}(n, \lambda)$.
+\item $X_i \sim \opname{Geometric}(p) \implies
+    Y \sim \opname{NegBinom}(n, p)$.
 \end{itemize}
 \end{theorem}
 
