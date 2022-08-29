@@ -34,6 +34,7 @@ by Sheldon M. Ross.
 * Notation for rewards.
 * R(t)/t converges to E(R)/E(X) when t → ∞.
 * Elementary reward renewal theorem (without proof).
+* Example 7.16
 * Example 7.18: average age of renewal process.
 * Example 7.20: average no. of people waiting at bus stop.
 

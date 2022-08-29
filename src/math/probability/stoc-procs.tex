@@ -472,6 +472,11 @@ Then $N$ and $N'$ are identically distributed and
 Finally, $m(t) = \E(\E(N(t) \mid X_1))$.
 \end{proof}
 
+\begin{corollary}
+Let $N$ be a renewal process where interarrival times are distributed $\opname{Uniform}(0, 1)$.
+Then for $0 \le t \le 1$, $m(t) = e^t - 1$.
+\end{corollary}
+
 \begin{theorem}[Limit theorems]
 For a renewal process $N$ with $\mu \defeq \E(X_1)$,
 \begin{align*}
@@ -502,6 +507,22 @@ Then $N(t)+1$ is a stopping time for $X$.
 \end{lemma}
 \begin{proof}[Proof sketch]
 $N(t)+1 \le n \iff S_n > t$.
+\end{proof}
+
+\begin{definition}
+For a renewal process $N$ with arrival times $S_1, S_2, \ldots$:
+\begin{itemize}
+\item Let $Y(t) \defeq S_{N(t)+1}-t$. $Y(t)$ is called the \emph{excess} at time $t$.
+\item Let $L(t) \defeq t - S_{N(t)}$. $L(t)$ is called the \emph{remaining life} at time $t$.
+\end{itemize}
+\end{definition}
+
+\begin{lemma}
+Let $N$ be a renewal process with interarrival times $X = [X_1, X_2, \ldots]$.
+Then $\E(S_{N(t)+1}) = t + \E(Y(t)) = \E(X_1)(m(t)+1)$.
+\end{lemma}
+\begin{proof}
+$N(t)+1$ is a stopping time for $X$.
 \end{proof}
 
 \end{document}
