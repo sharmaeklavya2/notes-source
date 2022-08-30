@@ -1,0 +1,398 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+%\def\colorscheme{dark}
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\hasInt}{hasInt}
+\newcommand*{\LP}{\mathrm{LP}}
+\newcommand*{\DLP}{\mathrm{DLP}}
+\newcommand*{\karthikLecSeven}{http://karthik.ise.illinois.edu/courses/ie511/lectures-sp-21/lecture-7.pdf}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{Polyhedral Theory}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+Prerequisites:
+\begin{tightenum}
+\item Convex combination, strict convex combination, convex hull, convex set.
+\item Vector spaces, rank of a set of vectors.
+\end{tightenum}
+
+\section{Definitions}
+
+\begin{definition}[Line and Ray]
+For $x \in \mathbb{R}^n$ and $d \in \mathbb{R}^n - \{0\}$,
+a line is a set of the form $\{x + \lambda d: \lambda \in \mathbb{R}\}$,
+and a ray is a set of the form $\{x + \lambda d: \lambda \ge 0\}$.
+\end{definition}
+
+\begin{definition}[Cone]
+A set $S \in \mathbb{R}^n$ is called a cone if $\forall x \in S$ and $\forall \alpha \ge 0$,
+we have $\alpha x \in S$. A cone is called \emph{pointed} if
+$\forall x \in S - \{0\}$, we have $-x \not\in S$.
+\end{definition}
+
+\begin{definition}[Bounded set]
+A set $S$ is bounded if $\exists \alpha \in \mathbb{R}$ such that
+$\|x\| \le \alpha$ for all $x \in S$.
+\end{definition}
+
+\begin{definition}[Vertex of a set]
+Let $S \subseteq \mathbb{R}^n$ and $x \in S$.
+$x$ is a vertex of $S$ if $\exists c \in \mathbb{R}^n$
+such that $\forall y \in S - \{x\}$, we have $c^Tx > c^Ty$.
+\end{definition}
+
+\begin{definition}[Direction of a set]
+$d$ is a direction of $S \subseteq \mathbb{R}^n$ if
+$\forall x \in S$, $\forall \lambda \ge 0$, we have $x + \lambda d \in S$.
+\end{definition}
+
+\begin{definition}[Extreme point]
+$x \in S$ is an extreme point of $S \subseteq \mathbb{R}^n$ if
+(the following definitions are equivalent):
+\begin{tightenum}
+\item $x$ is not a strict convex combination of at least 2 points in $S$.
+\item $x$ is not a strict convex combination of exactly 2 points in $S$.
+\item $\forall y \in \mathbb{R}^n$, $x + y \not\in S$ or $x - y \not\in S$.
+\end{tightenum}
+\end{definition}
+
+\begin{definition}[Extreme direction]
+Let $C$ be a pointed convex cone. Let $d \in C - \{0\}$.
+Then $d$ is called an extreme direction of $C$ iff
+$d$ cannot be expressed as $x + y$, where $x \in C$ and $y \in C$ are non-collinear.
+\end{definition}
+
+\begin{definition}[Projection]
+Let $S \subseteq \mathbb{R}^n$. Let $R \defeq \{(x_1, \ldots, x_k): x \in S\}$ for any $k < n$.
+Then $R$ is called the $k$-dimensional projection of $S$.
+\end{definition}
+
+\begin{definition}[Minkowski sum]
+Let $S$ and $T$ be two sets. Then their Minkowski sum $S + T$ is $\{s + t: s \in S, t \in T\}$.
+\end{definition}
+
+\subsection{Polyhedra}
+
+\begin{definition}[Polyhedron]
+\label{defn:polyhedron}
+A polyhedron is an intersection of half-spaces.
+Formally, a polyhedron is represented using equalities and inequalities:
+$P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$.
+\end{definition}
+
+\begin{definition}[Polyhedral cone]
+A polyhedral cone is (equiv defns):
+\begin{tightenum}
+\item a polyhedron that is also a cone.
+\item a set of the form
+$\{x \in \mathbb{R}^n: (a_i^Tx \ge 0, \forall i \in I) \wedge (a_i^Tx = 0, \forall i \in E)\}$.
+\end{tightenum}
+\end{definition}
+
+\begin{definition}[BFS]
+Let $Q$ be this system of inequations:
+$(a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)$.
+$\xhat \in \mathbb{R}^n$ and let $B \defeq \{a_i: a_i^T\xhat = b_i\}$.
+Then $\xhat$ is called a \emph{basic feasible solution} (BFS) of $Q$
+if $\xhat$ satisfies $Q$ and $\rank(B) = n$.
+\end{definition}
+
+\begin{definition}[BFD]
+Let $Q$ be this system of inequations:
+$(a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)$.
+Let $Q'$ be this system of inequations:
+$(a_i^Tx \ge 0, \forall i \in I) \wedge (a_i^Tx = 0, \forall i \in E)$.
+$\xhat \in \mathbb{R}^n$ and let $B \defeq \{a_i: a_i^T\xhat = 0\}$.
+Then $\xhat$ is called a \emph{basic feasible direction} (BFD) of $Q$ if
+$\xhat$ satisfies $Q'$ and $\rank(B) = n-1$.
+\end{definition}
+
+\section{Results on Polyhedra}
+
+\begin{theorem}[Fourier-Motzkin Elimination]
+\label{thm:fme}
+The projection of a polyhedron is also a polyhedron.
+\end{theorem}
+
+\begin{theorem}[Pointing a polyhedron]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx = b_i, \forall i \in E) \wedge (a_i^Tx \ge b_i, \forall i \in I)\}$
+be a non-empty polyhedron. Let $A \defeq \{a_i: i \in I \cup E\}$.
+Let $B \defeq \{a_i: i \in T\}$ (where $T \subseteq I \cup E$) be a basis of $A$.
+
+Let $D \defeq \{x \in \mathbb{R}^n: (a_i^Tx = 0, \forall i \in I \cup E)\}$.
+Let $C \defeq \{a_i: i \in H\}$ (where $H$ is a new set of indices) be a basis of $D$.
+Let $P' \defeq \{x \in P: (a_i^Tx = 0, \forall i \in H)\}$.
+
+Then the following hold:
+\begin{tightenum}
+\item $|C| = n - \rank(A)$ and $B \cup C$ is a basis of $\mathbb{R}^n$.
+\item $P = \{\xhat + d: \xhat \in P', d \in D\}$.
+\end{tightenum}
+
+Note that part 1 implies that $P'$ is a full-rank polyhedron.
+Part 2 implies that any polyhedron $P$ can be decomposed into a full-rank polyhedron $P'$ and subspace $D$.
+\end{theorem}
+
+\section{BFS and BFD}
+
+\begin{theorem}[Equiv of extreme point, vertex, BFS]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron. Then the following are equivalent for any $\xhat \in P$:
+\begin{tightenum}
+\item $\xhat$ is a vertex of $P$.
+\item $\xhat$ is an extreme point of $P$.
+\item $\xhat$ is a BFS of the system of constraints defining $P$.
+\end{tightenum}
+\end{theorem}
+
+\begin{theorem}[Equiv of BFD and extreme direction]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$.
+Let $C \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge 0, \forall i \in I) \wedge (a_i^Tx = 0, \forall i \in E)\}$.
+$d$ is a BFD of $P$'s constraints iff it is an extreme direction of $C$.
+\end{theorem}
+
+\begin{theorem}[Condition for existence of BFS]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron. Let $A = \{a_i: i \in I \cup E\}$. Then the following are equivalent:
+\begin{tightenum}
+\item $P$ has a BFS.
+\item $P$ doesn't contain a line.
+\item $\rank(A) = n$.
+\end{tightenum}
+\end{theorem}
+
+\begin{theorem}[Representation theorem]
+Let $P$ be a polyhedron. Let $x^{(1)}, \ldots, x^{(p)}$ be its BFSes and
+$d^{(1)}, \ldots, d^{(q)}$ be its BFDs, where $p \ge 1$. Then for any $\xhat \in P$,
+$\exists \lambda \in \mathbb{R}^p_{\ge 0}$, $\exists \mu \in \mathbb{R}^q_{\ge 0}$ such that
+$\sum_{i=1}^p \lambda_i = 1$ and
+\[ \xhat = \sum_{i=1}^p \lambda_ix^{(i)} + \sum_{j=1}^q \mu_jd^{(j)}. \]
+\end{theorem}
+\begin{proof}[Proof sketch]
+First handle the special case of polytopes by inducting on the number of tight constraints.
+Reduce the special case of cones to the polytope case by
+scaling each non-zero point of the cone $C$ to lie on a hyperplane $H$
+such that $C \cap H$ is bounded.
+For the general case, induct on the number of tight constraints, and use the result for cones.
+\end{proof}
+
+\begin{theorem}[Converse of representation theorem]
+Let $x^{(1)}, \ldots, x^{(p))}, d^{(1)}, \ldots, d^{(q)}$ be points.
+Let $P \defeq \{\sum_{i=1}^p \lambda_ix^{(i)} + \sum_{j=1}^q \mu_jd^{(j)}:
+\lambda \in \mathbb{R}^p_{\ge 0}, \mu \in \mathbb{R}^q_{\ge 0}, \sum_{i=1}^p \lambda_i = 1\}$.
+Then $P$ is a polyhedron.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Simple application of \nameref{thm:fme}.
+\end{proof}
+
+\section{Duality and Farkas' Lemma}
+
+Content in this section is based on \href{\karthikLecSeven}{Prof. Karthik's notes}.
+
+\begin{theorem}[Fund thm of lin ineqs]
+Let $a_1, \ldots, a_n, b \in \mathbb{R}^m$. Let $t \defeq \rank(\{b, a_1, \ldots, a_n\})$.
+Then exactly one of these holds:
+\begin{tightenum}
+\item $b$ lies in the non-neg hull of $\{a_i: i \in [n]\}$.
+\item $\exists c \in \mathbb{R}^m$ such that all of these hold:
+    \begin{tightenum}
+    \item $c^Tb < 0$.
+    \item $c^Ta_i \ge 0$ for all $i$.
+    \item $\rank(\{a_i: a_i^Tc = 0\}) = t-1$.
+    \item If $\{b, a_1, \ldots, a_n\}$ are rational, then $c$ is rational.
+    \end{tightenum}
+\end{tightenum}
+\end{theorem}
+
+\section{Dimension and Faces}
+
+Content in this section is based on \href{\karthikLecSeven}{Prof. Karthik's notes}.
+
+\begin{definition}[Implicit equality and redundant constraint]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$.
+For $i \in I$, $a_i^Tx \ge b_i$ is an implicit equality of $P$ if $a_i^Tx = b_i$ for all $x \in P$.
+For $i \in I \cup E$, the $i\Th$ constraint is redundant if removing it changes the polyhedron.
+\end{definition}
+
+\begin{theorem}[$\dim$ from rank of constraints]
+\label{thm:dim-from-rank}
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron without any implicit equalities.
+Let $A \defeq \{a_i: i \in E\}$. Then $\dim(P) = n - \rank(A)$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Use a max-cardinality affindep subset of $P$ to construct a basis of $A$'s nullspace.
+Use an interior point of $P$ and a basis of $A$'s nullspace to construct
+a max-cardinality affindep subset of $P$.
+\end{proof}
+
+\begin{definition}[Face]
+Let $P$ be a non-empty polyhedron. $F$ is a \emph{face} of $P$ if $F \neq \emptyset$
+and $\exists c \in \mathbb{R}^n$, $\exists \beta \in \mathbb{R}$, such that
+$F = \{x \in P: c^Tx = \beta\}$ and $(c^Tx \ge \beta, \forall x \in P)$.
+(Note that $c$ can be 0, in which case $F = P$.)
+A $F$ is called a \emph{proper face} of $P$ if $F$ is a face of $P$ and $F \neq P$.
+\end{definition}
+
+\begin{definition}[Tightening]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+$F$ is a tightening of $P$ if $\exists T$ such that $E \subseteq T \subseteq I \cup E$ and
+$F = \{x \in \mathbb{R}^n: (a_i^Tx = b_i, \forall i \in T) \wedge (a_i^Tx \ge b_i, \forall i \in I-T)\}$.
+$T$ is called the set of tight constraints for $F$.
+\end{definition}
+
+\begin{lemma}[Tightening is face]
+\label{thm:tightening-is-face}
+If $F$ is a tightening of $P$, then $F$ is a face of $P$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Pick $c \defeq \sum_{i \in T} a_i$ and $\beta \defeq \sum_{i \in T} b_i$.
+Then $\forall x \in F$, $c^Tx = \beta$, and $\forall x \in P - F$, $c^Tx > \beta$.
+\end{proof}
+
+\begin{theorem}[Face is tightening]
+\label{thm:face-is-tightening}
+If $F$ is a face of $P$, then $F$ is a tightening of $P$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Let $F \defeq \{x \in P: c^Tx = \beta\}$ be a face of $P$,
+where $c^Tx \ge \beta$ for all $x \in P$.
+Consider the LP $\min_{x \in P} c^Tx$.
+Then $\opt(\LP) = \beta$ and $F = \argopt(\LP)$, since $F \neq \emptyset$.
+Let $w^*$ be the optimal dual solution.
+Let $H \defeq \{i \in I: w_i^* > 0\}$. Let $T \defeq E \cup H$.
+Let $F' \defeq \{x: (a_i^Tx = b_i, \forall i \in T) \wedge (a_i^Tx \ge b_i, \forall i \in I-T)\}$.
+
+Let $\xhat \in F'$. We can show that $(\xhat, w^*)$ is a pair of solutions
+satisfying complementary slackness. Hence, $\xhat$ is optimal, so $\xhat \in \argopt(\LP) = F$.
+
+For all $\xhat \in F$, $\xhat$ is optimal for LP,
+and so $(\xhat, w^*)$ satisfies complementary slackness (by strong duality of LPs).
+Hence, for $i \in H$, $a_i^T\xhat = b_i$. Hence, $\xhat \in F'$.
+Hence, $F = F'$. Since $F'$ is a tightening, so is $F$.
+\end{proof}
+
+\begin{definition}[Facet]
+A facet of $P$ is a maximal proper face of $P$, i.e., $F$ is a facet of $P$ if
+for every proper face $F'$ of $P$, we have $F' \supseteq F \implies F' = F$.
+\end{definition}
+
+\begin{theorem}[Facet is 1-tightening]
+\label{thm:facet-is-1tight}
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron without implicit equalities.
+If $F$ is a facet of $P$, then $\exists k \in I$ such that $F = \{x \in P: a_k^Tx = b_k\}$.
+\end{theorem}
+\begin{proof}
+$T$ be the tight constraint indices for $F$. Pick any $k \in T$.
+Let $F' \defeq \{x \in P: a_k^Tx = b_k\}$. Then $F \subseteq F' \subseteq P$.
+Since $k$ is not an implicit equality, $F' \neq P$.
+Since $F$ is a maximal face, $F = F'$.
+\end{proof}
+
+\begin{theorem}[1-tightening is facet]
+\label{thm:1tight-is-facet}
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron without implicit equalities.
+Let $R \subseteq I$ be the set of irredundant constraints.
+If $F = \{x \in P: a_k^Tx = b_k\}$ for some $k \in R$, then $F$ is a facet.
+\end{theorem}
+\begin{proof}[Proof sketch]
+By \cref{thm:tightening-is-face}, $F$ is a face of $P$.
+Since $k$ is not an implicit equality, $F \neq P$.
+Use irredundancy of $k$ to find an interior point $\xhat$ of $F$
+(pick an interior point $x^{(1)}$ of $P$,
+pick a point $x^{(2)}$ that violates only the $k\Th$ constraint,
+and interpolate between them).
+
+Suppose $F$ is not a facet. Then it is contained by another proper face $F' \neq F$.
+Let $T'$ be the tight constraints of $F'$. Since $\xhat \in F'$, $T' = E \cup \{k\}$, so $F = F'$.
+\end{proof}
+
+\begin{theorem}[Facet has dimension $\dim(P)-1$]
+Let $F$ be a face of $P$. Then $F$ is a facet of $P$ iff $\dim(F) = \dim(P)-1$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Let $E$ be the equality (both implicit and explicit) constraints.
+Let $T$ be a set of tight constraints of $F$.
+If $F$ is a facet, $|T-E| = 1$ by \cref{thm:facet-is-1tight}. Then use \cref{thm:dim-from-rank}.
+Now let $\dim(F) = \dim(P)-1$. Then $\rank(T) = \rank(E)+1$.
+Let $k \in T-E$ be linindep from $E$. Then $\Span(E\cup\{k\}) = \Span(T)$,
+so $E \cup \{k\}$ is also a set of tight constraints for $F$.
+By \cref{thm:1tight-is-facet}, $F$ is a facet.
+\end{proof}
+
+\begin{theorem}[Minimal face from subsystem]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron. Let $F \subseteq P$ and $F \neq \emptyset$.
+Then $F$ is a minimal face of $P$ iff $\exists K$ such that $E \subseteq K \subseteq I \cup E$
+and $F = \{x: (a_i^Tx = b_i, \forall i \in K)\}$.
+\end{theorem}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{theorem}[Minimal face from rank]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$
+be a non-empty polyhedron. Let $F \subseteq P$ and $F \neq \emptyset$.
+Let $A \defeq \{a_i: i \in I \cup E\}$.
+Then $F$ is a minimal face of $P$ iff $\dim(F) = n - \rank(A)$.
+\end{theorem}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\section{Integrality of Polyhedra}
+
+Content in this section is based on \href{\karthikLecSeven}{Prof. Karthik's notes}.
+
+\begin{definition}[Rational Polyhedra]
+A polyhedron $P \subseteq \mathbb{R}^n$ is rational if it can be expressed as
+$P = \{x: (a_i^Tx = b_i, \forall i \in E) \wedge (a_i^Tx \ge b_i, \forall i \in I)\}$,
+where $a_i \in \mathbb{Q}^n$ and $b_i \in \mathbb{Q}$.
+\end{definition}
+
+\begin{theorem}
+Let $P \subseteq \mathbb{R}^n$ be a rational polyhedron.
+For any set $S \in \mathbb{R}^n$, define the predicate
+$\hasInt(S): S \cap \mathbb{Z}^n \neq \emptyset$.
+Then the following are equivalent.
+\begin{tightenum}
+\item $P = \operatorname{convexHull}(P \cap \mathbb{Z}^n)$.
+\item For every face $F$ of $P$, $\hasInt(F)$.
+\item For every minimal face $F$ of $P$, $\hasInt(F)$.
+\item $\forall c \in \mathbb{R}^n$,
+$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \hasInt\left(\argmax_{x \in P} c^Tx\right)$.
+\item $\forall c \in \mathbb{Z}^n$,
+$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \hasInt\left(\argmax_{x \in P} c^Tx\right)$.
+\item $\forall c \in \mathbb{Z}^n$,
+$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \max_{x \in P} c^Tx \in \mathbb{Z}$.
+\end{tightenum}
+\end{theorem}
+
+\end{document}
