@@ -1,0 +1,187 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\newcommand*{\karthikLec}[1]{http://karthik.ise.illinois.edu/courses/ie511/lectures-sp-21/lecture-#1.pdf}
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+
+\title{Integer Programming: Total Unimodularity}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+Based on lecture notes by Prof.~Karthik (\href{\karthikLec{10}}{Lecture 10}) and Prof.~Eteasmi.
+
+\section{Definition and Motivation}
+
+\begin{definition}[Integral matrix]
+$A \in \mathbb{R}^{m \times n}$ is \emph{integral} iff
+each entry in $A$ is an integer.
+\end{definition}
+
+\begin{definition}[Total Unimodularity]
+A matrix $A \in \mathbb{R}^{m \times n}$ is \emph{totally unimodular} (TU) iff
+for every square submatrix $B$ of $A$, we have $\det(B) \in \{-1, 0, 1\}$.
+\end{definition}
+
+\begin{lemma}[Integral inverse]
+Let $A$ be TU. Then for every square submatrix $B$ of $A$, $B^{-1}$ is integral.
+\end{lemma}
+\begin{proof}[Proof sketch]
+If $A$ is TU, then $B$ is also TU. Let $B \in \mathbb{R}^{n \times n}$. Then
+\[ (B^{-1})[i, j] = \frac{(-1)^{i+j}\det(C_{i,j})}{\det(B)}
+\quad\textrm{where}\quad C_{i,j} = B[[n]-\{j\}, [n]-\{i\}]. \]
+$\det(B), \det(C_{i,j}) \in \{-1, 0, 1\}$ because $B$ is TU.
+\end{proof}
+
+\begin{theorem}[TU polyhedron]
+Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx = b_i, \forall i \in E) \wedge (a_i^Tx \ge b_i, \forall i \in I)\}$
+be a non-empty polyhedron, where $b_i \in \mathbb{Z}$ for all $i \in I \cup E$.
+Let $A$ be a matrix whose rows are $\{a_i^T: i \in I \cup E\}$.
+If $A$ is TU, then $P$ is integral.
+\end{theorem}
+\begin{proof}[Proof sketch]
+We need to show that every minimal face of $P$ contains an integral vector.
+Every minimal face $F$ is given by $\{x: Bx = c\}$, which is a subsystem of $Ax = b$.
+Find a basis $U$ of the columns of $B$. Then $U$ would be a full-rank square submatrix of $B$.
+Use $U^{-1}c$ to construct an integral point in $F$.
+\end{proof}
+
+\begin{theorem}[Hoffman-Kruskal]
+Let $A \in \mathbb{Z}^{m \times n}$. $A$ is TU iff
+$\{x: Ax \le b\}$ is integral for all $b \in \mathbb{Z}^m$.
+\end{theorem}
+
+\section{TUity-Preserving Operations on Matrices}
+
+\begin{lemma}
+Let $A \in \mathbb{R}^{m \times n}$.
+\begin{tightenum}
+\item\label{item:TUop:neg}$A$ is TU iff $-A$ is TU.
+\item\label{item:TUop:trn}$A$ is TU iff $A^T$ is TU.
+\item\label{item:TUop:rearrange}If $B$ is obtained by rearranging the rows or columns of $A$,
+    then $A$ is TU iff $B$ is TU.
+\item\label{item:TUop:mul}If $B$ is obtained by multiplying a row or column of $A$ by a scalar $\alpha \in \{-1, 0, 1\}$,
+    then $A$ is TU $\implies$ $B$ is TU.
+\item\label{item:TUop:stack}$A$ is TU iff $[A, I]$ is TU.
+\item\label{item:TUop:pivot}If $A'$ is obtained by pivoting $A$ at $(i, j)$, then $A'$ is TU if $A$ is TU.
+\item\label{item:TUop:inv}If $A$ is invertible, then $A$ is TU iff $A^{-1}$ is TU.
+\end{tightenum}
+\end{lemma}
+\ref{item:TUop:neg}, \ref{item:TUop:trn}, \ref{item:TUop:rearrange}, \ref{item:TUop:mul} are trivial to prove.
+\ref{item:TUop:inv} is a corollary of \ref{item:TUop:stack} and \ref{item:TUop:pivot},
+since we can obtain $[I, A^{-1}]$ by repeatedly pivoting $[A, I]$.
+\begin{proof}[Proof sketch of \ref{item:TUop:stack}]
+For any square submatrix containing a few rows and columns from $I$,
+repeatedly pivot on elements of $I$ till we get a submatrix of $A$.
+\end{proof}
+\begin{proof}[Proof of \ref{item:TUop:pivot}]
+Let $J \subseteq [m]$ and $K \subseteq [n]$. Let $B \defeq A[J, K]$ and $B' \defeq A'[J, K]$.
+Then $\det(B) \in \{-1, 0, 1\}$ because $A$ is TU. We will show that $\det(B') \in \{-1, 0, 1\}$.
+
+If $i \in J$, then $B'$ can be obtained by performing row operations on $B$.
+Hence, $\det(B') = \det(B) \in \{-1, 0, 1\}$.
+If $i \not\in J$ and $j \in K$, then $B'$ has a zero column, so $\det(B') = 0$.
+
+Suppose $i \not\in J$ and $j \not\in K$.
+Let $J' \defeq \{i\} \cup J$ and $K' \defeq \{j\} \cup K$.
+Let $C \defeq A[J', K']$ and $C' \defeq A'[J', K']$.
+Then $C'$ can be obtained by performing row operations on $C$.
+Hence, $\det(C') = \det(C) \in \{-1, 0, 1\}$. Also,
+\[ C' = \begin{bmatrix}1 & A'[i, K] \\ \textbf{0} & B'\end{bmatrix}. \]
+Hence, $\det(C') = \det(B')$. Hence, $\det(B') \in \{-1, 0, 1\}$.
+\end{proof}
+
+\section{Conditions for TUity}
+
+\begin{lemma}[Sufficient condition]
+\label{thm:tu-2-part}
+Let $A \in \{-1, 0, 1\}^{m \times n}$. Then $A$ is TU if
+each column of $A$ contains at most two non-0 elements
+and $\exists M \subseteq [m]$ (subset of rows) such that
+every column $j$ with two non-0 entries satisfies
+\begin{equation}
+\label{eqn:partition-sum}
+\sum_{i \in M} A[i,j] = \sum_{i \not\in M} A[i,j].
+\end{equation}
+\end{lemma}
+\begin{proof}[Proof sketch]
+Let $B$ be the smallest submatrix of $A$ such that $\det(B) \not\in \{-1, 0, 1\}$.
+Every column of $B$ has exactly two non-0 elements,
+else we can construct a smaller counterexample.
+\Cref{eqn:partition-sum} implies that rows of $B$
+are linearly dependent, and so $\det(B) = 0$.
+\end{proof}
+
+\begin{lemma}[Characterization]
+\label{thm:tu-char}
+Let $A \in \{-1, 0, 1\}^{m \times n}$. $A$ is TU iff
+$\forall J \subseteq [m]$, $\exists K \subseteq J$,
+\[ \abs{\sum_{i \in K} A[i,j] - \sum_{i \in J-K} A[i,j]} \le 1 \qquad \forall j \in [n]. \]
+\end{lemma}
+
+\section{Examples}
+
+\begin{lemma}[Interval matrix]
+A matrix $A \in \{0, 1\}^{m \times n}$ is called an \emph{interval matrix}
+if in each column, all ones are in consecutive positions.
+An interval matrix is TU.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Use \cref{thm:tu-char} with $K$ as alternate rows of $J$.
+\end{proof}
+
+\begin{lemma}[Directed incidence matrix]
+Let $G \defeq (V, E)$ be a directed graph.
+The incidence matrix of $G$ is defined as the matrix $A \in \{-1, 0, 1\}^{|V| \times |E|}$, where
+\[ A[w, (u, v)] \defeq \begin{cases}0 & \textrm{ if } w \not\in \{u, v\}
+\\ -1 & \textrm{ if } w = u
+\\ 1 & \textrm{ if } w = v
+\end{cases}. \]
+Then $A$ is TU.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Use \cref{thm:tu-2-part} with $M = \emptyset$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:cycle-det}
+Let $A \in \{0, 1\}^{n \times n}$, where $A[i, j] = 1$ iff $j \in \{i+1, i+1-n\}$.
+Then $\det(A)$ is 0 if $n$ is even and $2$ if $n$ is odd.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Apply two row operations to the determinant to reduce to
+an $(n-2) \times (n-2)$ matrix of the same structure.
+\end{proof}
+
+\begin{lemma}[Undirected incidence matrix]
+Let $G \defeq (V, E)$ be an undirected graph.
+The incidence matrix of $G$ is defined as the matrix $A \in \{0, 1\}^{|V| \times |E|}$,
+where $A[v, e]$ is 1 iff $v$ is an endpoint of $e$.
+Then $A$ is TU iff $G$ is bipartite.
+\end{lemma}
+\begin{proof}[Proof sketch]
+If $G$ is bipartite with vertex partitions $L$ and $R$,
+use \cref{thm:tu-2-part} with $M = L$.
+If $G$ is not bipartite, it contains a cycle $C$ of odd length.
+Let $V'$ and $E'$ be the vertices and edges in $C$.
+Then $\det(A[V', E']) = 2$, by \cref{thm:cycle-det}.
+\end{proof}
+
+\end{document}
