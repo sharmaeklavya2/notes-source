@@ -1,0 +1,56 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\DeclareMathOperator{\hasInt}{hasInt}
+\newcommand*{\karthikLec}[1]{http://karthik.ise.illinois.edu/courses/ie511/lectures-sp-21/lecture-#1.pdf}
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+
+\title{Integer Programming: Criteria for Integrality}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+Content in this section is based on Prof. Karthik's notes: \href{\karthikLec{9}}{Lecture 9}.
+
+\begin{definition}[Rational Polyhedra]
+A polyhedron $P \subseteq \mathbb{R}^n$ is rational if it can be expressed as
+$P = \{x: (a_i^Tx = b_i, \forall i \in E) \wedge (a_i^Tx \ge b_i, \forall i \in I)\}$,
+where $a_i \in \mathbb{Q}^n$ and $b_i \in \mathbb{Q}$.
+\end{definition}
+
+\begin{theorem}
+Let $P \subseteq \mathbb{R}^n$ be a rational polyhedron.
+For any set $S \in \mathbb{R}^n$, define the predicate
+$\hasInt(S): S \cap \mathbb{Z}^n \neq \emptyset$.
+Then the following are equivalent.
+\begin{tightenum}
+\item $P = \operatorname{convexHull}(P \cap \mathbb{Z}^n)$.
+\item For every face $F$ of $P$, $\hasInt(F)$.
+\item For every minimal face $F$ of $P$, $\hasInt(F)$.
+\item $\forall c \in \mathbb{R}^n$,
+$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \hasInt\left(\argmax_{x \in P} c^Tx\right)$.
+\item $\forall c \in \mathbb{Z}^n$,
+$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \hasInt\left(\argmax_{x \in P} c^Tx\right)$.
+\item $\forall c \in \mathbb{Z}^n$,
+$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \max_{x \in P} c^Tx \in \mathbb{Z}$.
+\end{tightenum}
+\end{theorem}
+
+\end{document}

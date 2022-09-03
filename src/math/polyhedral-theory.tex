@@ -19,10 +19,9 @@
 \newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\Span}{span}
-\DeclareMathOperator{\hasInt}{hasInt}
 \newcommand*{\LP}{\mathrm{LP}}
 \newcommand*{\DLP}{\mathrm{DLP}}
-\newcommand*{\karthikLecSeven}{http://karthik.ise.illinois.edu/courses/ie511/lectures-sp-21/lecture-7.pdf}
+\newcommand*{\karthikLec}[1]{http://karthik.ise.illinois.edu/courses/ie511/lectures-sp-21/lecture-#1.pdf}
 
 \author{Eklavya Sharma}
 \date{\empty}
@@ -212,7 +211,7 @@ Simple application of \nameref{thm:fme}.
 
 \section{Duality and Farkas' Lemma}
 
-Content in this section is based on \href{\karthikLecSeven}{Prof. Karthik's notes}.
+Content in this section is based on Prof. Karthik's notes: \href{\karthikLec{3}}{Lecture 3}.
 
 \begin{theorem}[Fund thm of lin ineqs]
 Let $a_1, \ldots, a_n, b \in \mathbb{R}^m$. Let $t \defeq \rank(\{b, a_1, \ldots, a_n\})$.
@@ -231,7 +230,8 @@ Then exactly one of these holds:
 
 \section{Dimension and Faces}
 
-Content in this section is based on \href{\karthikLecSeven}{Prof. Karthik's notes}.
+Content in this section is based on Prof. Karthik's notes:
+Lectures \href{\karthikLec{5}}{5} and \href{\karthikLec{6}}{6}.
 
 \begin{definition}[Implicit equality and redundant constraint]
 Let $P \defeq \{x \in \mathbb{R}^n: (a_i^Tx \ge b_i, \forall i \in I) \wedge (a_i^Tx = b_i, \forall i \in E)\}$.
@@ -366,33 +366,5 @@ Then $F$ is a minimal face of $P$ iff $\dim(F) = n - \rank(A)$.
 \begin{proof}
 (TODO)
 \end{proof}
-
-\section{Integrality of Polyhedra}
-
-Content in this section is based on \href{\karthikLecSeven}{Prof. Karthik's notes}.
-
-\begin{definition}[Rational Polyhedra]
-A polyhedron $P \subseteq \mathbb{R}^n$ is rational if it can be expressed as
-$P = \{x: (a_i^Tx = b_i, \forall i \in E) \wedge (a_i^Tx \ge b_i, \forall i \in I)\}$,
-where $a_i \in \mathbb{Q}^n$ and $b_i \in \mathbb{Q}$.
-\end{definition}
-
-\begin{theorem}
-Let $P \subseteq \mathbb{R}^n$ be a rational polyhedron.
-For any set $S \in \mathbb{R}^n$, define the predicate
-$\hasInt(S): S \cap \mathbb{Z}^n \neq \emptyset$.
-Then the following are equivalent.
-\begin{tightenum}
-\item $P = \operatorname{convexHull}(P \cap \mathbb{Z}^n)$.
-\item For every face $F$ of $P$, $\hasInt(F)$.
-\item For every minimal face $F$ of $P$, $\hasInt(F)$.
-\item $\forall c \in \mathbb{R}^n$,
-$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \hasInt\left(\argmax_{x \in P} c^Tx\right)$.
-\item $\forall c \in \mathbb{Z}^n$,
-$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \hasInt\left(\argmax_{x \in P} c^Tx\right)$.
-\item $\forall c \in \mathbb{Z}^n$,
-$\displaystyle \max_{x \in P} c^Tx \neq \infty \implies \max_{x \in P} c^Tx \in \mathbb{Z}$.
-\end{tightenum}
-\end{theorem}
 
 \end{document}
