@@ -1,0 +1,256 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+\DeclareMathOperator{\convexHull}{convexHull}
+\DeclareMathOperator{\depth}{depth}
+
+\title{Integer Programming: Cutting Plane Method}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\begin{lemma}[Disjunction]
+Let $S_1, S_2 \subseteq \mathbb{R}^n$.
+If $a^Tx \le \alpha$ for all $x \in S_1$,
+and $b^Tx \le \beta$ for all $x \in S_2$,
+then $\min(a, b)^Tx \le \max(\alpha, \beta)$ for all $x \in S_1 \cup S_2$.
+($\min(a, b)_i \defeq \min(a_i, b_i)$.)
+\end{lemma}
+
+\begin{definition}[Inequality dominance]
+Let $S \subseteq \mathbb{R}^n$.
+The inequality $a^Tx \ge b$ dominates $c^Tx \ge d$ in set $S$ if
+$\{x \in S: a^Tx \ge b\} \subseteq \{x \in S: c^Tx \ge d\}$.
+\end{definition}
+
+\begin{definition}[Mixing]
+Suppose we are given a set $S$ of inequalities
+$\{a_i^Tx \ge b_i: i \in I\} \cup \{a_i^Tx = b_i: i \in [m] - I\}$.
+Let $w \in \mathbb{R}^m$, where $w_i \ge 0$ for $i \in I$.
+Then the inequality $(w^TA)x \ge w^Tb$ is called a \emph{mixing} of the inequalities $S$
+(we are essentially doing a linear combination of the inequalities to get a new inequality).
+\end{definition}
+
+\begin{theorem}[Valid dominated by mixing]
+Let $A \in \mathbb{R}^{m \times n}$, $I \subseteq [m]$, and $J \subseteq [n]$. Let
+\\ $P \defeq \{x \in \mathbb{R}^n: (x_j \ge 0, \forall j \in J), ((Ax)_i \ge b_i, \forall i \in I),
+((Ax)_i = b_i, \forall i \in [m]-I) \}$ be a non-empty polyhedron.
+Let $c^Tx \ge \gamma$ be an inequality satisfied by all points in $P$. Let
+\\ $Q \defeq \{w \in \mathbb{R}^m: (y_i \ge 0, \forall i \in I), ((A^Tw)_j \le c_j, \forall j \in J),
+((A^Tw)_j = c_j, \forall j \in [n]-J) \}$.
+Then $Q \neq \emptyset$. Let $\what \in \argmax_{w \in Q} b^Tw$.
+Then $c^Tx \ge \gamma$ is dominated by $(\what^TA)x \ge \what^Tb$
+in $S \defeq \{x \in \mathbb{R}^n: x_j \ge 0, \forall j \in J\}$.
+\end{theorem}
+\begin{proof}
+\WLoG, assume $\{x \in P: c^Tx = \gamma\} \neq \emptyset$, since we can increase $\gamma$.
+Then $\gamma$ is the optimal objective value of the LP $\min_{x \in P} c^Tx$.
+The dual of this LP is $\max_{w \in Q} b^Tw$.
+By strong duality, $Q \neq \emptyset$ and $b^T\what = \gamma$.
+
+Let $\xhat \in \{x \in S: \what^TAx \ge \what^Tb\}$. We will show that $c^T\xhat \ge \gamma$,
+which will imply that $(\what^TA)x \ge \what^Tb$ dominates $c^Tx \ge \gamma$.
+When $j \in J$, then $\xhat_j \ge 0$ and $(A^T\what)_j \le c_j$, so $\xhat_j(c - A^T\what)_j \ge 0$.
+When $j \not\in J$, then $(A^T\what)_j = c_j$, so $\xhat_j(c - A^T\what)_j = 0$.
+Hence, $\xhat^T(c - A^T\what) \ge 0$, so $c^T\xhat \ge \what^TA\xhat \ge \what^Tb = \gamma$.
+\end{proof}
+
+\begin{lemma}[Rounding]
+\label{thm:rounding-is-valid}
+Let $S \subseteq \mathbb{R}^n$ and $a \in \mathbb{Z}^n$. Then
+\[ (\forall x \in S, a^Tx \ge b) \implies (\forall x \in S \cap \mathbb{Z}^n, a^Tx \ge \ceil{b}). \]
+\[ (\forall x \in S, a^Tx \le b) \implies (\forall x \in S \cap \mathbb{Z}^n, a^Tx \le \floor{b}). \]
+This transformation is called \emph{rounding}.
+\end{lemma}
+\begin{corollary}
+\label{thm:porth-rounding-is-valid}
+Let $S \subseteq \mathbb{R}^n_{\ge 0}$. Then
+\[ (\forall x \in S, a^Tx \ge b) \implies (\forall x \in S \cap \mathbb{Z}^n, \ceil{a}^Tx \ge \ceil{b}). \]
+\[ (\forall x \in S, a^Tx \le b) \implies (\forall x \in S \cap \mathbb{Z}^n, \floor{a}^Tx \le \floor{b}). \]
+\end{corollary}
+
+\section{\texorpdfstring{Chv\'atal}{Chvatal}-Gomory Process}
+
+\begin{definition}[Chv\'atal-Gomory process]
+Let $P \subseteq \mathbb{R}^n$ be a polyhedron described as a set $S$ of inequalities.
+Assign a \emph{depth} of 0 to all inequalities in $S$.
+Repeated application of the following operations (for any number of iterations)
+is called the Chv\'atal-Gomory (CG) process:
+\begin{tightenum}
+\item Mix a subset $S'$ of inequalities from $S$ to get a new inequality $c^Tx \ge d$
+    such that $c \in \mathbb{Z}^n$.
+\item Add the inequality $c^Tx \ge \ceil{d}$ to $S$.
+    Assign the depth $1 + \max_{i \in S'} \depth(i)$ to this newly-added inequality.
+\end{tightenum}
+The output of the process is $S$, the set of (original and newly-added) inequalities.
+\end{definition}
+
+\begin{lemma}
+Let $Q$ be the output of some CG process on polyhedron $P$.
+Let $P_I \defeq \convexHull(P \cap \mathbb{Z}^n)$.
+Then $P_I \subseteq Q \subseteq P$.
+\end{lemma}
+
+\begin{definition}[CG rank and CG closure]
+Let $P \subseteq \mathbb{R}^n$ be a polyhedron, represented as a set $S$ of inequalities.
+For any inequality $c^Td \ge d$, where $c \in \mathbb{Z}^n$ and $d \in \mathbb{Z}$,
+the CG rank of the inequality is $r$ if it can be obtained as a depth $r$
+inequality in some CG process.
+
+The $r\Th$ CG-closure of $P$ is defined as the set of inequalities (and the associated polyhedron)
+of CG-rank at most $r$.
+
+The CG-rank of a polyhedron is the smallest number $t$ such that the $t\Th$ CG-closure
+of $P$ is $\convexHull(P \cap \mathbb{Z}^n)$ (and $\infty$ if no such integer $t$ exists).
+\end{definition}
+
+\begin{lemma}
+Let $P \subseteq \mathbb{R}^n$ be a polyhedron,
+$P_I \defeq \convexHull(P \cap \mathbb{Z}^n)$,
+and $P^{(r)}$ be the $r\Th$ CG closure of $P$.
+Then $P_I \subseteq P^{(r)} \subseteq P$.
+\end{lemma}
+
+\begin{lemma}
+Let $P \defeq \{x \in \mathbb{R}^n: Ax \le b\}$,
+where $A \in \mathbb{Z}^{m \times n}$ and $b \in \mathbb{Z}^m$.
+Let $P' \defeq \{x: Ax \le b, (w^TA)x \le \floor{w^Tb} \forall w \in [0, 1]^m
+\textrm{ such that } w^TA \in \mathbb{Z}^n\}$.
+Then $P'$ is the first CG-closure of $P$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Any rank 1 inequality can be written as $(w^TA)x \le \floor{w^Tb}$ for some $w \ge 0$,
+where $w^TA \in \mathbb{Z}^n$. Let $u \defeq w - \floor{w}$.
+We can show that $(u^TA)x \le \floor{u^Tb}$ is a rank-1 CG inequality,
+and $w^TAx \le \floor{w^Tb}$ is implied by $(u^TA)x \le \floor{u^Tb}$ and $Ax \le b$.
+\end{proof}
+
+\begin{theorem}
+If $P$ is a rational polyhedron, then the first CG-closure of $P$ is also a rational polyhedron.
+\end{theorem}
+
+\begin{theorem}[Chv\'atal-Gomory]
+Given a rational polyhedron $P$ described as a set $S$ of inequalities,
+we can obtain $\convexHull(P \cap \mathbb{Z}^n)$ using the CG process
+for a finite number of iterations
+(by appropriately choosing which inequalities to mix in each step).
+\end{theorem}
+\begin{corollary}
+The CG rank of a rational polyhedron is finite.
+\end{corollary}
+
+\subsection{Extra Results}
+
+\begin{theorem}
+There exist polyhedra whose CG rank is super-polynomial in $mn$.
+\end{theorem}
+
+\begin{theorem}
+Polyhedra in $[0, 1]^n$ have CG rank at most $n^2(1 + \log n)$.
+There exist polyhedra in $[0, 1]^n$ whose CG rank is at least $cn^2$ for some constant $c$.
+\end{theorem}
+
+\section{Examples}
+
+\begin{theorem}[Non-bipartite Matching]
+Let $G \defeq (V, E)$ be an undirected graph. Let
+\[ P \defeq \left\{x \in \mathbb{R}^{|E|}: \left(\sum_{e \in \delta(v)} x_e \le 1, \forall v \in V\right),
+    (x_e \ge 0, \forall e \in E)\right\}. \]
+Then for any $S \subseteq V$ where $|S|$ is odd, the following inequality has CG rank at most 1:
+\[ \sum_{e \in E(S)} x_e \le \frac{|S|-1}{2}. \tag{here $E(S) \defeq \{(u, v) \in E: u \in S, v \in S\}$} \]
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& \sum_{v \in S} \frac{1}{2}\left(\sum_{e \in \delta(v)} x_e \le 1\right)
++ \sum_{e \in \delta(S)} \frac{1}{2}\left(-x_{e} \le 0\right)
+= \left(\sum_{e \in E(S)} x_e \le \frac{|S|}{2}\right).
+\end{align*}
+Then round this inequality. $\floor{|S|/2} = (|S|-1)/2$.
+\end{proof}
+
+\begin{theorem}[Independent set]
+Let $G \defeq (V, E)$ be an undirected graph. Let
+\[ P \defeq \left\{x \in \mathbb{R}^{|V|}: (x_u + x_v \le 1, \forall (u, v) \in E),
+(0 \le x_v \le 1, \forall v \in V)\right\}. \]
+Then for any odd-cycle $C$, the following is a CG rank 1 inequality:
+\begin{equation}
+\label{eqn:indset:odd-cycle}
+\sum_{v \in C} x_v \le \frac{|C|-1}{2}.
+\end{equation}
+For any clique $S \subseteq V$, the following is an inequality of CG rank at most
+$\ceil{\log_2(|S|-1)}$:
+\begin{equation}
+\label{eqn:indset:clique}
+\sum_{v \in S} x_v \le 1.
+\end{equation}
+\end{theorem}
+\begin{proof}
+\Cref{eqn:indset:odd-cycle} has rank at most 1 because
+\[ \sum_{(u, v) \in C} \frac{1}{2}\left(x_u + x_v \le 1\right)
+= \left(\sum_{v \in C} x_v \le \frac{|C|}{2}\right). \]
+It has rank exactly 1 since it contains $|C| \ge 3$ terms,
+but the original inequalities of $P$ contain at most 2 terms.
+
+WLoG, assume $S \defeq \{1, 2, \ldots, n\}$. Let $m \defeq \ceil{\log_2(n-1)}$.
+For $0 \le i \le m$, let $r_i \defeq \min(n, 2^i+1)$. Then $r_{m-1} < n = r_m$.
+Let $B(k)$ be the proposition that for any $R \subseteq S$ such that $|R| \le r_k$,
+$\sum_{i \in R} x_i \le 1$ is a CG inequality of rank at most $k$.
+Then $B(m)$ would imply \cref{eqn:indset:clique}.
+
+We will show $B(k)$ by induction on $k$.
+If $|R| \le 2 = r_0$, then $\sum_{i \in R} x_i \le 1$ is a constraint of $P$
+(since $S$ is a clique), and so has rank 0.
+Now let $r_{k-1} < |R| \le r_k$ for some $k \ge 1$.
+By the inductive hypothesis, for any $T \subseteq S$ such that $|T| = r_{k-1}$,
+$\sum_{i \in T} x_i \le 1$ is an inequality of CG rank at most $k-1$. Then
+\[ \sum_{T \subseteq R: |T| = r_{k-1}} \left(\sum_{i \in T} x_i \le 1\right)
+= \left(\binom{|R|-1}{r_{k-1}-1} \sum_{i \in R} x_i \le \binom{|R|}{r_{k-1}} \right). \]
+\begin{align*}
+\binom{|R|}{r_{k-1}} &= \frac{|R|}{r_{k-1}}\binom{|R|-1}{r_{k-1}-1},
+& \frac{|R|}{r_{k-1}} &\le \frac{r_k}{r_{k-1}} = 2 - \frac{1}{r_{k-1}}.
+\end{align*}
+Hence, $\sum_{i \in R} x_i \le 1$ is an inequality of CG rank at most $k$.
+By induction, $B(k)$ $\forall k$.
+\end{proof}
+
+\begin{theorem}[Knapsack, \cite{dietrich1994}]
+Let $P \defeq \{x \in [0, 1]^n: a^Tx \le b\}$,
+where $b \in \mathbb{Z}_{\ge 1}$, and $a \in ([1, b] \cap \mathbb{Z})^n$.
+For any $S \subseteq [n]$, let $a(S) \defeq \sum_{i \in S} a_i$.
+Let $C \subseteq [n]$ be a \emph{minimal cover},
+i.e., $a(C) > b$ and $a(C') \le b$ for all $C' \subsetneq C$.
+Then $\sum_{i \in C} x_i \le |C|-1$ is an inequality of CG rank at most 1.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+& \sum_{i \in C} \left(1 - \frac{a_i}{b+1}\right)(x_i \le 1)
+    + \sum_{i \in [n]-C} \left(\frac{a_i}{b+1}\right)(-x_i \le 0)
+    + \frac{(a^Tx \le b)}{b+1}
+\\ &= \left(\sum_{i \in C} x_i \le |C| - \frac{a(C)-b}{b+1}\right).
+\end{align*}
+By minimality of $C$, we get $b < a(C) \le 2b$,
+so $(a(C)-b)/(b+1) \in (0, 1)$.
+\end{proof}
+
+\bibliographystyle{plainurl}
+\bibliography{bibdb}
+
+\end{document}
