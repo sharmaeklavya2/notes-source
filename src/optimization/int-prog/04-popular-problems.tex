@@ -1,0 +1,56 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+
+\title{Integer Programming: Popular Problems}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\section{Traveling Salesman Problem}
+
+\begin{enumerate}
+\item IP using subtour elimination.
+\item Short MIP.
+\item NP-hardness from Hamiltonian path.
+\item DP solution.
+\end{enumerate}
+
+\section{Uncapacitated Facility Location}
+
+\begin{enumerate}
+\item IP
+\end{enumerate}
+
+\section{Uncapacitated Lot Sizing}
+
+\begin{enumerate}
+\item Solution using LP.
+\item DP solution.
+\end{enumerate}
+
+\section{Assortment Optimization}
+
+\begin{enumerate}
+\item Solution using LP.
+\end{enumerate}
+
+\end{document}
