@@ -17,6 +17,17 @@
 \date{\empty}
 
 \newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+\newcommand*{\boolone}{\mathbf{1}}
+\newcommand*{\deltaIn}{\delta^{\mathrm{in}}}
+\newcommand*{\deltaOut}{\delta^{\mathrm{out}}}
+\DeclareMathOperator{\indeg}{indeg}
+\DeclareMathOperator{\outdeg}{outdeg}
+\newcommand*{\Rpos}{\mathbb{R}_{\ge 0}}
+
+\newcommand*{\optprog}[3]{
+\begin{array}{{>{\displaystyle}c}*2{>{\displaystyle}l}}
+#1 & \multicolumn{2}{>{\displaystyle}l}{#2}
+#3 \end{array}}
 
 \title{Integer Programming: Popular Problems}
 
@@ -25,38 +36,315 @@
 \maketitle
 \setlength{\parskip}{0.2em}
 
-\section{Traveling Salesman Problem}
+\begin{definition}[Bidirecting a graph]
+Given an undirected graph $G \defeq (V, E)$, \emph{bidirection} is the process of
+replacing each undirected edge $\{u, v\}$ by directed edges $(u, v)$ and $(v, u)$.
+\end{definition}
 
-\begin{enumerate}
-\item IP using subtour elimination.
-\item Short MIP.
-\item NP-hardness from Hamiltonian path.
-\item DP solution.
-\end{enumerate}
+\section{Traveling Salesman Problem (TSP)}
 
-\section{Capacitated Facility Location}
+\begin{definition}[TSP]
+Let $G \defeq (V, E)$ be a directed graph (if $G$ is undirected, bidirect it).
+Each edge $e \in E$ has a non-negative cost $c(e)$.
+Find a simple cycle of length $|V|$ (called tour) having the minimum total cost.
 
-\begin{enumerate}
-\item IP
-\end{enumerate}
+If $c(u, v) = c(v, u)$ $\forall u \neq v$, then the problem is called \emph{symmetric}.
+\end{definition}
 
-\section{Uncapacitated Lot Sizing}
+\begin{lemma}[Hard to approx]
+Symmetric TSP is NP-hard to approximate.
+\end{lemma}
+\begin{proof}
+Let $G \defeq (V, E)$ be an undirected graph. Let $\alpha$ be an arbitrarily large number.
+Create set $c(u, v) = 1$ if $(u, v) \in E$ and $c(u, v) = (\alpha-1)n + 2$ otherwise.
+If $G$ has a Hamiltonian cycle, then the cheapest tour costs $n$.
+Otherwise, the cheapest tour costs at least $\alpha n + 1$.
+If there is an $\alpha$-approx polynomial-time algorithm for symmetric TSP,
+there is a polynomial-time algorithm for undirected Hamiltonian cycle.
+\end{proof}
 
-\begin{enumerate}
-\item Solution using LP.
-\item DP solution.
-\end{enumerate}
+\begin{lemma}[Subtour elimination IP]
+Let $x_e$ be 1 if edge $e$ is in the tour and 0 otherwise.
+Then this IP finds the min-cost tour
+\[ \optprog{\min_{x \in \{0, 1\}^{|E|}}}{c^Tx}{
+\\ \textrm{where} & \sum_{e \in \deltaIn(v)} x_e = 1 & \forall v \in V
+\\[1.5em] \textrm{and} & \sum_{e \in \deltaOut(v)} x_e = 1 & \forall v \in V
+\\[1.5em] \textrm{and} & \sum_{e \in \deltaOut(S)} x_e \ge 1 & \forall S \subset V, 2 \le |S| \le |V|-2
+} \]
+(Note that this IP has $|E|$ binary variables and $2^{|V|}-2$ constraints.)
+\end{lemma}
+\begin{proof}
+It is easy to see that a tour satisfies this IP.
+Let $x$ be a solution to the IP. Let $T \defeq \{e \in E: x_e = 1\}$.
+By the first two constraint families, $\indeg_T(v) = \outdeg_T(v) = 1$ $\forall v \in V$.
+Hence, $T$ is a collection of disjoint cycles that span $V$.
+Let $C$ be one of these cycles. If $|C| \neq |V|$, then $2 \le |C| \le |V|-2$,
+and the last constraint is violated for $S = C$.
+Hence, if $x$ is feasible, then $T$ is a tour.
+Hence, the set of feasible solutions to the IP is also the set of feasible tours.
+\end{proof}
+
+\begin{lemma}[MIP]
+Let $V = [n]$. Let $x_e$ be 1 if edge $e$ is in the tour and 0 otherwise.
+Then this MIP finds the min-cost tour
+\[ \optprog{\min_{x \in \{0, 1\}^{|E|}, w \in \mathbb{R}^{n-1}}}{c^Tx}{
+\\ \textrm{where} & \sum_{e \in \deltaIn(v)} x_e = 1 & \forall v \in V
+\\[1.5em] \textrm{and} & \sum_{e \in \deltaOut(v)} x_e = 1 & \forall v \in V
+\\[1.5em] \textrm{and} & w_i-w_j+|V|x_{i,j} \le |V|-1 & \forall (i,j) \in E \cap [n-1] \times [n-1]
+} \]
+(This MIP has $|E|$ binary variables, $|V|-1$ real variables, and $\le 2|V|+|E|$ constraints.)
+\end{lemma}
+\begin{proof}
+Let $\{v_1, v_2, \ldots, v_n\}$ be a valid tour, where $v_n = n$.
+Let $w_{v_i} = i$. Then the IP is satisfied.
+Let $(x, w)$ be a feasible solution to the IP. Let $T = \{e \in E: x_e = 1\}$.
+Then $T$ is a union of disjoint cycles that span $V$. Suppose there are multiple cycles in $T$.
+Let $C$ be a cycle that doesn't contain vertex $n$.
+Adding together constraints from the last family for $(i, j) \in C$,
+we get $|V||C| \le (|V|-1)|C|$, which is false. Hence, $T$ is a valid tour.
+\end{proof}
+
+\begin{lemma}[DP]
+Let $V = [n]$. Let $f(S, v)$ be the min cost of a simple path (or simple cycle, if $v = n$)
+whose first vertex is $n$, last vertex is $v$,
+and the other vertices are $S \subseteq [n-1] - \{v\}$. Then
+\[ f(S, v) \defeq \begin{cases}
+0 & \textrm{ if } S = \emptyset \textrm{ and } v = n
+\\ c(n, v) & \textrm{ if } S = \emptyset \textrm{ and } v \neq n
+\\ \displaystyle \min_{u \in S} (f(S-\{u\}, u) + c(u, v))
+    & \textrm{ if } S \neq \emptyset
+\end{cases}. \]
+The cost of the optimal tour is $f([n-1], n)$.
+We can compute $f(S, v)$ for all $S \subseteq [n-1]$ and all $v \in [n] - S$
+in $\Theta(n^22^n)$ time using dynamic programming.
+\end{lemma}
+
+\section{Facility Location}
+
+Let there be $n$ facilities and $m$ clients. The input is the tuple $(c, b, u, h)$ where
+\begin{tightenum}
+\item $c \in \Rpos^n$ and $c_j$ is the cost of opening facility $j$.
+\item $b \in \Rpos^m$ and $b_i$ is the demand of client $i$.
+\item $u \in \Rpos^n$ and $u_j$ is the capacity of facility $j$.
+\item $h \in \Rpos^{m \times n}$ and $h_{i,j}$ is the cost of satisfying
+unit demand from client $i$ by facility $j$.
+\end{tightenum}
+In the capacitated facility location problem, we need to open some facilities
+and distribute clients' demand onto the open facilities such that
+the total demand at a facility is at most its capacity and the cost is minimized.
+
+Let $x_j \in \{0, 1\}$ be 1 iff we open facility $j$.
+Let $y_{i,j} \in [0, 1]$ be the fraction of client $i$'s demand satisfied by facility $j$.
+Then the MIP for this problem is
+\[ \optprog{\min_{x \in \{0, 1\}^n,\, y \in \Rpos^{m \times n}}}{%
+\sum_{j=1}^n c_jx_j + \sum_{i=1}^m\sum_{j=1}^n h_{i,j}y_{i,j}}{
+\\[1.5em] \textrm{where} & \sum_{j=1}^n y_{i,j} = b_i & \forall i \in [m]
+\\[1.5em] \textrm{and} & \sum_{i=1}^m y_{i,j} \le u_jx_j & \forall j \in [n]
+} \]
+
+Let $B \defeq \sum_{i=1}^m b_i$. When $u_j \ge B$ for all $j$,
+we say that the problem is uncapacitated. In this case,
+we can assume \wLoG{} that $b_i = 1$ for all $i$.
+Hence, the input can be specified using only the pair $(c, h)$,
+and we have this MIP:
+\[ \optprog{\min_{x \in \{0, 1\}^n,\, y \in \Rpos^{m \times n}}}{%
+\sum_{j=1}^n c_jx_j + \sum_{i=1}^m\sum_{j=1}^n h_{i,j}y_{i,j}}{
+\\[1.5em] \textrm{where} & \sum_{j=1}^n y_{i,j} = 1 & \forall i \in [m]
+\\[1.5em] \textrm{and} & y_{i,j} \le x_j & \forall i \in [m], \forall j \in [n]
+} \]
+
+\subsection{Reduction from Set Cover}
+
+In the set cover problem, given a matrix $A \in \{0, 1\}^{m \times n}$ and a vector $c \in \Rpos^n$,
+we need to solve the IP:
+\[ \min_{x \in \{0, 1\}^n}\quad c^Tx\quad\textrm{where}\quad Ax \ge 1. \]
+
+Let $h_{i,j} \defeq \alpha(1 - A[i, j])$, for an arbitrarily large number $\alpha$.
+This gives us an uncapacitated facility location instance $(c, h)$.
+Solve it with $x$ fixed to $\xhat$.
+Let $(\xhat, \yhat)$ be the optimal solution.
+Let $\beta \defeq c^T\xhat + h^T\yhat$ be the cost.
+
+\begin{lemma}
+If $\xhat$ is a valid set cover (i.e., $A\xhat \ge 1$), then $\beta = c^T\xhat$.
+Otherwise, $\beta = c^T\xhat + \alpha$.
+\end{lemma}
+\begin{proof}
+If $A\xhat \ge 1$, then for all $i \in [m]$, $\exists j_i \in [n]$ such that
+$A[i, j_i]\xhat_{j_i} = 1$. Let $\ytild_{i,j}$ be 1 if $j = j_i$ and 0 otherwise.
+Then $(\xhat, \ytild)$ is a feasible solution of cost $c^T\xhat$.
+
+If $A\xhat \not\ge 1$, then $\exists k \in [m]$ such that $\forall j \in [n]$,
+$A[k,j]\xhat_j = 0$. Then $\yhat_{k,j} > 0 \implies \xhat_j = 1 \implies A[k,j] = 0$. Hence,
+\[ \beta \ge c^T\xhat + \sum_{j=1}^n h_{k,j}\yhat_{k,j}
+= c^T\xhat + \alpha\sum_{j: \yhat_{k,j} > 0} \yhat_{k,j}
+= c^T\xhat + \alpha. \qedhere \]
+\end{proof}
+
+Hence, if $\alpha > \|c\|_1$, then $(\xhat, \yhat)$ is optimal for this facility location instance
+iff $\xhat$ is optimal for the set cover instance.
+
+\section{Uncapacitated Lot-Sizing}
+
+We need to decide on an $n$-day production plan for a product.
+Days are numbered from 1 to $n$.
+We can choose to open a facility on some days.
+The facility will open in the morning, produce goods, and close in the evening.
+Then some of the goods will be sent to the client, and the rest of the goods (if any)
+will be stored in the warehouse overnight.
+\begin{tightenum}
+\item $d_t$: client's demand on day $t$.
+\item $f_t$: cost of opening the facility on day $t$.
+\item $p_t$: production cost per unit on day $t$.
+\item $h_t$: cost per unit stored in the warehouse at night on day $t$.
+\end{tightenum}
+
+\subsection{MIP Formulation 1}
+
+Decision variables:
+\begin{tightenum}
+\item $x_t \in \Rpos$: amount produced on day $t$.
+\item $y_t \in \{0, 1\}$: whether facility is open on day $t$.
+\item $s_t \in \Rpos$: amount in warehouse at night on day $t$, for $t \in [n-1]$.
+    $s_0 \defeq 0$, $s_n \defeq 0$.
+\end{tightenum}
+
+Let $M_t \defeq \sum_{i=t}^n d_t$. MIP 1:
+\[ \optprog{\min_{x \in \Rpos^n, y \in \{0, 1\}^n, s \in \Rpos^{n-1}}}{p^Tx + h^Ts + f^Ty}{
+\\ \textrm{where} & s_{t-1} + x_t = d_t + s_t & \forall t \in [n]
+\\ \textrm{and} & x_t \le M_ty_t & \forall t \in [n]
+} \]
+
+\begin{lemma}
+Consider the LP relaxation of MIP 1 where $y_t \in \{0, 1\}$ is replaced by $y_t \in [0, 1]$.
+This LP relaxation is not integral.
+\end{lemma}
+\begin{proof}
+Let $n = 2$. Let $p = 0$, $h = 0$, $d_1 = d_2 = 1$, $f_1 = 2$, $f_2 = 0$.
+Then every feasible solution to the MIP has cost $2$.
+However, the solution $x_1 = x_2 = 1$, $s = 0$, $y_1 = 1/2$, $y_2 = 1$
+is a basic feasible solution and has cost $1$.
+\end{proof}
+
+\subsection{MIP Formulation 2}
+
+Decision variables:
+\begin{tightenum}
+\item $z_{i,j} \in \Rpos$: amount produced on day $i$ to satisfy demand on day $j$.
+    When $i > j$, $z_{i,j} \defeq 0$.
+\item $y_t \in \{0, 1\}$: whether facility is open on day $t$.
+\end{tightenum}
+
+MIP 2:
+\[ \optprog{\min_{z \in \Rpos^{n^2}, y \in \{0, 1\}^n}}{%
+\sum_{i=1}^n\sum_{j=1}^n p_iz_{i,j} + \sum_{t=1}^n f_ty_t
+    + \sum_{i=1}^n\sum_{j=1}^n\left(\sum_{k=i}^{j-1} h_k\right)z_{i,j}}{
+\\ \textrm{where} & \sum_{i=1}^j z_{i,j} = d_j & \forall j \in [n]
+\\ \textrm{and} & z_{i,j} \le d_jy_i & \forall 1 \le i \le j \le n
+} \]
+
+\begin{lemma}
+Consider the LP relaxation of MIP 2 where $y_t \in \{0, 1\}$ is replaced by $y_t \in [0, 1]$.
+This LP relaxation is integral.
+\end{lemma}
+\begin{proof}(TODO)
+\end{proof}
+
+\subsection{DP solution}
+
+\begin{lemma}[Zero-inventory ordering]
+\label{thm:lot:zio}
+Fix $y$ in MIP 1. Then in any extreme point solution to MIP 1, $x_t > 0 \implies s_{t-1} = 0$.
+\end{lemma}
+\begin{proof}
+Let $(\xhat, \shat)$ be a solution to MIP 1 (after fixing $y$),
+where $\xhat_t > 0$ and $\shat_{t-1} > 0$. Then $t > 1$ and $y_t = 1$.
+Let $k \defeq \max_{i=1}^{t-1} (y_i = 1)$.
+
+Let $\delta \defeq \min(\shat_{t-1}, \xhat_t)$.
+Then $\delta > 0$. Let $\eps \in [-\delta, \delta]$.
+Define $\xtild(\eps)$ and $\stild(\eps)$ as
+\begin{align*}
+\xtild_i(\eps) &\defeq \xhat_i + \eps\begin{cases}
+-1 & \textrm{ if } i = k
+\\ 1 & \textrm{ if } i = t
+\\ 0 & \textrm{ otherwise}
+\end{cases}
+& \stild_i(\eps) &\defeq \shat_i - \eps\begin{cases}
+1 & \textrm{ if } k \le i < t
+\\ 0 & \textrm{ otherwise}
+\end{cases}
+\end{align*}
+Then $(\xtild(\eps), \stild(\eps))$ is also a feasible solution to the MIP.
+$\xhat$ is the midpoint of $\xtild(\delta)$ and $\xtild(-\delta)$,
+so $\xhat$ is not an extreme point.
+\end{proof}
+
+Let $g(i, j)$ be the cost of the min-cost solution for days $[j] - [i-1]$,
+when $y_i = 1$ and $y_t = 0$ for $t \neq i$.
+We can compute $g(i, j)$ in $\Theta(j-i)$ time in a straightforward manner.
+In fact, we can also compute $g(i, j)$ for all $1 \le i \le j \le n$ in $\Theta(n^2)$ time.
+
+Let $f(j)$ be the cost of the min-cost for days $[j]$. Then by \cref{thm:lot:zio},
+\[ f(j) = \begin{cases}
+0 & \textrm{ if } j = 0
+\\ \displaystyle \min_{i=1}^j (f(i-1) + g(i, j)) & \textrm{ if } j > 0
+\end{cases} .\]
+Hence, we can compute $f(j)$ for all $j$ using dynamic programming.
 
 \section{Assortment Optimization}
 
-\begin{enumerate}
-\item Solution using LP.
-\end{enumerate}
+There are $n$ products, numbered 1 to $n$.
+Product $i$ has revenue $r_i$ and consumer appeal $v_i$.
+For a set $S \subseteq [n]$ (called assortment),
+the probability of a consumer buying product $i$ is
+\[ p_i(S) \defeq \frac{v_i}{v_0 + \sum_{j \in S} v_j}. \]
+Let $C \in \mathbb{Z}_{\ge 1}$ be the assortment capacity.
+We need to find an assortment $S \subseteq [n]$, where $|S| \le C$, to maximize the expected revenue
+\[ \sum_{i \in S} r_ip_i(S) = \frac{\sum_{i \in S} r_iv_i}{v_0 + \sum_{i \in S} v_i}. \]
 
-\section{Fixed-Charge Min-Cost Network Flow}
+Non-linear IP:
+\[ \min_{x \in \{0, 1\}^n}\quad\frac{\sum_{i=1}^n r_iv_ix_i}{v_0 + \sum_{i=1}^n v_ix_i}%
+\quad\textrm{where}\quad \sum_{i=1}^n x_i \le C. \]
 
-\begin{enumerate}
-\item IP.
-\end{enumerate}
+\subsection{Solution using LP}
+
+LP:
+\[ \optprog{\min_{w_0 \in \mathbb{R}, w \in \mathbb{R}^n}}{\sum_{i=1}^n r_iw_i}{
+\\ \textrm{where} & w_0 + \sum_{i=1}^n w_i = 1
+\\[1.5em] \textrm{and} & 0 \le \frac{w_i}{v_i} \le \frac{w_0}{v_0} & \forall i \in [n]
+\\[1.1em] \textrm{and} & \sum_{i=1}^n \frac{w_i}{v_i} \le C\frac{w_0}{v_0}
+} \]
+
+\begin{lemma}[Extreme points]
+In any extreme-point solution to LP, $w_i/v_i \in \{0, w_0/v_0\}$.
+\end{lemma}
+\begin{proof}
+Let $w$ be an extreme point solution.
+If $w_0 = 0$, then $w_i = 0$ for all $i \in [n]$,
+which violates the first constraint. Hence, $w_0 > 0$.
+
+$w$ is tight at at least $n+1$ constraints.
+So, there can be at most a single value $k$ for which $w_k/v_k \not\in \{0, w_0/v_0\}$.
+Assume such a $k$ exists. Then the last constraint is tight.
+Hence, for $S \defeq \{i: w_i/v_i = w_0/v_0\}$, we get
+\[ \frac{w_k}{v_k} = C\frac{w_0}{v_0} - \sum_{i \neq k} \frac{w_i}{v_i} = (C-|S|)\frac{w_0}{v_0}. \]
+Since $C - |S| \in \mathbb{Z}$, we get that $w_k/v_k \in \{0, w_0/v_0\}$.
+This is a contradiction. Hence, no such $k$ exists.
+\end{proof}
+
+\begin{lemma}[LP vs IP]
+The optimal objective value of the IP and LP are the same.
+Furthermore, we can solve the IP using an extreme-point solution to the LP.
+\end{lemma}
+\begin{proof}
+Let $w$ be an optimal extreme-point solution to the LP.
+Then $x_i \defeq w_iv_0/v_iw_0$ is feasible for the IP.
+
+Let $x$ be an optimal solution to the IP.
+Let $\alpha \defeq v_0 + \sum_{i=1}^n v_ix_i$.
+Let $w_0 \defeq v_0/\alpha$ and for $i \in [n]$, let $w_i \defeq v_ix_i/\alpha$.
+Then $w$ is feasible for the LP.
+\end{proof}
 
 \end{document}
