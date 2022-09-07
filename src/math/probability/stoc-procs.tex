@@ -354,7 +354,8 @@ Let $X$ be a TH CTMC.
 In an irreducible positive-recurrent TH CTMC $X$, for every state $j$,
 $\lim_{t \to \infty} P_{j,i}(t) = P_i$ for a unique real number $P_i$.
 $P_i$ is called the \emph{limiting probability} of state $i$.
-Furthermore, $P_i$ is the unique solution to CK forward equations and $\sum_i P_i = 1$.
+Furthermore, $P_i$ is the unique solution to $\sum_i P_i = 1$ and CK forward equations,
+i.e., $P_i\nu_i = \sum_{j \neq i} P_jq_{j,i}$.
 \end{lemma}
 
 \begin{lemma}[Limiting probability of embedded chain]
