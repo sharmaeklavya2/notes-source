@@ -1,0 +1,87 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{enumitem}
+%\usepackage{booktabs}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+\DeclareMathOperator{\LP}{LP}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{Linear Programming Duality}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\section{Definition}
+
+Let $A \in \mathbb{R}^{m \times n}$, $I \subseteq [m]$, $J \subseteq [n]$.
+Define the linear program $P \defeq \LP(A, b, c, I, J)$ as
+\[ \min_{x \in \mathbb{R}^n: x_J \ge 0} c^Tx \quad\textrm{where}\quad
+((Ax)_i \ge b_i, \forall i \in I) \textrm{ and } ((Ax)_i = b_i, \forall i \in [m]-I) \]
+Then the dual of $P$ is $D \defeq \LP(-A^T, -c, -b, J, I)$, i.e.,
+\[ \max_{y \in \mathbb{R}^m: y_I \ge 0} b^Ty \quad\textrm{where}\quad
+((A^Ty)_j \le c_j, \forall j \in J) \textrm{ and } ((A^Ty)_j = c_j, \forall j \in [n]-J) \]
+
+\begin{lemma}
+Dual of dual is dual.
+\end{lemma}
+
+On setting $J = [n]$ and $I = [m]$, we get that the
+following are duals of each other
+\begin{align*}
+P &: \min_{x \ge 0} c^Tx \textrm{ where } Ax \ge b
+& D&: \max_{y \ge 0} b^Ty \textrm{ where } A^Ty \le c
+\end{align*}
+
+\section{Method for Quick Application}
+
+Adapted from S\'ebastien Lahaie's \href{http://www.cs.columbia.edu/coms6998-3/lpprimer.pdf}{notes}.
+
+\begin{enumerate}
+\item Express problem in standard form:
+    \begin{tightenum}
+    \item Express as a minimization problem.
+    \item Write each (non-trivial) constraint as $f(x) \le 0$ or $f(x) = 0$.
+    \item Write each trivial constraint as $x \ge 0$ (i.e., if $x \le 0$, replace $x$ by $-x$):
+    \end{tightenum}
+\[ \min_{x \in \mathbb{R}^n: x_J \ge 0} c^Tx \quad\textrm{where}\quad
+(b_i - (Ax)_i \le 0, \forall i \in I) \textrm{ and } (b_i - (Ax)_i = 0, \forall i \in [m]-I). \]
+\item Add dual variables:
+    \begin{tightenum}
+    \item Create a non-negative dual variable $y_i$ for each inequality constraint $f_i(x) \le 0$.
+    \item Create an unrestricted dual variable $y_i$ for each equality constraint $f_i(x) = 0$.
+    \item Remove the constraint and add the term $y_if_i(x)$ to the objective.
+    \item Maximize over dual variables.
+    \end{tightenum}
+\[ \max_{y \in \mathbb{R}^m: y_I \ge 0}\; \min_{x \in \mathbb{R}^n: x_J \ge 0} c^Tx + y^T(b - Ax). \]
+\item Rearrange terms to express objective as an affine function of primal variables:
+\[ \max_{y \in \mathbb{R}^m: y_I \ge 0}\; \min_{x \in \mathbb{R}^n: x_J \ge 0} b^Ty + x^T(c - A^Ty). \]
+\item For each term $x_jg_j(y)$ in the objective, remove the term and add constraint
+    \begin{tightenum}
+    \item $g_j(y) \ge 0$ if $x_j$ is non-negative.
+    \item $g_j(y) = 0$ if $x_j$ is unrestricted.
+    \end{tightenum}
+\[ \min_{y \in \mathbb{R}^m: y_J \ge 0} b^Ty \quad\textrm{where}\quad
+(c_j - (A^Ty)_j \ge 0, \forall j \in J) \textrm{ and } (c_j - (A^Ty)_j = 0, \forall j \in [n]-J). \]
+\item Rearrange into suitable form
+\[ \min_{y \in \mathbb{R}^m: y_J \ge 0} b^Ty \quad\textrm{where}\quad
+((A^Ty)_j \le c_j, \forall j \in J) \textrm{ and } ((A^Ty)_j = c_j, \forall j \in [n]-J). \]
+\end{enumerate}
+
+\end{document}
