@@ -243,11 +243,12 @@ MIP 2:
 \\ \textrm{and} & z_{i,j} \le d_jy_i & \forall 1 \le i \le j \le n
 } \]
 
-\begin{lemma}
+\begin{theorem}
 Consider the LP relaxation of MIP 2 where $y_t \in \{0, 1\}$ is replaced by $y_t \in [0, 1]$.
 This LP relaxation is integral.
-\end{lemma}
-\begin{proof}(TODO)
+\end{theorem}
+\begin{proof}
+Theorem~3 in \cite{barany1984uncapacitated}.
 \end{proof}
 
 \subsection{DP solution}
@@ -346,5 +347,8 @@ Let $\alpha \defeq v_0 + \sum_{i=1}^n v_ix_i$.
 Let $w_0 \defeq v_0/\alpha$ and for $i \in [n]$, let $w_i \defeq v_ix_i/\alpha$.
 Then $w$ is feasible for the LP.
 \end{proof}
+
+\bibliographystyle{plainurl}
+\bibliography{bibdb}
 
 \end{document}
