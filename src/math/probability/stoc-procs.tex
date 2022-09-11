@@ -306,6 +306,14 @@ Let $S_i$ be the $i\Th$ arrival time of $N$.
 Then conditioned on $N(t) = n$, the distribution of $[S_1, \ldots, S_n]$ and $U$ are identical.
 \end{theorem}
 
+\begin{lemma}[Excess and Residual]
+Let $N$ be a Poisson process with rate function $\lambda$.
+Let $S_i$ be the $i\Th$ arrival time.
+Let $Y(t) \defeq S_{N(t)+1}-t$ and $R(t) \defeq t - S_{N(t)}$.
+Then $Y(t) > s \iff N(t+s)-N(t) = 0$ and $R(t) > r \iff N(t)-N(t-r) = 0$.
+If $N$ is homogeneous, we get $Y(t) \sim \Expo(\lambda)$ and $R(t) \sim \Expo(\lambda)$.
+\end{lemma}
+
 \section{Continuous-Time Markov Chain}
 
 \begin{definition}[CTMC]
