@@ -301,8 +301,9 @@ where $n_i$ is the number of events of $N^{(i)}$ that have occurred.
 
 \begin{theorem}[arrival times distributed as order statistics]
 Let $X = [X_1, X_2, \ldots, X_n]$ be IID uniform variables over $[0, t]$.
-Let $U = \opname{sorted}(X)$. Let $S = [S_1, S_2, \ldots, S_n]$.
-Then conditioned on $N(t) = n$, the distribution of $S$ and $U$ are identical.
+Let $U = \opname{sorted}(X)$. Let $N$ be a homogeneous Poisson process.
+Let $S_i$ be the $i\Th$ arrival time of $N$.
+Then conditioned on $N(t) = n$, the distribution of $[S_1, \ldots, S_n]$ and $U$ are identical.
 \end{theorem}
 
 \section{Continuous-Time Markov Chain}
