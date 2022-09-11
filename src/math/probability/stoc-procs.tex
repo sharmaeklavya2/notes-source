@@ -348,7 +348,20 @@ For a TH CTMC $X$, let $P_{i,j}(t) \defeq \Pr(X(t)=j \mid X(0)=i)$. Then
 \begin{itemize}
 \item Backward DiffEqs: $\displaystyle \frac{dP_{i,j}(t)}{dt} = \sum_{k \neq i} q_{i,k}P_{k,j}(t) - \nu_iP_{i,j}(t)$.
 \item Forward DiffEqs: $\displaystyle \frac{dP_{i,j}(t)}{dt} = \sum_{k \neq j} P_{i,k}(t)q_{k,j} - P_{i,j}(t)\nu_j$.  \end{itemize}
+Let $r_{i,j} \defeq \begin{cases}q_{i,j} & \textrm{ if } i \neq j \\ -\nu_i & \textrm{ if } i = j\end{cases}$.
+Let the state space be $[n]$. Let $R$ be a matrix where $R[i,j] = r_{i,j}$.
+Then CBKE becomes $P'(t) = RP(t)$ and CFKE becomes $P'(t) = P(t)R$.
 \end{theorem}
+
+\begin{lemma}
+CKBE $P'(t) = RP(t)$ solves to $P(t) = e^{Rt}$,
+where $e^{A} \defeq \sum_{i=0}^{\infty} A^i/i!$ for any square matrix $A$.
+Suppose $R$ has $n$ eigenpairs $\{(\lambda_1, v_i): i \in [n]\}$.
+Let $P$ be a square matrix whose $i\Th$ column is $v_i$,
+and $D$ be a diagonal matrix whose $i\Th$ diagonal entry is $\lambda_i$.
+Then $R = PDP^{-1}$, $e^{Rt} = Pe^{Dt}P^{-1}$,
+and $e^{Dt} = \opname{diag}([e^{\lambda_1t}, \ldots, e^{\lambda_nt}])$.
+\end{lemma}
 
 \begin{lemma}
 Let $X$ be a TH CTMC.
