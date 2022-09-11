@@ -390,6 +390,14 @@ Then $P_i = (\pi_i/\nu_i)/(\sum_j \pi_j/\nu_j)$ and $\pi_i = P_i\nu_i/(\sum_j P_
 A CTMC is time-reversible iff the corresponding embedded discrete-time MC is time-reversible.
 \end{definition}
 
+\begin{lemma}[2-state]
+For a CTMC on states $\{0, 1\}$, where $q_{0,1} = \lambda$ and $q_{1,0} = \mu$, we get
+\[ P(t) = \frac{1}{\lambda + \mu}\left(
+\begin{bmatrix}\mu & \lambda \\ \mu & \lambda\end{bmatrix}
++ e^{-(\mu+\lambda)t}\begin{bmatrix}\lambda & -\lambda \\ -\mu & \mu\end{bmatrix}
+\right). \]
+\end{lemma}
+
 \subsection{Birth and Death Process}
 
 \begin{definition}
