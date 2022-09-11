@@ -219,6 +219,14 @@ $\{N_1, \ldots, N_k\}$ is independent and $N_i \mid N \sim \opname{Binom}(N, p_i
 $X \sim N(\mu, \sigma^2) \implies aX + b \sim N(a\mu + b, a^2\sigma^2)$.
 \end{theorem}
 
+\begin{theorem}
+Let $X \sim \opname{Expo}(\lambda)$. Then
+$\E(X^ke^{-\mu X}) = \lambda k!/(\lambda + \mu)^{k+1}$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Use $\E(f(X)) = \int_0^{\infty} f(x)\lambda e^{-\lambda x}dx$, then use integration by parts $k$ times.
+\end{proof}
+
 \begin{theorem}[Competing exponentials]
 Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \opname{Expo}(\lambda_i)$.
 Let $Z \defeq \min_{i=1}^n X_i$ and $E$ be the event $X_1 < X_2 < \ldots < X_n$.
