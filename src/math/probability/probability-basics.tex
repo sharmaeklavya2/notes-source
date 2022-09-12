@@ -227,6 +227,11 @@ $\E(X^ke^{-\mu X}) = \lambda k!/(\lambda + \mu)^{k+1}$.
 Use $\E(f(X)) = \int_0^{\infty} f(x)\lambda e^{-\lambda x}dx$, then use integration by parts $k$ times.
 \end{proof}
 
+\begin{lemma}
+Let $X \sim \opname{Gamma}(n, \lambda)$ and $N \sim \opname{Poiss}(\lambda x)$.
+Then $\Pr(X > x) = \Pr(N < n)$.
+\end{lemma}
+
 \begin{theorem}[Competing exponentials]
 Let $X_1, \ldots, X_n$ be independent ranvars, where $X_i \sim \opname{Expo}(\lambda_i)$.
 Let $Z \defeq \min_{i=1}^n X_i$ and $E$ be the event $X_1 < X_2 < \ldots < X_n$.
