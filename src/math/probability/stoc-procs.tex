@@ -181,6 +181,61 @@ $x_jP(j, i) = x_iP(i, j)$ for all states $i$ and $j$, and $\sum_i x_i = 1$.
 If the transition function of markov chain $X$ is symmetric, then $X$ is time-reversible.
 \end{theorem}
 
+\subsection{Simple Random Walk}
+
+Let $X$ be a TH MC on state space $S = I \subseteq \mathbb{Z}$,
+where $I$ is an interval of $\mathbb{R}$ and
+\[ \Pr(X_1 = j \mid X_0 = i) = \begin{cases}
+p & \textrm{ if } j = i+1
+\\ 1-p & \textrm{ if } j = i-1
+\\ 0 & \textrm{ otherwise}
+\end{cases}. \]
+
+\begin{lemma}[Martingale property]
+\label{thm:rand-walk:martin}
+Let $\forall t \ge 1$. If $p = 1/2$, then $\E(X_t \mid X_{t-1}) = X_{t-1}$.
+Otherwise, for $q = (1-p)/p$, $\E(q^{X_t} \mid X_{t-1}) = q^{X_{t-1}}$.
+\end{lemma}
+
+\begin{lemma}
+Let $I = [0, b]$. Let $T \defeq \min_{t \ge 0} (X_t \in \{0, b\})$. Let $q = (1-p)/p$.
+\begin{align*}
+\Pr(X_T = b \mid X_0 = i) &= \begin{cases}
+\displaystyle \frac{i}{b} & \textrm{ if } p = 1/2
+\\ \displaystyle \frac{q^i-1}{q^b-1} & \textrm{ if } p \neq 1/2
+\end{cases}
+\\ \E(T \mid X_0 = i) &= \begin{cases}
+i(b-i) & \textrm{ if } p = 1/2
+\\ \displaystyle \frac{1}{1-2p}\left(i - b\frac{q^i-1}{q^b-1}\right) & \textrm{ if } p \neq 1/2
+\end{cases}
+\end{align*}
+\end{lemma}
+\begin{proof}[Proof sketch]
+Use \cref{thm:rand-walk:martin} to compute $\Pr(X_T \mid X_0=i)$.
+Let $\mu_i \defeq \E(X_T \mid X_0=i)$.
+Then $\mu_0 = \mu_b = 0$ and $\mu_i = 1 + (1-p)\mu_{i-1} + p\mu_i$ for $i \in [1, b-1]$.
+Let $d_i \defeq \mu_i - \mu_{i-1}$ for $i \in [1, b]$.
+Then $qd_i - d_{i+1} = 1/p$ for $i \in [1, b-1]$.
+Solve the recurrences.
+\end{proof}
+
+\begin{lemma}
+Let $I = [0, \infty)$. Let $T \defeq \min_{t \ge 0} (X_t = 0)$. Then for $i > 0$,
+\[ \mu_i \defeq \E(T \mid X_0 = i) = \begin{cases}
+i/(1-2p) & \textrm{ if } p < 1/2
+\\ \infty & \textrm{ if } p \ge 1/2
+\end{cases}. \]
+\[ p_i \defeq \Pr(T \neq \infty \mid X_0 = i) = \begin{cases}
+1 & \textrm{ if } p \le 1/2
+\\ q^i & \textrm{ if } p > 1/2
+\end{cases}. \]
+\end{lemma}
+\begin{proof}[Proof sketch]
+$\mu_i = i\mu_1$ and $\mu_1 = 1 + p\mu_2$.
+$p_i = p_1^i$ and $p_1 = (1-p) + p_2$.
+This gives us $p_1 \in \{1, q\}$. (TODO)
+\end{proof}
+
 \section{Counting Process}
 
 \begin{definition}[Counting Process]
