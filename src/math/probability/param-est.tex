@@ -1,0 +1,219 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+%\def\colorscheme{dark}
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{Parameter Estimation}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+Our aim is to find out something about a distribution by observing a sample.
+
+\begin{definition}[Sample]
+For a distribution $D$, a \emph{sample of size $n$} from $D$
+is the sequence $[X_1, X_2, \ldots, X_n]$ of $n$ IID random variables,
+each having distribution $D$.
+\end{definition}
+
+\paragraph{Notation:}
+For a random variable $X$ having distribution $D$
+and any function $g$, define $\E(g(D)) \defeq \E(g(X))$.
+(Hence, $\Var(D) \defeq \Var(X)$.)
+
+\section{Bias and Variance of Estimators}
+
+\begin{definition}[Sample mean and variance]
+Let $[X_1, \ldots, X_n]$ be a sample.
+\begin{enumerate}
+\item The mean of the sample is defined as
+    $\displaystyle \Xbar \defeq \frac{1}{n}\sum_{i=1}^n X_i$.
+\item The variance of the sample is defined as
+    $\displaystyle V_X \defeq \frac{1}{n-1}\sum_{i=1}^n (X_i-\Xbar)^2$.
+\item The standard-deviation of the sample is defined as $S_X \defeq \sqrt{V_X}$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}
+Let $\Xbar$ be the mean of a sample from $D$.
+Then $\E(\Xbar) = \E(D)$ and $\Var(\Xbar) = \Var(D)/n$.
+\end{theorem}
+
+\begin{claim}
+\label{thm:svar-expand}
+Let $\Xbar$ and $S^2$ be the mean and variance, respectively, of sample $[X_1, \ldots, X_n]$.
+Let $a$ be any random variable (or a constant). Then
+\[ S^2 = \frac{1}{n-1}\left(\sum_{i=1}^n (X_i-a)^2 - n(\Xbar-a)^2\right). \]
+(Note that setting $a = \Xbar$ gives the definition of $S^2$.)
+\end{claim}
+
+\begin{theorem}
+Let $V$ be the variance of sample $[X_1, \ldots, X_n]$ from $D$.
+Let $\mu \defeq \E(D)$ and $\sigma^2 \defeq \Var(D)$.
+Then $\E(V) = \sigma^2$ and
+$\Var(V) = \frac{\E((D-\mu)^4)}{n} - \frac{\sigma^4(n-3)}{n(n-1)}$.
+\end{theorem}
+\begin{proof}
+\begin{align*}
+\E(V) &= \frac{1}{n-1}\left(\sum_{i=1}^n \E((X_i-\mu)^2) - n\E((\Xbar-\mu)^2)\right)
+    \tag{by \cref{thm:svar-expand}}
+\\ &= \frac{1}{n-1}\left(\sum_{i=1}^n \Var(X_i) - n\Var(\Xbar)\right) = \sigma^2.
+\end{align*}
+The expression for $\Var(V)$ is from \cite{se.math.73080}.
+\end{proof}
+
+\section{Distribution of Estimators}
+
+\begin{definition}
+Let $Z$ be a random variable and $S \defeq [X_1, X_2, \ldots]$ be an infinite sequence
+of random variables. We say that $S$ converges to $Z$ if
+$\lim_{n \to \infty} F_{X_n}(x) = F_Z(x)$ for all $x \in \mathbb{R}$ where $F_Z$ is continuous.
+\end{definition}
+
+\begin{theorem}[Central Limit Theorem]
+Let $X_1, X_2, \ldots$ be IID randvars having mean $\mu$ and variance $\sigma^2$.
+Let $\Xbar_n \defeq \frac{1}{n}\sum_{i=1}^n X_i$.
+Let $Y_n \defeq \sqrt{n/\sigma}(\Xbar_n - \mu)$.
+Then $[Y_1, Y_2, \ldots]$ converges to $N(0, 1)$.
+\end{theorem}
+
+\begin{lemma}[Scaling normal]
+\label{thm:scaling-normal}
+Let $X \sim N(\mu, \sigma)$. Then for any constants $a$ and $b$,
+$aX + b \sim N(a\mu + b, |b|\sigma)$.
+\end{lemma}
+
+\begin{lemma}[\cite{wikipedia.sum-of-normal}]
+\label{thm:sum-of-ind-normal}
+Let $X$ and $Y$ be independent randvars where
+$X \sim N(\mu_X, \sigma_X)$ and $Y \sim N(\mu_Y, \sigma_Y)$.
+Then $X + Y \sim N(\mu_X + \mu_Y, \sqrt{\sigma_X^2 + \sigma_Y^2})$.
+\end{lemma}
+
+\begin{theorem}
+\label{thm:normal-smean-svar}
+Let $[X_1, \ldots, X_n]$ be a sample from $N(\mu, \sigma)$.
+Let $\Xbar$ and $S^2$ be the mean and variance of the sample. Then
+\begin{enumerate}
+\item\label{item:normal-smean-svar:smean}$\Xbar \sim N(\mu, \sigma/\sqrt{n})$.
+\item\label{item:normal-smean-svar:svar}$\frac{n-1}{\sigma^2}S^2 \sim \chi^2(n-1)$.
+\item\label{item:normal-smean-svar:indep}$\Xbar$ and $S^2$ are independent.
+\end{enumerate}
+Here $\chi^2(n-1)$ is the
+\href{https://en.wikipedia.org/wiki/Chi-squared_distribution}{Chi-Squared distribution}
+with $n-1$ degrees of freedom.
+\end{theorem}
+\begin{proof}
+Part \ref{item:normal-smean-svar:smean} follows from \cref{thm:scaling-normal,thm:sum-of-ind-normal}.
+
+\cite{duke.stat.mean-var-indep} proves parts \ref{item:normal-smean-svar:svar}
+and \ref{item:normal-smean-svar:indep}.
+Alternatively, \cite{se.math.50598} proves part \ref{item:normal-smean-svar:indep}
+and \cite{psu.stat414.svar} proves part \ref{item:normal-smean-svar:svar}.
+\end{proof}
+
+\section{Distribution of Statistical Scores}
+
+\begin{definition}
+Let $Z \sim N(0, 1)$ and $U \sim \chi^2(r)$ be independent randvars.
+Let $T \defeq Z/\sqrt{U/r}$. Then $T$'s distribution is called the
+\emph{Student's $t$ distribution} with $r$ degrees of freedom.
+\end{definition}
+
+\begin{theorem}
+Let $\Xbar$ and $S^2$ be the mean and variance of a sample from $N(\mu, \sigma)$. Then
+\[ \frac{\Xbar - \mu}{S/\sqrt{n}} \sim t(n-1). \]
+\end{theorem}
+\begin{proof}[Proof sketch]
+Use \cref{thm:normal-smean-svar} and
+$\displaystyle \frac{\frac{\Xbar - \mu}{\sigma/\sqrt{n}}}{\sqrt{\frac{(n-1)S^2/\sigma^2}{n-1}}}
+= \frac{\Xbar - \mu}{S/\sqrt{n}}$.
+\end{proof}
+
+\section{Distribution of Paired Statistical Scores}
+
+\begin{theorem}
+Let $\Xbar$ and $S_X^2$ be the mean and variance of a sample $[X_1, \ldots, X_n]$
+from distribution $N(\mu_X, \sigma)$.
+Let $\Ybar$ and $S_Y^2$ be the mean and variance of sample $[Y_1, \ldots, Y_m]$
+from distribution $N(\mu_Y, \sigma)$. The two samples are independent.
+Then for
+\begin{align*}
+S_p^2 &\defeq \frac{(n-1)S_X^2 + (m-1)S_Y^2}{n+m-2},
+& T &\defeq \frac{(\Xbar-\Ybar) - (\mu_X-\mu_Y)}{S_p\sqrt{\frac{1}{n} + \frac{1}{m}}},
+\end{align*}
+we have $T \sim t(n+m-2)$. ($S_p^2$ is called \emph{pooled sample variance}.)
+\end{theorem}
+\begin{proof}[Proof sketch]
+$\Xbar, \Ybar, S_X, S_Y$ are independent by
+\cref{thm:normal-smean-svar}.\ref{item:normal-smean-svar:indep}.
+\begin{align*}
+& \Xbar \sim N(\mu_X, \sigma/\sqrt{n}) \quad\textrm{and}\quad \Ybar \sim N(\mu_Y, \sigma/\sqrt{m})
+    \tag{by \cref{thm:normal-smean-svar}.\ref{item:normal-smean-svar:smean}}
+\\ &\implies \frac{(\Xbar - \Ybar) - (\mu_X - \mu_Y)}{\sigma\sqrt{\frac{1}{n} + \frac{1}{m}}} \sim N(0, 1).
+    \tag{by \cref{thm:scaling-normal,thm:sum-of-ind-normal}}
+\end{align*}
+\begin{align*}
+& (n-1)S_X^2/\sigma^2 \sim \chi^2(n-1) \quad\textrm{and}\quad (m-1)S_Y^2/\sigma^2 \sim \chi^2(m-1)
+    \tag{by \cref{thm:normal-smean-svar}.\ref{item:normal-smean-svar:svar}}
+\\ &\implies (n+m-2)S_p^2/\sigma^2 \sim \chi^2(n+m-2).
+\qedhere \end{align*}
+\end{proof}
+
+\begin{lemma}
+\label{thm:svar-lincomb}
+For $i \in \{1, \ldots, k\}$, let $\mathbf{X}_i \defeq [X_{i,1}, \ldots, X_{i,n_i}]$
+be a sample from $N(\mu_i, \sigma_i)$. The samples are independent.
+Let $a_1, \ldots, a_k$ be non-negative constants.
+Let $S_i^2$ be the variance of $\mathbf{X}_i$. Let
+\begin{align*}
+r &\defeq \frac{\left(\sum_{i=1}^k a_iS_i^2\right)^2}{\sum_{i=1}^k \frac{(a_iS_i^2)^2}{n_i-1}}
+& L &\defeq \frac{r}{\sum_{i=1}^k a_i\sigma_i^2}\sum_{i=1}^k a_iS_i^2.
+\end{align*}
+Then $L$ is approximately distributed $\chi^2(r)$.
+\end{lemma}
+\begin{proof}
+The meaning of \emph{approximate} and the `proof' can be found at \cite{se.math.3189589,welch}.
+\end{proof}
+
+\begin{theorem}
+Let $\Xbar$ and $S_X^2$ be the mean and variance of a sample $[X_1, \ldots, X_n]$
+from distribution $N(\mu_X, \sigma_X)$.
+Let $\Ybar$ and $S_Y^2$ be the mean and variance of sample $[Y_1, \ldots, Y_m]$
+from distribution $N(\mu_Y, \sigma_Y)$.
+The samples $[X_1, \ldots, X_n]$ and $[Y_1, \ldots, Y_m]$ are independent.
+Then for
+\[ r \defeq \frac{(S_X^2/n + S_Y^2/m)^2}{\frac{(S_X^2/n)^2}{n-1} + \frac{(S_Y^2/m)^2}{m-1}}
+\qquad\textrm{and}\qquad T \defeq \frac{(\Xbar-\Ybar) - (\mu_X-\mu_Y)}{\sqrt{S_X^2/n + S_Y^2/m}}, \]
+$T$ approximately follows $t(r)$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+$T = Z/(\sqrt{L/r})$, where
+\begin{align*}
+Z &\defeq \frac{(\Xbar-\Ybar) - (\mu_X-\mu_Y)}{\sqrt{\sigma_X^2/n + \sigma_Y^2/m}} \sim N(0, 1),
+& L &\defeq \frac{r}{\sigma_X^2/n + \sigma_Y^2/m}\left(\frac{S_X^2}{n} + \frac{S_Y^2}{m}\right),
+\end{align*}
+and $L$ approximately follows $\chi^2(r)$ by \cref{thm:svar-lincomb}.
+\end{proof}
+
+\bibliographystyle{plainurl}
+\bibliography{bibdb.bib}
+
+\end{document}
