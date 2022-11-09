@@ -137,6 +137,29 @@ Let $T \defeq Z/\sqrt{U/r}$. Then $T$'s distribution is called the
 \emph{Student's $t$ distribution} with $r$ degrees of freedom.
 \end{definition}
 
+\begin{lemma}[$t$ distribution is symmetric]
+Let $T \sim t(r)$. Then $T$ and $-T$ have the same distribution.
+\end{lemma}
+\begin{proof}
+Let $Z \sim N(0, 1)$ and $U \sim \chi^2(r)$ be independent randvars
+and $T \defeq Z/\sqrt{U/r}$. Then $T \sim t(r)$.
+Since $-Z \sim N(0, 1)$, so $-T = (-Z)/\sqrt{U/r} \sim t(r)$.
+\end{proof}
+
+\begin{lemma}[Implications of symmetry]
+Let $X$ be a continuous random variable such that $X$ and $-X$ have the same distribution.
+Then, $\forall x \in \mathbb{R}$, we get $F_X(x) + F_X(-x) = 1$,
+and $\forall \alpha \in [0, 1]$, we get $F_X^{-1}(\alpha) + F_X^{-1}(1-\alpha) = 0$.
+\end{lemma}
+\begin{proof}
+$F_X(-x) = F_{-X}(-x) = \Pr(-X \le -x) = \Pr(X \ge x)
+= 1 - F_X(x)$.
+
+Let $x = F_X^{-1}(\alpha)$. Then
+\\ $-F_X^{-1}(1-\alpha) = -F_X^{-1}(1 - F_X(x))
+= -F_X^{-1}(F_X(-x)) = x = F_X^{-1}(\alpha)$.
+\end{proof}
+
 \begin{theorem}
 Let $\Xbar$ and $S^2$ be the mean and variance of a sample from $N(\mu, \sigma)$. Then
 \[ \frac{\Xbar - \mu}{S/\sqrt{n}} \sim t(n-1). \]
@@ -211,6 +234,26 @@ Z &\defeq \frac{(\Xbar-\Ybar) - (\mu_X-\mu_Y)}{\sqrt{\sigma_X^2/n + \sigma_Y^2/m
 & L &\defeq \frac{r}{\sigma_X^2/n + \sigma_Y^2/m}\left(\frac{S_X^2}{n} + \frac{S_Y^2}{m}\right),
 \end{align*}
 and $L$ approximately follows $\chi^2(r)$ by \cref{thm:svar-lincomb}.
+\end{proof}
+
+\begin{definition}
+Let $X$ and $Y$ be independent randvars, where $X \sim \chi^2(u)$ and $Y \sim \chi^2(v)$.
+Then the distribution of $\displaystyle \frac{X/u}{Y/v}$ is called the F distribution
+with parameters $u$ and $v$.
+\end{definition}
+
+\begin{lemma}
+Let $R$ be an $F$ distribution with parameters $u$ and $v$.
+Then $R^{-1}$ is an $F$ distribution with parameters $v$ and $u$.
+Furthermore, $\forall x \in \mathbb{R}_{> 0}$, we get $F_R(x) + F_{R^{-1}}(x^{-1}) = 1$,
+and $\forall \alpha \in [0, 1]$, we get $F_R^{-1}(\alpha)F_{R^{-1}}^{-1}(1-\alpha) = 1$.
+\end{lemma}
+\begin{proof}
+$F_{R^{-1}}(x^{-1}) = \Pr(R^{-1} \le x^{-1}) = \Pr(R \ge x) = 1 - F_R(x)$.
+
+Let $x \defeq F_R^{-1}(\alpha)$. Then
+\\ $F_{R^{-1}}^{-1}(1-\alpha) = F_{R^{-1}}^{-1}(1 - F_R(x))
+= F_{R^{-1}}^{-1}(F_{R^{-1}}(x^{-1})) = x^{-1} = 1/F_R^{-1}(\alpha)$.
 \end{proof}
 
 \bibliographystyle{plainurl}
