@@ -78,6 +78,7 @@ Then $N_i$ is called the visit-count of $i$.
 \end{definition}
 
 \begin{definition}
+\label{defn:recurrence}
 A state $i$ of a markov chain is \emph{recurrent} iff (the following are equivalent):
 \begin{itemize}
 \item the recurrence probability ($f_i$) of $i$ is 1.
@@ -88,6 +89,7 @@ A non-recurrent state is called a \emph{transient} state.
 \end{definition}
 
 \begin{lemma}
+\label{thm:recurrence}
 $\Pr(N_i = k \mid X_0 = i) = f_i^{k-1}(1-f_i)$.
 \end{lemma}
 
@@ -183,40 +185,123 @@ If the transition function of markov chain $X$ is symmetric, then $X$ is time-re
 
 \subsection{Simple Random Walk}
 
-Let $X$ be a TH MC on state space $S = I \subseteq \mathbb{Z}$,
+Let $X$ be a TH MC on state space $S = I \cap \mathbb{Z}$,
 where $I$ is an interval of $\mathbb{R}$ and
 \[ \Pr(X_1 = j \mid X_0 = i) = \begin{cases}
 p & \textrm{ if } j = i+1
 \\ 1-p & \textrm{ if } j = i-1
-\\ 0 & \textrm{ otherwise}
+\\ 0 & \textrm{ if } j \neq i
 \end{cases}. \]
 
 \begin{lemma}[Martingale property]
 \label{thm:rand-walk:martin}
 Let $\forall t \ge 1$. If $p = 1/2$, then $\E(X_t \mid X_{t-1}) = X_{t-1}$.
-Otherwise, for $q = (1-p)/p$, $\E(q^{X_t} \mid X_{t-1}) = q^{X_{t-1}}$.
+Otherwise, for $r \defeq (1-p)/p$, $\E(r^{X_t} \mid X_{t-1}) = r^{X_{t-1}}$.
 \end{lemma}
 
 \begin{lemma}
-Let $I = [0, b]$. Let $T \defeq \min_{t \ge 0} (X_t \in \{0, b\})$. Let $q = (1-p)/p$.
+Let $I = [0, b]$, $T \defeq \min_{t \ge 0} (X_t \in \{0, b\})$, and $r \defeq (1-p)/p$.
+Then $\forall i \in S$,
 \begin{align*}
-\Pr(X_T = b \mid X_0 = i) &= \begin{cases}
+p_i \defeq \Pr(X_T = b \mid X_0 = i) &= \begin{cases}
 \displaystyle \frac{i}{b} & \textrm{ if } p = 1/2
-\\ \displaystyle \frac{q^i-1}{q^b-1} & \textrm{ if } p \neq 1/2
+\\ \displaystyle \frac{r^i-1}{r^b-1} & \textrm{ if } p \neq 1/2
 \end{cases}
-\\ \E(T \mid X_0 = i) &= \begin{cases}
+\\ \mu_i \defeq \E(T \mid X_0 = i) &= \begin{cases}
 i(b-i) & \textrm{ if } p = 1/2
-\\ \displaystyle \frac{1}{1-2p}\left(i - b\frac{q^i-1}{q^b-1}\right) & \textrm{ if } p \neq 1/2
+\\ \displaystyle \frac{1}{1-2p}\left(i - b\frac{r^i-1}{r^b-1}\right) & \textrm{ if } p \neq 1/2
 \end{cases}
 \end{align*}
 \end{lemma}
 \begin{proof}[Proof sketch]
-Use \cref{thm:rand-walk:martin} to compute $\Pr(X_T \mid X_0=i)$.
-Let $\mu_i \defeq \E(X_T \mid X_0=i)$.
-Then $\mu_0 = \mu_b = 0$ and $\mu_i = 1 + (1-p)\mu_{i-1} + p\mu_i$ for $i \in [1, b-1]$.
-Let $d_i \defeq \mu_i - \mu_{i-1}$ for $i \in [1, b]$.
-Then $qd_i - d_{i+1} = 1/p$ for $i \in [1, b-1]$.
-Solve the recurrences.
+$p_0 = 0$, $p_b = 1$, and $p_i \defeq pp_{i+1} + (1-p)p_{i-1}$ $\forall i \in [b-1]$.
+Rearrange to get $p(p_{i+1} - p_i) = (1-p)(p_i - p_{i-1})$ $\forall i \in [b-1]$.
+Let $d_i \defeq p_i - p_{i-1}$ $\forall i \in [b]$. Then
+\[ \forall i \in [b],\quad \frac{d_i}{d_1} = \prod_{j=1}^{i-1} \frac{d_{j+1}}{d_j}
+= \prod_{j=1}^{i-1} r = r^{i-1}, \]
+\[ \forall i \in S,\quad
+p_i = \sum_{j=1}^i d_j = \sum_{j=1}^i d_1r^{j-1} = d_1 \times \begin{cases}
+i & \textrm{ if } p = 1/2 \\ \frac{r^i-1}{r-1} & \textrm{ if } p \neq 1/2
+\end{cases}. \]
+Since $p_b = 1$, we get $d_1 = 1/b$ if $p = 1/2$ and $d_1 = (r-1)/(r^b-1)$ otherwise.
+
+$\mu_0 = \mu_b = 0$, and $\mu_i = 1 + p\mu_{i+1} + (1-p)\mu_{i-1}$ $\forall i \in [b-1]$.
+Rearrange to get $p(\mu_{i+1}-\mu_i) = (1-p)(\mu_i - \mu_{i-1}) - 1$ $\forall i \in [b-1]$.
+Let $\nu_i \defeq \mu_i - \mu_{i-1}$ $\forall i \in [b]$.
+Then $\forall i \in [b-1]$, $\nu_{i+1} = r\nu_i - 1/p$.
+
+\textbf{Case 1}: $p = 1/2$
+\[ \forall i \in [b],\quad \nu_i - \nu_1 = \sum_{j=1}^{i-1} (\nu_{j+1} - \nu_j) = -2(i-1). \]
+\[ \forall i \in S,\quad \mu_i = \sum_{j=1}^i \nu_j = \sum_{j=1}^i (\nu_1 - 2(j-1))
+= i(\nu_1 - (i - 1)). \]
+Since $\mu_b = 0$, we get $\nu_1 = b-1$, and so $\mu_i = i(b-i)$.
+
+\textbf{Case 2}: $p \neq 1/2$
+\[ \nu_{i+1} = r\nu_i - \frac{1}{p} = r\nu_i - \frac{1}{p}\left(\frac{r}{r-1} - \frac{1}{r-1}\right)
+\implies \nu_{i+1} - \frac{1}{p(r-1)} = r\left(\nu_i - \frac{1}{p(r-1)}\right). \]
+$p(r-1) = 1-2p$. Hence,
+\[ \forall i \in [b],\quad \frac{\nu_i - \frac{1}{1-2p}}{\nu_1 - \frac{1}{1-2p}}
+= \prod_{j=1}^{i-1} \frac{\nu_{j+1} - \frac{1}{1-2p}}{\nu_j - \frac{1}{1-2p}}
+= r^{i-1}. \]
+\begin{align*}
+\forall i \in S,\quad \mu_i &= \sum_{j=1}^i \nu_i
+= \sum_{j=1}^i \left(\frac{1}{1-2p} + r^{j-1}\left(\nu_1 - \frac{1}{1-2p}\right)\right).
+\\ &= \frac{i}{1-2p} + \left(\nu_1 - \frac{1}{1-2p}\right)\frac{r^i-1}{r-1}.
+\end{align*}
+Set $\mu_b = 0$ to get the answer.
+\end{proof}
+
+\begin{lemma}[\href{https://en.wikipedia.org/wiki/Catalan_number}{Catalan number}]
+\label{thm:bal-paren}
+The number of balanced parentheses strings of length $2n$ is
+$\binom{2n}{n}\frac{1}{n+1}$.
+\end{lemma}
+
+\begin{lemma}
+\label{thm:catalan-stirling}
+For all $n \ge 1$,
+\[ \binom{2n}{n}\frac{\sqrt{n}}{4^n} \in \left[\frac{2\sqrt{\pi}}{e^2}, \frac{e}{\sqrt{2}\pi}\right]. \]
+\end{lemma}
+\begin{proof}
+Use Stirling's approximation: $n!e^n/(n^n\sqrt{n}) \in [\sqrt{2\pi}, e]$.
+\end{proof}
+
+\begin{lemma}
+Let $S = \mathbb{Z}$. If $p \neq 1/2$, then every state is transient.
+Otherwise, every state is null recurrent.
+\end{lemma}
+\begin{proof}
+All states communicate, so all states belong to the same class.
+Recurrence and positive recurrence are class properties.
+
+Using \cref{defn:recurrence}, we get that state 0 is recurrent iff
+$\E(N_0 \mid X_0=0)$, where $N_0$ is the number of times we visit state 0.
+\begin{align*}
+\E(N_0 \mid X_0=0) &= \sum_{t=0}^{\infty} P^{(t)}(0,0)  \tag{by \cref{thm:recurrence}}
+\\ &= \sum_{j=0}^{\infty} 2\binom{2j}{j}p^j(1-p)^j  \tag{by \cref{thm:bal-paren}}
+\\ &\le \frac{\sqrt{2}e}{\pi} \sum_{j=0}^{\infty} \frac{(4p(1-p))^j}{\sqrt{j}}.
+    \tag{by \cref{thm:catalan-stirling}}
+\end{align*}
+$4p(1-p) \le 1$ and $p = 1/2 \iff 4p(1-p) = 1$.
+Hence, the series is convergent iff $p \neq 1/2$.
+Hence, state 0 is recurrent iff $p = 1/2$.
+
+Let $p = 1/2$. Then $T \defeq \min_{t \ge 0} (X_t = 0)$
+and $T' \defeq \min_{t \ge 1} (X_t = 0)$.
+Then state 0 is null recurrent iff $\E(T' \mid X_0=0) = \infty$.
+Since state 0 is recurrent, $\Pr(T' = \infty \mid X_0=0) = 0$.
+Hence, $0 = \Pr(T' = \infty \mid X_0=0) = \Pr(T = \infty \mid X_0=1)$.
+\begin{align*}
+& \E(T' \mid X_0=0) = 1 + \E(T \mid X_0=1)
+\\ &= 1 + \sum_{j=0}^{\infty} (2j+1)\Pr(T=2j+1 \mid X_0=1)
+    \tag{since $\Pr(T = \infty \mid X_0=1) = 0$}
+\\ &= 1 + \sum_{j=0}^{\infty} \frac{2j+1}{j+1} \binom{2j}{j}\frac{1}{2^{2j+1}}
+    \tag{by \cref{thm:bal-paren}}
+\\ &\ge 1 + \frac{\sqrt{\pi}}{e^2} \sum_{j=0}^{\infty} \frac{1}{\sqrt{j}}
+    \tag{by \cref{thm:catalan-stirling}}
+\\ &= \infty.
+\end{align*}
+Hence, 0 is null recurrent.
 \end{proof}
 
 \begin{lemma}
@@ -227,13 +312,43 @@ i/(1-2p) & \textrm{ if } p < 1/2
 \end{cases}. \]
 \[ p_i \defeq \Pr(T \neq \infty \mid X_0 = i) = \begin{cases}
 1 & \textrm{ if } p \le 1/2
-\\ q^i & \textrm{ if } p > 1/2
+\\ r^i & \textrm{ if } p > 1/2
 \end{cases}. \]
 \end{lemma}
 \begin{proof}[Proof sketch]
-$\mu_i = i\mu_1$ and $\mu_1 = 1 + p\mu_2$.
-$p_i = p_1^i$ and $p_1 = (1-p) + p_2$.
-This gives us $p_1 \in \{1, q\}$. (TODO)
+$\mu_i = i\mu_1$ and $\mu_1 = 1 + p\mu_2 = 1 + 2p\mu_1$.
+Suppose $\mu_1 \neq \infty$.
+If $p > 1/2$, then $\mu_1 = 1/(1-2p) < 0$, which is a contradiction.
+If $p = 1/2$, then $\mu_1 = 1 + \mu_1$, which is a contradiction.
+Hence, $\mu_1 = \infty$ when $p \ge 1/2$.
+
+$p_i = p_1^i$ and $p_1 = (1-p) + pp_2$.
+Solving these equations gives us $p_1 \in \{1, r\}$.
+When $p \le 1/2$, we get $r \ge 1$, but $p_1 \in [0, 1]$ (since $p_1$ is a probability).
+Hence, $p_i = 1$ when $p \le 1/2$.
+
+Let $p < 1/2$. Then $\mu_1 \in \{\infty, 1/(1-2p)\}$.
+We will show that $\mu_1 \neq \infty$.
+Since $p_i = 1$ for all $i \ge 0$, we have $\Pr(T = \infty \mid X_0 = i) = 0$. Hence,
+\begin{align*}
+\mu_1 &= \E(T \mid X_0=1) = \sum_{j=0}^{\infty} (2j+1)\Pr(T=2j+1 \mid X_0=1)
+\\ &= \sum_{j=0}^{\infty} \frac{2j+1}{j+1} \binom{2j}{j}p^j(1-p)^{j+1}
+    \tag{by \cref{thm:bal-paren}}
+\\ &\le 2(1-p)\frac{e}{\sqrt{2}\pi} \sum_{j=0}^{\infty} \frac{(4p(1-p))^j}{\sqrt{j}}.
+    \tag{by \cref{thm:catalan-stirling}}
+\end{align*}
+This series is convergent, since $4p(1-p) < 1$ for $p < 1/2$.
+Hence, $\mu_1 \neq \infty$, so $\mu_1 = 1/(1-2p)$.
+
+Let $p > 1/2$.
+Consider the random walk $Y$ on state space $\mathbb{Z}$ where $\forall t \ge 0$,
+$\Pr(Y_{t+1} = j+1 \mid Y_t = j) = p$ and $\Pr(Y_{t+1} = j-1 \mid Y_t=j) = 1-p$.
+Let $T' \defeq \min_{t \ge 0} (Y_t = 0)$.
+Then $\Pr(T \neq \infty \mid X_0 = 1) = 1 \iff \Pr(T' \neq \infty \mid Y_0 = 1) = 1$.
+$\Pr(T' \neq \infty \mid Y_0 = -1) = 1$, using the $p < 1/2$ case.
+Hence, we return to state 0 in $Y$ with probability 1.
+Hence, 0 is a recurrent state in $Y$, which is a contradiction.
+Hence, $p_1 = \Pr(T \neq \infty \mid X_0 = 1) \neq 1$. Hence, $p_1 = r$.
 \end{proof}
 
 \section{Counting Process}
