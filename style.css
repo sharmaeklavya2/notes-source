@@ -9,11 +9,11 @@ a:not(:hover) {text-decoration: none;}
 
 /* color scheme */
 body {color: #202020;}
-a {color: rgb(3, 102, 214);}
-a:visited {color: rgb(100, 0, 150);}
+a {color: #1a0dab;}
+a:visited {color: #681da8;}
 @media (prefers-color-scheme: dark) {
-    body {background: rgb(27, 30, 32); color: rgb(192, 192, 192);}
-    a {color: rgb(65, 175, 235);}
-    a:visited {color: rgb(150, 100, 230);}
+    body {background: #1b1e20; color: #c8c8c8;}
+    a {color: #8ab4f8;}
+    a:visited {color: #c58af9;}
     img {filter: brightness(.8) contrast(1.2);}
 }
