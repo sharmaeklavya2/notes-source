@@ -15,6 +15,9 @@
 \hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
 \input{macros.tex}
 
+\DeclareMathOperator*{\Cov}{Cov}
+\newcommand*{\SSE}{\mathrm{SSE}}
+
 \author{Eklavya Sharma}
 \date{\empty}
 
@@ -255,6 +258,178 @@ Let $x \defeq F_R^{-1}(\alpha)$. Then
 \\ $F_{R^{-1}}^{-1}(1-\alpha) = F_{R^{-1}}^{-1}(1 - F_R(x))
 = F_{R^{-1}}^{-1}(F_{R^{-1}}(x^{-1})) = x^{-1} = 1/F_R^{-1}(\alpha)$.
 \end{proof}
+
+\section{Correlated Data}
+
+Let $X$ and $Y$ be random variables over a joint distribution $D$.
+Let $[(X_i, Y_i): i \in \{1, \ldots, n\}]$ be an IID sample drawn from $D$.
+Let $\Xbar \defeq (1/n)\sum_{i=1}^n X_i$ and $\Ybar \defeq (1/n)\sum_{i=1}^n Y_i$.
+
+\begin{theorem}
+$\Cov(\Xbar, \Ybar) = \Cov(X_1, Y_1)/n$.
+\end{theorem}
+
+\begin{definition}[Sample covariance]
+\[ C_{X,Y} \defeq \frac{1}{n-1} \sum_{i=1}^n (X_i-\Xbar)(Y_i-\Ybar). \]
+\end{definition}
+
+\begin{claim}
+\label{thm:scov-expand}
+For any real numbers (or random variables) $a$ and $b$,
+\[ C_{X,Y} = \frac{1}{n-1}\left(\sum_{i=1}^n (X_i-a)(Y_i-b) - n(\Xbar-a)(\Ybar-b) \right). \]
+\end{claim}
+
+\begin{theorem}
+$\E(C_{X,Y}) = \Cov(X_1, Y_1)$.
+\end{theorem}
+\begin{proof}
+Let $\mu_X \defeq \E(X_1)$ and $\mu_Y \defeq \E(Y_1)$. Then
+\begin{align*}
+\E(C_{X,Y}) &= \frac{1}{n-1}\left(\sum_{i=1}^n \E((X_i-\mu_X)(Y_i-\mu_Y)) - n\E((\Xbar-\mu_X)(\Ybar-\mu_Y))\right)
+    \tag{by \cref{thm:scov-expand}}
+\\ &= \frac{1}{n-1}\left(\sum_{i=1}^n \Cov(X_i, Y_i) - n\Cov(\Xbar, \Ybar)\right) = \Cov(X_1, Y_1).
+\qedhere \end{align*}
+\end{proof}
+
+Let $V_X$ and $V_Y$ be the sample variance of $[X_1, \ldots, X_n]$ and $[Y_1, \ldots, Y_n]$, respectively.
+
+\begin{lemma}
+\[ (n-1)^2(V_XV_Y - C_{X,Y}^2) = \sum_{1 \le i < j \le n} ((X_i-\Xbar)(Y_j-\Ybar) - (X_j-\Xbar)(Y_i-\Ybar))^2. \]
+\end{lemma}
+\begin{proof}
+Let $W_i \defeq X_i - \Xbar$ and $Z_i \defeq Y_i - \Ybar$. Then
+\begin{align*}
+& (n-1)^2(V_XV_Y - C_{X,Y}^2) = \left(\sum_{i=1}^n W_i^2\right)\left(\sum_{i=1}^n Z_i^2\right)
+    - \left(\sum_{i=1}^n W_iZ_i\right)^2
+\\ &= \sum_{i=1}^n\sum_{j=1}^n (W_i^2 Z_j^2 - W_iZ_iW_jZ_j)
+= \sum_{i=1}^n\sum_{j=1}^n W_iZ_j(W_iZ_j - W_jZ_i)
+\\ &= \sum_{1 \le i < j \le n} (W_iZ_j - W_jZ_i)^2.
+\qedhere
+\end{align*}
+\end{proof}
+
+\begin{lemma}
+\[ \E(V_XV_Y - C_{X,Y}^2) = \frac{n}{n-1}\left(\Var(X_1)\Var(Y_1) - \Cov(X_1, Y_1)\right). \]
+\end{lemma}
+\begin{proof}
+Let $W_i \defeq X_i - \Xbar$ and $Z_i \defeq Y_i - \Ybar$. Then
+\begin{align*}
+& (n-1)^2\E(V_XV_Y - C_{X,Y}^2) = \sum_{1 \le i < j \le n} \E((W_iZ_j - W_jZ_i)^2)
+\\ &= \sum_{1 \le i < j \le n} (\E(W_i^2Z_j^2) + \E(W_j^2Z_i^2) - 2\E(W_iW_jZ_iZ_j))
+\\ &= \sum_{1 \le i < j \le n} (\E(W_i^2)\E(Z_j^2) + \E(W_j^2)\E(Z_i^2) - 2\E(W_iZ_i)\E(W_jZ_j))
+    \tag{samples are independent}
+\\ &= \sum_{1 \le i < j \le n} (\Var(X_1)\Var(Y_1) + \Var(X_1)\Var(Y_1) - 2\Cov(X_1, Y_1)^2)
+\\ &= n(n-1) (\Var(X_1)\Var(Y_1) - \Cov(X_1, Y_1)^2).
+\qedhere
+\end{align*}
+\end{proof}
+
+\section{Linear Regression}
+
+Let $[(x_i, y_i): i \in \{1, \ldots, n\}]$ be our data. Define
+\[ \SSE(\alpha, \beta) \defeq \sum_{i=1}^n (y_i - \alpha - \beta x_i)^2. \]
+
+\begin{itemize}
+\item Let $\Xbar$ and $V_X$ be the mean and variance of sample $[x_1, \ldots, x_n]$.
+\item Let $\Ybar$ and $V_Y$ be the mean and variance of sample $[y_1, \ldots, y_n]$.
+\item Let $C_{X,Y}$ be the covariance of sample $[(x_i, y_i): i \in \{1, \ldots, n\}]$.
+\end{itemize}
+
+\begin{theorem}
+\label{thm:sse-expand}
+\[ \SSE(\alpha, \beta) = n(\alpha + \beta\Xbar - \Ybar)^2
+    + (n-1)V_X\left(\beta - \frac{C_{X,Y}}{V_X}\right)^2
+    + (n-1)\left(V_Y - \frac{C_{X,Y}^2}{V_X}\right). \]
+\end{theorem}
+
+Hence, $\SSE$ is minimized at $(\alphahat, \betahat)$,
+where $\betahat \defeq C_{X,Y}/V_X$ and $\alphahat \defeq \Ybar - \betahat\Xbar$.
+
+\subsection{Independent errors with mean 0}
+
+Let $[x_1, \ldots, x_n]$ be constants and $[e_1, \ldots, e_n]$ be IID random variables.
+For all $i \in \{1, \ldots, n\}$, let
+$\E(e_i) = 0$, $\Var(e_i) = \sigma^2$, and $y_i \defeq \alpha + \beta x_i + e_i$.
+
+\begin{itemize}
+\item Let $\xbar$ and $V_X$ be the mean and variance of sample $[x_1, \ldots, x_n]$.
+\item Let $\ybar$ and $V_Y$ be the mean and variance of sample $[y_1, \ldots, y_n]$.
+\item Let $\ebar$ and $V_E$ be the mean and variance of sample $[e_1, \ldots, e_n]$.
+\item Let $C_{X,Y}$ be the covariance of sample $[(x_i, y_i): i \in \{1, \ldots, n\}]$.
+\item Let $C_{X,E}$ be the covariance of sample $[(x_i, e_i): i \in \{1, \ldots, n\}]$.
+\end{itemize}
+
+\begin{lemma}
+\begin{align*}
+C_{X,E} &= \sum_{i=1}^n \frac{x_i-\xbar}{n-1}e_i
+& \ybar &= \alpha + \beta\xbar + \ebar
+\\ C_{X,Y} &= \beta V_X + C_{X,E}
+& V_Y &= \beta^2 V_X + V_E + 2\beta C_{X,E}
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+\begin{align*}
+\betahat &= \beta + \frac{C_{X,E}}{V_X}
+& \SSE(\alphahat, \betahat) &= (n-1)\left(V_E - \frac{C_{X,E}^2}{V_X}\right)
+\end{align*}
+For any $t \in \mathbb{R}$,
+\[ \alphahat + \betahat t = (\alpha + \beta t) + \ebar + \frac{t-\xbar}{V_X}C_{X,E}
+ = (\alpha + \beta t) + \sum_{i=1}^n \left(\frac{1}{n} + \frac{(t-\xbar)(x_i-\xbar)}{V_X(n-1)}\right)e_i. \]
+\end{lemma}
+
+\begin{lemma}
+$\E(C_{X,E}) = 0$ and $\Var(C_{X,E}) = \E(C_{X,E}^2) = \sigma^2V_X/(n-1)$.
+\end{lemma}
+
+\begin{lemma}
+$\E(\SSE(\alphahat, \betahat)) = (n-2)\sigma^2$.
+\end{lemma}
+
+\begin{lemma}
+For any $t \in \mathbb{R}$,
+$\E(\betahat) = \beta$, $\E(\alphahat + \betahat t) = \alpha + \beta t$,
+\begin{align*}
+\Var(\betahat) &= \frac{\sigma^2}{(n-1)V_X},
+& \Var(\alphahat + \betahat t) = \sigma^2\left(\frac{1}{n} + \frac{(t-\xbar)^2}{(n-1)V_X}\right).
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+$\Cov(\ybar, \betahat) = \Cov(\ebar, C_{X,E}) = 0$.
+\end{lemma}
+\begin{proof}
+\[ \Cov(\ybar, \betahat) = \frac{\Cov(\ebar, C_{X,E})}{V_X}
+    = \frac{\Cov(n\ebar, (n-1)C_{X,E})}{n(n-1)V_X}. \]
+\begin{align*}
+& \Cov(n\ebar, (n-1)C_{X,E}) = \Cov\left(\sum_{i=1}^n e_i, \sum_{j=1}^n (x_j-\xbar)e_j\right)
+\\ &= \sum_{i=1}^n \sum_{j=1}^n \Cov(e_i, (x_j-\xbar)e_j) = \sum_{i=1}^n (x_i-\xbar)\sigma^2 = 0.
+\qedhere
+\end{align*}
+\end{proof}
+
+\subsection{IID normal errors with mean 0}
+
+Let $[e_1, \ldots, e_n]$ be drawn IID from $N(0, \sigma)$.
+
+\begin{lemma}
+\begin{align*}
+\ybar &\sim N\left(\alpha + \beta\xbar, \frac{\sigma}{\sqrt{n}}\right)
+& \betahat &\sim N\left(\beta, \frac{\sigma}{\sqrt{(n-1)V_X}}\right)
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+$\ybar$, $\betahat$, and $\SSE(\alphahat, \betahat)$ are independent.
+$\SSE(\alphahat, \betahat)/\sigma^2 \sim \chi^2(n-2)$.
+\end{lemma}
+\begin{proof}
+\cite{psu.stat415.regci} gives a proof idea and lists references to proofs.
+\end{proof}
+
+\begin{lemma}
+\[ \sqrt{\frac{(n-2)(n-1)V_X}{\SSE(\alphahat, \betahat)}}(\betahat - \beta) \sim t_{n-2}. \]
+\end{lemma}
 
 \bibliographystyle{plainurl}
 \bibliography{bibdb.bib}
