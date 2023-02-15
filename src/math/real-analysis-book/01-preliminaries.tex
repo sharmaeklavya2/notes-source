@@ -1,0 +1,144 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+%\def\colorscheme{dark}
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\DeclareMathOperator{\idFunc}{id}
+
+\author{\empty}
+\date{\empty}
+
+\title{Chapter 1: Preliminaries}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\section{Sets}
+
+\begin{definition}[Set basics]
+\leavevmode
+\begin{enumerate}
+\item $A \subseteq B \defiff (\forall x \in A, x \in B)$.
+\item $A = B \defiff (A \subseteq B \land B \subseteq A)$.
+\item $A \subset B \defiff (A \subseteq B \land B \not\subseteq A)$.
+\item $A \cup B \defeq \{x: x \in A \textrm{ or } x \in B\}$.
+\item $A \cap B \defeq \{x \in A: x \in B\}$.
+\item $A \setminus B \defeq \{x \in A: x \not\in B\}$.
+\item $\displaystyle \bigcup_{i \in I} A_i \defeq \{x: \exists i \in I \textrm{ such that } x \in A_i\}$.
+\item $\displaystyle \bigcap_{i \in I} A_i \defeq \{x: \forall i \in I, x \in A_i\}$.
+\item $A \times B \defeq \{(x, y): x \in A, y \in B\}$.
+\item $\displaystyle \prod_{i=1}^n A_i \defeq \{(x_1, x_2, \ldots, x_n): x_i \in A_i \textrm{ for all } i\}$.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}
+\begin{enumerate}
+\item $A \subseteq B \iff A \cap B = A \iff A \cup B = B$.
+\item $A \setminus (B \cup C) = (A \setminus B) \cap (A \setminus C)$.
+\item $A \setminus (B \cap C) = (A \setminus B) \cup (A \setminus C)$.
+\item $A \cup (B \cup C) = (A \cap B) \cup (A \cap C)$.
+\item $A \cap (B \cap C) = (A \cup B) \cap (A \cup C)$.
+\end{enumerate}
+\end{theorem}
+
+\section{Relations and Functions}
+
+\begin{definition}[Relation and function]
+A relation $R$ between $A$ and $B$ is a subset of $A \times B$.
+A function $f: A \to B$ is a relation between $A$ and $B$ such that
+\[ (a, b_1) \in f \textrm{ and } (a, b_2) \in f \implies b_1 = b_2. \]
+$D(f) \defeq A$ (called \emph{domain} of $f$),
+and $R(f) \defeq B$ (called \emph{range} of $f$).
+\end{definition}
+
+\begin{lemma}
+Let $f: A \to B$ and $g: A \to B$.
+Then $f = g \iff (\forall x \in A, f(x) = g(x))$.
+\end{lemma}
+
+\begin{definition}[Image and reverse image]
+Let $f: A \to B$ be a function.
+\begin{enumerate}
+\item For $X \subseteq A$, $f(X) \defeq \{f(x): x \in X\}$ is called the \emph{image} of $X$ under $f$.
+    \\ Equivalently, $y \in f(X) \iff (\exists x \in X, f(x) = y)$.
+\item For $Y \subseteq B$, $f^{-1}(Y) = \{x: f(x) \in Y\}$ is called the \emph{inverse image}
+    of $Y$ under $f$. Equivalently, $x \in f^{-1}(Y) \iff f(x) \in Y$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}
+Let $f: A \to B$. Let $X_1, X_2 \subseteq A$ and $Y_1, Y_2 \subseteq B$.
+\begin{enumerate}
+\item $f(X_1 \cup X_2) = f(X_1) \cup f(X_2)$.
+\item $f(X_1 \cap X_2) \subseteq f(X_1) \cap f(X_2)$.
+\item $f^{-1}(Y_1 \cup Y_2) = f^{-1}(Y_1) \cup f^{-1}(Y_2)$.
+\item $f^{-1}(Y_1 \cap Y_2) = f^{-1}(Y_1) \cap f^{-1}(Y_2)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{definition}[Composition]
+\label{defn:func-compose}
+For functions $f: A \to B$ and $g: B \to C$,
+$g \circ f: A \to C$ is the defined as $(g \circ f)(x) = g(f(x))$.
+\end{definition}
+
+\begin{definition}[Injection and surjection]
+Let $f: A \to B$.
+\begin{enumerate}
+\item $f$ is injective (aka one-to-one)
+    $\defiff \forall x_1 \in A, \forall x_2 \in A, (f(x_1) = f(x_2) \implies x_1 = x_2)$.
+\item $f$ is surjective (aka onto)
+    $\defiff \forall y \in B, \exists x \in A, f(x) = y$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Composition]
+\label{thm:inj-surj-comp}
+Let $f: A \to B$ and $g: B \to C$.
+\begin{enumerate}
+\item If $f$ and $g$ are injective, then $g \circ f$ is injective.
+\item If $g \circ f$ is injective, then $f$ is injective.
+\item If $f$ and $g$ are surjective, then $g \circ f$ is surjective.
+\item If $g \circ f$ is surjective, then $g$ is surjective.
+\end{enumerate}
+\end{lemma}
+
+\begin{definition}[Identity]
+The identity function $\idFunc_A: A \to A$ is given by $\idFunc_A(x) = x$ for all $x \in A$.
+\end{definition}
+
+\begin{definition}[Bijection]
+A function $f: A \to B$ is a bijection iff (the following are equivalent):
+\begin{enumerate}
+\item \label{item:bij:inj-surj}$f$ is injective and surjective.
+\item \label{item:bij:inv}$\exists g: B \to A$ such that $g \circ f = \idFunc_A$ and $f \circ g = \idFunc_B$.
+    (Then $g$ is called the \emph{inverse} of $f$, and is denoted by $f^{-1}$.)
+\end{enumerate}
+\end{definition}
+\begin{proof}[Proof sketch of equivalence]
+If $f$ is injective and surjective, for each $y \in B$, there is a unique $x \in A$
+such that $f(x) = y$. Define $g(y) = x$ and show condition \ref{item:bij:inv}.
+To show that condition \ref{item:bij:inv} implies condition \ref{item:bij:inj-surj},
+use \cref{thm:inj-surj-comp}.
+\end{proof}
+
+\begin{definition}[Restriction]
+Let $f: A \to B$ be a function. Let $X \subseteq A$. Then $f|X$ is a function from $X$ to $B$
+such that $(f|X)(x) = f(x)$ for all $x \in X$.
+\end{definition}
+
+\end{document}
