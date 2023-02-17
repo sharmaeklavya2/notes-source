@@ -7,7 +7,7 @@
 \usepackage{comment}
 \usepackage{booktabs}
 \usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
-%\usepackage{algorithm, algpseudocode}
+\usepackage{algorithm, algpseudocode}
 \usepackage[capitalize,sort]{cleveref}
 
 %\def\colorscheme{dark}
@@ -140,5 +140,96 @@ use \cref{thm:inj-surj-comp}.
 Let $f: A \to B$ be a function. Let $X \subseteq A$. Then $f|X$ is a function from $X$ to $B$
 such that $(f|X)(x) = f(x)$ for all $x \in X$.
 \end{definition}
+
+\begin{lemma}
+There is an injection from $A$ to $B$ iff there is a surjection from $B$ to $A$.
+\end{lemma}
+\begin{proof}
+$\implies$:
+\\ Let $f: A \to B$ be injective.
+Then for any $y \in B$, $f^{-1}(y)$ contains 0 or 1 elements.
+Let $a$ be an arbitrary element of $A$. Define $g: B \to A$ as:
+\[ g(y) = \begin{cases}x & \textrm{ if } f^{-1}(y) = \{x\}
+\\ a & \textrm{ if } f^{-1}(y) = \emptyset \end{cases}. \]
+Pick any $x \in A$. Let $y = f(x)$. Then $x \in f^{-1}(y)$. Hence, $g(y) = x$.
+Hence, $g$ is surjective.
+
+$\impliedby$:
+\\ Let $g: B \to A$ be surjective.
+Then for any $x \in A$, we have $g^{-1}(x) \neq \emptyset$.
+By the axiom of choice, there is a function $f: A \to B$ such that $f(x) \in g^{-1}(x)$.
+For any distinct $x_1, x_2 \in A$, we have $g^{-1}(x_1) \cap g^{-1}(x_2) = \emptyset$.
+Hence, $f$ is injective.
+\end{proof}
+
+\section{Set Cardinality}
+
+\begin{definition}
+A set $S$ is \emph{countable} iff there exists a surjection $f: \mathbb{N} \to S$.
+A set $S$ is \emph{denumerable} iff it is countable and infinite.
+\end{definition}
+
+\begin{lemma}
+A set $S$ is \emph{countable} iff there exists a surjection $f: T \to S$, where $T$ is countable.
+\end{lemma}
+
+\begin{lemma}
+There is a bijection from $\mathbb{N}$ to $\mathbb{N} \times \mathbb{N}$.
+(Hence, $\mathbb{N} \times \mathbb{N}$ is countable.)
+\end{lemma}
+\begin{proof}[Proof sketch]
+The bijection $f: \mathbb{N} \to \mathbb{N} \times \mathbb{N}$ is defined as
+\begin{algorithmic}[1]
+\State Set $j = 1$
+\For{$s \in \mathbb{N}$}
+    \For{$i$ from $1$ to $s-1$}
+        \State Set $f(j) = (i, s-i)$
+        \State $j$ \texttt{+=} 1
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{proof}
+
+\begin{theorem}
+\label{thm:prod-countable}
+Let $I$ be a finite set and for each $i \in I$, let $A_i$ be a countable set.
+Then $\prod_{i \in I} A_i$ is countable.
+\end{theorem}
+\begin{proof}[Proof sketch]
+When $|I| = 2$, we can show a surjection from $\mathbb{N} \times \mathbb{N}$ to $A_1 \times A_2$.
+For larger $|I|$, use induction on $|I|$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:union-countable}
+Let $I$ be a countable set and for each $i \in I$, let $A_i$ be a countable set.
+Then $\bigcup_{i \in I} A_i$ is countable.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Since $I$ is countable, there exists a surjection $f: \mathbb{N} \to I$.
+Since $A_i$ is countable, there exists a surjection $g_i: \mathbb{N} \to A_i$.
+Then $h(i, j) = g_i(j)$ is a surjection from $\mathbb{N} \times \mathbb{N}$ to $\bigcup_{i \in I} A_i$.
+\end{proof}
+
+\begin{theorem}
+\label{thm:finite-subsets-countable}
+Let $A$ be a countable set.
+Let $B$ be the set of all finite subsets of $A$. Then $B$ is countable.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Express $B$ as union of $k$-sized sets and use \cref{thm:union-countable}.
+For each $k$, a subset is finite by \cref{thm:prod-countable}.
+\end{proof}
+
+\begin{theorem}[Cantor's theorem]
+Let $P$ be the power set of $A$.
+Then there is no surjection from $A$ to $P$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Assume there is a surjection $f: A \to P$.
+Let $D \defeq \{a \in A: a \not\in f(a)\}$.
+Since $D \in P$ and $f$ is a surjection, we have $D = f(a_0)$ for some $a_0 \in A$.
+For each case $a_0 \in D$ and $a_0 \not\in D$, show a contradiction.
+\end{proof}
 
 \end{document}
