@@ -1,0 +1,113 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage[bookmarksnumbered=true,hypertexnames=true]{hyperref}
+\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+%\def\colorscheme{dark}
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{\empty}
+\date{\empty}
+
+\title{Chapter 2: Real numbers}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+\section{Groups}
+
+\begin{definition}[Group]
+Let $G$ be a non-empty set and $\circ: G \times G \to G$ be a binary operator.
+Then $(G, \circ)$ is a group iff all of the following hold:
+\begin{enumerate}
+\item Associativity: $a \circ (b \circ c) = (a \circ b) \circ c$ for all $a, b, c \in G$.
+\item Identity exists: $\exists e \in G$ such that $\forall a \in G$, $e \circ a = a \circ e = a$.
+    Such an $e$ is called an \emph{identity} of $(G, \circ)$.
+    We can prove that the identity is unique.
+\item Inverses exist: Let $e$ be an identity of $(G, \circ)$. Then $\forall a \in G$,
+    $(\exists \ell \in G, \ell \circ a = e)$ and $(\exists r \in G, a \circ r = e)$.
+    $\ell$ is called a \emph{left inverse} of $a$. $r$ is called a \emph{right inverse} of $a$.
+\end{enumerate}
+$(G, \circ)$ is called \emph{symmetric}, \emph{commutative}, or \emph{abelian} iff
+$\forall a \in G$, $\forall b \in G$, $a \circ b = b \circ a$.
+\end{definition}
+
+\begin{lemma}
+In a group $(G, \circ)$, the identity is unique and each element has a unique inverse.
+\end{lemma}
+\begin{proof}
+Let $e_1$ and $e_2$ be identities of $(G, \circ)$.
+Then $e_1 \circ e_2 = e_1$, since $e_2$ is an identity, and $e_2 \circ e_1 = e_2$, since $e_1$ is an identity.
+Hence, $e_1 = e_2$.
+
+Let $\ell$ be a left inverse and $r$ be a right inverse of $a \in G$. Then
+\[ \ell = \ell \circ e = \ell \circ (a \circ r) = (\ell \circ a) \circ r = e \circ r = r. \]
+Hence, every left inverse equals every right inverse. Hence, they are all equal.
+\end{proof}
+
+If we use $+$ as a group operator, we denote identity as 0 and inverse of $g$ as $-g$.
+If we use $\times$ as a group operator, we denote identity as 1 and inverse of $g$ as $g^{-1}$.
+
+\begin{definition}
+Let $(G, \times)$ be a group. Then for any $n \in \mathbb{Z}$ and any $g \in G$, define
+\[ g^n = \begin{cases}
+g \times g \times \ldots \times g \; (n \textrm{ times}) & \textrm{if } n > 0
+\\ 1 & \textrm{if } n = 0
+\\ g^{-1} \times g^{-1} \times \ldots \times g^{-1} \; (-n \textrm{ times}) & \textrm{if } n < 0
+\end{cases}. \]
+\end{definition}
+
+\begin{lemma}[Basic properties]
+Let $(G, \cdot)$ be a group. Let $a, b \in G$ and $m, n \in \mathbb{Z}$.
+\begin{enumerate}
+\item $(ab)^{-1} = b^{-1}a^{-1}$.
+\item $(a^{-1})^{-1} = a$.
+\item $a^ma^n = a^{m+n}$.
+\item $(a^m)^n = a^{mn}$.
+\item If $G$ is symmetric, $(ab)^n = a^nb^n$.
+\end{enumerate}
+\end{lemma}
+
+\section{Fields}
+
+\begin{definition}[Field]
+$(F, +, \times)$ is a field iff it satisfies all of the following:
+\begin{enumerate}
+\item $(F, +)$ is a symmetric group. It's identity is denoted as 0.
+\item $(F - \{0\}, \times)$ is a symmetric group. It's identity is denoted as 1.
+\item Distributivity: $a(b + c) = ab + ac$ and $(a+b)c = ac + bc$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Basic properties]
+Let $(F, +, \times)$ be a field. Let $a, b \in F$.
+\begin{enumerate}
+\item $a0 = 0a = 0$.
+\item $a(-b) = (-a)b = -(ab)$.
+\item $(-a)(-b) = ab$.
+\item $ab = 0 \iff (a = 0 \textrm{ or } b = 0)$.
+\item $(-a)^{-1} = -a^{-1}$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}[Proof sketches]
+\leavevmode
+\begin{enumerate}
+\item $a0 = a(0 + 0) = a0 + a0$.
+\item $0 = a0 = a(b + (-b)) = ab + a(-b)$.
+\item $(-a)(-b) = a(-(-b)) = ab$.
+\item Suppose $a \neq 0$. Then $ab = 0 \implies b = a^{-1}0 = 0$.
+\item $(-1)(-1) = 1$, so $(-1)^{-1} = -1$. $(-a)^{-1} = ((-1)a)^{-1} = (-1)^{-1}a^{-1} = -a^{-1}$.
+\end{enumerate}
+\end{proof}
+
+\end{document}
