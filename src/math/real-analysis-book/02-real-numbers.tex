@@ -55,8 +55,11 @@ Let $\ell$ be a left inverse and $r$ be a right inverse of $a \in G$. Then
 Hence, every left inverse equals every right inverse. Hence, they are all equal.
 \end{proof}
 
+\begin{definition}[Standard operators]
 If we use $+$ as a group operator, we denote identity as 0 and inverse of $g$ as $-g$.
 If we use $\times$ as a group operator, we denote identity as 1 and inverse of $g$ as $g^{-1}$.
+$a - b \defeq a + (-b)$. $a / b \defeq ab^{-1}$.
+\end{definition}
 
 \begin{definition}
 Let $(G, \times)$ be a group. Then for any $n \in \mathbb{Z}$ and any $g \in G$, define
@@ -90,12 +93,13 @@ $(F, +, \times)$ is a field iff it satisfies all of the following:
 \end{definition}
 
 \begin{lemma}[Basic properties]
+\label{thm:field-basics}
 Let $(F, +, \times)$ be a field. Let $a, b \in F$.
 \begin{enumerate}
 \item $a0 = 0a = 0$.
 \item $a(-b) = (-a)b = -(ab)$.
 \item $(-a)(-b) = ab$.
-\item $ab = 0 \iff (a = 0 \textrm{ or } b = 0)$.
+\item \label{item:field-basics:zero-prod}$ab = 0 \iff (a = 0 \textrm{ or } b = 0)$.
 \item $(-a)^{-1} = -a^{-1}$.
 \end{enumerate}
 \end{lemma}
@@ -108,6 +112,153 @@ Let $(F, +, \times)$ be a field. Let $a, b \in F$.
 \item Suppose $a \neq 0$. Then $ab = 0 \implies b = a^{-1}0 = 0$.
 \item $(-1)(-1) = 1$, so $(-1)^{-1} = -1$. $(-a)^{-1} = ((-1)a)^{-1} = (-1)^{-1}a^{-1} = -a^{-1}$.
 \end{enumerate}
+\end{proof}
+
+\section{Partial Orders}
+
+\begin{definition}[Partial and total orders]
+Let $L$ be a set and let $\le$ be a binary predicate over $L \times L$.
+Then $(L, \le)$ is called a \emph{partial order} (aka poset) iff all of the following hold:
+\begin{enumerate}
+\item Reflexivity: $\forall a \in L$, $a \le a$.
+\item Anti-symmetry: $a \le b$ and $b \le a$ $\implies a = b$.
+\item Transitivity: $a \le b$ and $b \le c$ $\implies a \le c$.
+\end{enumerate}
+Additionally, if $\forall a, b \in L$, we have $a \le b$ or $b \le a$,
+then $(L, \le)$ is called a \emph{total order}.
+
+$a < b \defiff (a \le b \textrm{ and } a \neq b)$.
+$a \ge b \defiff b \le a$. $a > b \defiff b < a$.
+\end{definition}
+
+\begin{definition}[Upper bound]
+Let $(L, \le)$ be a poset. Let $S \subseteq L$.
+\begin{enumerate}
+\item $u \in L$ is an \emph{upper bound} for $S$ iff $s \le u$ for all $s \in S$.
+    $S$ is called \emph{upper-bounded} iff an upper bound exists for $S$.
+\item $u \in L$ is a \emph{least upper bound} or \emph{supremum} for $S$ (denoted $\sup(S)$)
+    iff for every upper bound $v$ of $S$, we have $u \le v$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Lower bound]
+Let $(L, \le)$ be a poset. Let $S \subseteq L$.
+\begin{enumerate}
+\item $u \in L$ is a \emph{lower bound} for $S$ iff $u \le s$ for all $s \in S$.
+    $S$ is called \emph{lower-bounded} iff a lower bound exists for $S$.
+\item $u \in L$ is a \emph{greatest lower bound} or \emph{infimum} for $S$ (denoted $\inf(S)$) iff
+    for every lower bound $v$ of $S$, we have $v \le u$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}
+$\sup(S)$, if it exists, is unique.
+$\inf(S)$, if it exists, is unique.
+\end{lemma}
+
+\section{Ordered Field}
+
+\begin{definition}[Ordered field]
+\label{defn:ord-field}
+Let $(F, +, \times)$ be a field.
+$(F, +, \times, \le)$ is an ordered field iff all of the following hold:
+\begin{enumerate}
+\item $(F, \le)$ is a total order.
+\item $a \le b \implies (\forall c \in F, a + c \le b + c)$.
+\item $a \ge 0$ and $b \ge 0$ $\implies ab \ge 0$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Strict inequalities]
+Let $(F, +, \times, \le)$ be an ordered field. Then
+\begin{enumerate}
+\item $a < b$ and $b < c$ $\implies a < c$.
+\item $a < b \implies (\forall c \in F, a + c < b + c)$.
+\item $a > 0$ and $b > 0$ $\implies ab > 0$.
+\end{enumerate}
+\end{lemma}
+\begin{comment}
+\leavevmode
+\begin{enumerate}
+\item $a = c \implies (a < b \textrm{ and } b < a) \implies \bot$.
+\item $a + c = b + c \implies a = b \implies \bot$.
+\item $ab = 0 \implies (a = 0 \textrm{ or } b = 0) \implies \bot$ by
+    \cref{thm:field-basics}.\ref{item:field-basics:zero-prod}.
+\end{enumerate}
+\end{comment}
+
+\begin{definition}[Field with positives (non-standard terminology)]
+\label{defn:field-with-positives}
+Let $(F, +, \times)$ be a field. Let $P \subseteq F$.
+$(F, +, \times, P)$ is called a \emph{field with positives} iff
+\begin{enumerate}
+\item $a, b \in P \implies a + b \in P$.
+\item $a, b \in P \implies ab \in P$.
+\item $\forall a \in F$, exactly one of these is true:
+    $a = 0$, $a \in P$, $-a \in P$.
+\end{enumerate}
+\end{definition}
+
+The following two results state that either of \cref{defn:ord-field,defn:field-with-positives}
+could be used to define the other.
+
+\begin{lemma}
+Let $(F, +, \times, P)$ be a field with positives.
+Let $a \le b \defiff (b - a \in P \textrm{ or } b = a)$.
+Then $(F, +, \times, \le)$ is an ordered field.
+\end{lemma}
+
+\begin{lemma}
+Let $(F, +, \times, \le)$ be an ordered field. Let $P \defeq \{x \in F: x > 0\}$.
+Then $(F, +, \times, P)$ is a field with positives.
+\end{lemma}
+
+\begin{lemma}
+Let $(F, +, \times, \le)$ be an ordered field.
+\begin{enumerate}
+\item $a_1 \le b_1$ and $a_2 \le b_2 \implies a_1 + a_2 \le b_1 + b_2$.
+\item $a^2 \ge 0$ and $(a^2 = 0 \iff a = 0)$.
+\item $1 > 0$.
+\item $ab > 0 \implies (a > 0 \textrm{ and } b > 0) \textrm{ or } (a < 0 \textrm{ and } b < 0)$.
+\item $a > 0 \implies a^{-1} > 0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{lemma}
+$(\forall \eps > 0, a \le \eps) \implies a \le 0$.
+\end{lemma}
+
+\begin{definition}
+$\displaystyle |a| \defeq \begin{cases} a & \textrm{ if } a \ge 0
+\\ -a & \textrm{ if } a < 0 \end{cases}$.
+\end{definition}
+
+\begin{lemma}
+\label{thm:abs-basics}
+Let $(F, +, \times, \le)$ be an ordered field.
+\begin{enumerate}
+\item $|a| \ge 0$ and $(|a| = 0 \iff a = 0)$.
+\item $|-a| = |a|$.
+\item $|a| \ge a$ and $|a| \ge -a$.
+\item \label{item:abs-basics:dbl}Let $c \ge 0$. Then $|a| \le c \iff -c \le a \le c$.
+\item $-|a| \le a \le |a|$.
+\item $|ab| = |a||b|$.
+\item For $a \neq 0$, $|a^{-1}| = |a|^{-1}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{lemma}[Triangle inequalities]
+$||a|-|b|| \le |a + b| \le |a| + |b|$.
+\end{lemma}
+\begin{proof}
+$-|a| \le a \le |a|$ and $-|b| \le b \le |b|$.
+Add these to get $-(|a|+|b|) \le a + b \le |a| + |b|$.
+By \cref{thm:abs-basics}.\ref{item:abs-basics:dbl}, we get $|a + b| \le |a| + |b|$.
+
+By previous result, $|a| = |(a+b) + (-b)| \le |a+b| + |b|$, so $|a|-|b| \le |a+b|$.
+Also, $|b| = |(a+b) + (-a)| \le |a+b| + |a|$, so $-|a+b| \le |a|-|b|$.
+Hence, $-|a+b| \le |a|-|b| \le |a+b|$.
+By \cref{thm:abs-basics}.\ref{item:abs-basics:dbl}, we get $||a|-|b|| \le |a+b|$.
 \end{proof}
 
 \end{document}
