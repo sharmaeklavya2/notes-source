@@ -131,23 +131,18 @@ $a < b \defiff (a \le b \textrm{ and } a \neq b)$.
 $a \ge b \defiff b \le a$. $a > b \defiff b < a$.
 \end{definition}
 
-\begin{definition}[Upper bound]
+\begin{definition}[Upper and lower bound]
 Let $(L, \le)$ be a poset. Let $S \subseteq L$.
 \begin{enumerate}
 \item $u \in L$ is an \emph{upper bound} for $S$ iff $s \le u$ for all $s \in S$.
     $S$ is called \emph{upper-bounded} iff an upper bound exists for $S$.
 \item $u \in L$ is a \emph{least upper bound} or \emph{supremum} for $S$ (denoted $\sup(S)$)
     iff $u$ is an upper bound for $S$ and for every upper bound $v$ of $S$, we have $u \le v$.
-\end{enumerate}
-\end{definition}
-
-\begin{definition}[Lower bound]
-Let $(L, \le)$ be a poset. Let $S \subseteq L$.
-\begin{enumerate}
 \item $u \in L$ is a \emph{lower bound} for $S$ iff $u \le s$ for all $s \in S$.
     $S$ is called \emph{lower-bounded} iff a lower bound exists for $S$.
 \item $u \in L$ is a \emph{greatest lower bound} or \emph{infimum} for $S$ (denoted $\inf(S)$)
     iff $u$ is a lower bound for $S$ and for every lower bound $v$ of $S$, we have $v \le u$.
+\item $S$ is called \emph{bounded} iff it has a lower bound and an upper bound.
 \end{enumerate}
 \end{definition}
 
