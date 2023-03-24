@@ -256,11 +256,218 @@ Hence, $-|a+b| \le |a|-|b| \le |a+b|$.
 By \cref{thm:abs-basics}.\ref{item:abs-basics:dbl}, we get $||a|-|b|| \le |a+b|$.
 \end{proof}
 
-\section{Real Numbers}
+\begin{definition}
+Define $\max$ and $\min$ as
+\begin{align*}
+\max(x, y) &\defeq \begin{cases}x & \textrm{ if } x \ge y \\ y & \textrm{ if } y > x\end{cases}.
+& \min(x, y) &\defeq \begin{cases}y & \textrm{ if } x \ge y \\ x & \textrm{ if } y > x\end{cases}.
+\end{align*}
+\end{definition}
+
+\begin{lemma}
+$\max$ and $\min$ are symmetric and associative, i.e.,
+$\max(a, b) = \max(b, a)$, $\max(\max(a, b), c) = \max(a, \max(b, c))$.
+$\min(a, b) = \min(b, a)$, and $\min(\min(a, b), c) = \min(a, \min(b, c))$.
+\end{lemma}
+
+\section{Supremum, Infimum, and Real Numbers}
 
 \begin{definition}
 The set of real numbers is an ordered field $(\mathbb{R}, +, \times, \le)$
 in which every set with an upper bound has a supremum.
+(In fact, such an ordered field is unique, but proving that is beyond the scope of the course/book.)
 \end{definition}
+
+\begin{lemma}
+Let $S \subseteq \mathbb{R}$ and $S' = \{-x: x \in S\}$.
+Then $\inf(S) = -\sup(S')$ and $\sup(S) = -\inf(S')$.
+\end{lemma}
+
+\begin{lemma}
+Let $S \subseteq \mathbb{R}$. Then for any $\alpha \in \mathbb{R}$,
+$(\forall x \in S, x \le \alpha) \iff \sup(S) \le \alpha$,
+and $(\forall x \in S, x \ge \alpha) \iff \inf(S) \ge \alpha$.
+\end{lemma}
+
+\begin{lemma}
+Let $A, B \subseteq \mathbb{R}$. Then
+\begin{enumerate}
+\item $\sup(A \cup B) = \max(\sup(A), \sup(B))$ and $\inf(A \cup B) = \min(\inf(A), \inf(B))$.
+\item $A \subseteq B \implies \inf(B) \le \inf(A) \le \sup(A) \le \sup(B)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{definition}
+Let $f: D \to \mathbb{R}$. Then $\sup_{x \in D} f(x) \defeq \sup(f(D))$.
+\end{definition}
+
+\begin{lemma}[Archimedian Properties, floor, and ceil]
+Let $x \in \mathbb{R}_{> 0}$. Then
+\begin{enumerate}
+\item $\exists n \in \mathbb{N}$ such that $x < n$.
+\item $\exists n \in \mathbb{N}$ such that $1/n < x$.
+\item There is a unique $n \in \mathbb{N} \cup \{0\}$ such that $n \le x < n+1$.
+    (We denote $n$ as $\smallfloor{x}$.)
+\item There is a unique $n \in \mathbb{N}$ such that $n-1 < x \le n$.
+    (We denote $n$ as $\smallceil{x}$.)
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+\begin{enumerate}
+\item Suppose this is not true. Then $x$ is an upper-bound of $\mathbb{N}$.
+    By completeness property of $\mathbb{R}$, $u \defeq \sup(\mathbb{N})$ exists.
+    Hence, $u-1$ is not an upper-bound of $\mathbb{N}$, and so $\exists m \in \mathbb{N}$
+    such that $u-1 < m$. Hence, $u \le m+1$. This is a contradiction, since $m+1 \in \mathbb{N}$.
+\item $\exists n \in \mathbb{N}$ such that $n > 1/x$. Hence, $1/n < x$.
+\item Let $T \defeq \{m \in \mathbb{N}: x < m\}$. By part 1, $T \neq \emptyset$.
+    By well-ordering of $\mathbb{N}$, $T$ has a least element $t$.
+    Then $t-1 \not\in T$, so $t-1 \le x$. Hence, $t-1 \le x < t$. Set $n = t-1$.
+\item Let $T \defeq \{m \in \mathbb{N}: x \le m\}$. By part 1, $T \neq \emptyset$.
+    By well-ordering of $\mathbb{N}$, $T$ has a least element $n$.
+    Then $n-1 \not\in T$, so $n-1 < x$.
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}[$\mathbb{Q}$ is dense in $\mathbb{R}$]
+Let $x, y \in \mathbb{R}$ and $x < y$. Then $\exists z \in \mathbb{Q}$ such that $x < z < y$.
+\end{lemma}
+\begin{proof}
+By Archimedian property, $\exists n \in \mathbb{N}$ such that $1/n < y-x$. Then $nx + 1 < y$.
+Let $k \defeq \floor{nx}+1$. Then $nx < \floor{nx} + 1 \le nx + 1 < ny$.
+Hence, $x < k/n < y$.
+\end{proof}
+
+\begin{lemma}[Principle of iterated suprema]
+Let $X$ and $Y$ be non-empty sets and $f: X \times Y \to \mathbb{R}$ be upper-bounded. Then
+\[ \sup_{(x, y) \in X \times Y} f(x, y)
+= \sup_{x \in X}\sup_{y \in Y} f(x, y)
+= \sup_{y \in Y}\sup_{x \in X} f(x, y). \]
+\end{lemma}
+\begin{proof}
+We will prove the first equality, since the second's proof is similar. Let
+\begin{align*}
+g(x) &\defeq \sup_{y \in Y} f(x, y)
+& \alpha &\defeq \sup_{x \in X} g(x)
+& \beta &\defeq \sup_{(x,y) \in X \times Y} f(x, y)
+\end{align*}
+We need to show that $\alpha = \beta$. For any $z \in \mathbb{R}$,
+\begin{align*}
+& \beta \le z
+\\ \iff &\forall (x, y) \in X \times Y, f(x, y) \le z
+\\ \iff &\forall x \in X, \forall y \in Y, f(x, y) \le z
+\\ \iff &\forall x \in X, g(x) \le z
+\\ \iff &\alpha \le z.
+\qedhere
+\end{align*}
+\end{proof}
+
+\begin{lemma}
+Let $X$ and $Y$ be non-empty sets and $f: X \times Y \to \mathbb{R}$ be bounded.
+Then $\alpha \le \beta$, where
+\begin{align*}
+\alpha &\defeq \sup_{x \in X}\inf_{y \in Y} f(x, y),
+& \beta &\defeq \inf_{x \in X}\sup_{y \in Y} f(x, y).
+\end{align*}
+\end{lemma}
+(Hint: Consider the special case where $X$ and $Y$ are finite, and then generalize.)
+\begin{proof}
+Pick any $\eps > 0$.
+Then $\exists x^* \in X$ such that $\inf_{y \in Y} f(x^*, y) \ge \alpha - \eps$,
+and $\exists y^* \in Y$ such that $\sup_{x \in X} f(x, y*) \le \beta + \eps$. Hence,
+\[ \alpha - \eps \le \inf_{y \in Y} f(x^*, y) \le f(x^*, y^*) \le \sup_{x \in X} f(x, y^*) \le \beta + \eps. \]
+Hence, $\forall \eps > 0$, we get $\alpha - \beta \le 2\eps$.
+Hence, $\alpha - \beta \le 0$.
+\end{proof}
+
+\section{Intervals}
+
+\begin{definition}[Interval]
+Let $a, b \in \mathbb{R}$, such that $a \le b$.
+\\ The following are called \emph{closed intervals}:
+\begin{enumerate}
+\item $[a, b] \defeq \{x \in \mathbb{R}: a \le x \le b\}$.
+\item $[a, \infty) \defeq \{x \in \mathbb{R}: a \le x\}$.
+\item $(-\infty, b] \defeq \{x \in \mathbb{R}: x \le b\}$.
+\end{enumerate}
+The following are called \emph{open intervals}:
+\begin{enumerate}
+\item $(a, b) \defeq \{x \in \mathbb{R}: a < x < b\}$.
+\item $(a, \infty) \defeq \{x \in \mathbb{R}: a < x\}$.
+\item $(-\infty, b) \defeq \{x \in \mathbb{R}: x < b\}$.
+\end{enumerate}
+The following are called \emph{half-open intervals}:
+\begin{enumerate}
+\item $[a, b) \defeq \{x \in \mathbb{R}: a \le x < b\}$.
+\item $(a, b] \defeq \{x \in \mathbb{R}: a < x \le b\}$.
+\end{enumerate}
+$(-\infty, \infty) \defeq \mathbb{R}$ is both an open and closed interval.
+\end{definition}
+
+\begin{lemma}
+Let $S \subseteq \mathbb{R}$ be a non-empty set.
+Then $S$ is an interval iff $\forall x \in S, \forall y \in S, (x < y \implies [x, y] \subseteq S)$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Let $a \defeq \inf(S)$ and $b \defeq \sup(S)$.
+(Let $a \defeq -\infty$ if $S$ is not lower bounded,
+and $b \defeq \infty$ if $S$ is not upper bounded.)
+
+Pick any $z \in (a, b)$. Since $z$ is not a lower or upper bound of $S$,
+$\exists x \in S$ such that $x < z$, and $\exists y \in S$ such that $y < z$.
+Then $z \in [x, y]$ and $[x, y] \subseteq S$, so $z \in S$. Hence, $(a, b) \subseteq S$.
+Also, $S \subseteq [a, b]$ (where $[a, \infty] \defeq [a, \infty)$ and $[-\infty, b] \defeq (-\infty, b]$).
+\end{proof}
+
+\begin{lemma}
+Let $[a_i]_{i \in \mathbb{N}}$ and $[b_i]_{i \in \mathbb{N}}$ be infinite sequences
+and $I_n \defeq [a_n, b_n]$ for all $n \in \mathbb{N}$. Then
+\end{lemma}
+
+\subsection{Nested Intervals}
+
+Let $[a_n]_{n \in \mathbb{N}}$ and $[b_n]_{n \in \mathbb{N}}$ be two sequences of real numbers
+such that $a_i \le a_{i+1} \le b_{i+1} \le b_i$ for all $i \in \mathbb{N}$.
+Let $I_n \defeq [a_n, b_n]$ for $n \in \mathbb{N}$.
+Let $I \defeq \cap_{n \in \mathbb{N}} I_n$.
+
+$\forall n \in \mathbb{N}$, $a_1 \le a_n \le b_n \le b_1$.
+Hence, sequences $[a_n]_{n \in \mathbb{N}}$ and $[b_n]_{n \in \mathbb{N}}$ are bounded.
+Let $a \defeq \sup_{n \in \mathbb{N}} a_n$ and $b \defeq \inf_{n \in \mathbb{N}} b_n$.
+Let $\ell \defeq \inf_{n \in \mathbb{N}} (b_n - a_n)$
+($\ell \ge 0$, since $b_n - a_n \ge 0$ for all $n \in \mathbb{N}$).
+
+\begin{lemma}
+$I = [a, b]$.
+\end{lemma}
+\begin{proof}
+Let $z \in \mathbb{R}$.
+\begin{align*}
+& z \in [a, b]
+\\ \iff & (\forall n \in \mathbb{N}, a_n \le z) \textrm{ and } (\forall n \in \mathbb{N}, b_n \le z)
+\\ \iff & (\forall n \in \mathbb{N}, a_n \le z \le b_n)
+\\ \iff & (\forall n \in \mathbb{N}, z \in I_n)
+\\ \iff & z \in I.
+\qedhere
+\end{align*}
+\end{proof}
+
+\begin{lemma}
+$\ell \defeq b-a$.
+\end{lemma}
+\begin{proof}
+\begin{align*}
+& (\forall n \in \mathbb{N}, a_n \le a) \textrm{ and } (\forall n \in \mathbb{N}, b \le b_n)
+\\ \implies & (\forall n \in \mathbb{N}, a_n \le a \textrm{ and } b \le b_n)
+\\ \implies & (\forall n \in \mathbb{N}, b - a \le b_n - a_n )
+\\ \implies & b - a \le \inf_{n \in \mathbb{N}} (b_n - a_n) = \ell.
+\end{align*}
+Let $\eps > 0$. Then $\exists p \in \mathbb{N}$ such that $a_p \ge a - \eps$,
+and $\exists q \in \mathbb{N}$ such that $b_q \le b + \eps$.
+Let $r \defeq \max(p, q)$. Then
+\[ a - \eps \le a_p \le a_r \le b_r \le b_q \le b + \eps. \]
+Hence,
+\[ \ell \le b_r - a_r \le (b + \eps) - (a - \eps) = (b-a) + 2\eps. \]
+Since this is true for all $\eps > 0$, we get $\ell \le b-a$.
+\end{proof}
 
 \end{document}
