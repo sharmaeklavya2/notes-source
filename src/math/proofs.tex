@@ -81,23 +81,50 @@ Many proofs were a long string of arguments that led to basic claims that
 people thought were \emph{obvious}. They weren't obvious to me,
 and some of those claims were (provably) wrong since I could find counterexamples.
 
-I don't blame the students, though. Learning to write proofs is tricky.
-Most students learn proof-writing by looking at examples.
+I don't blame the students, though.
+\end{comment}
+
+Learning to write proofs is tricky.
+Most students learn proof-writing by looking at examples of proofs.
 This is what I too initially did during my undergrad.
 Examples are good for learning proof techniques, like proof by contradiction,
 proof by induction, proof by cases, etc.
-But examples can't be used to truly understand \emph{what} a proof is.
+But such examples can't be used to truly understand \emph{what} a proof is.
 Unless people know what a proof is, it would be very difficult for them to know
 whether their attempted proof is correct or not.
-\end{comment}
 
 \section{Why proofs?}
 
-If you want to show that a statement is true, an explanation for why you think
-the statement is true may not constitute a valid proof,
-even if the explanation is detailed enough and
-written using enough amount of mathematics.
-The word `proof' has a very specific meaning.
+Often in math, we want to ascertain the truth of statements.
+Let's take a few statements as examples.
+Do you know which of these are true and which are false?
+\begin{enumerate}
+\item The product of any two odd numbers is odd.
+\item Let $f: \mathbb{R} \to \mathbb{R}$ be a function. Let $a, b \in \mathbb{R}$ such that
+    $a < b$, $f(a) < 0$, and $f(b) > 0$. Then $\exists c \in \mathbb{R}$ such that
+    $a < c < b$ and $f(c) = 0$.
+\item Every even natural number greater than 2 is the sum of two prime numbers.
+\end{enumerate}
+
+Let's say you made up your mind about which of these are true and which are false.
+How would you convince others that your opinions are correct?
+In fact, how would \emph{you} know that your opinions are correct?
+How can you be sure that there's no mistake in your reasoning?
+
+Early in the history of mathematics, many mathematicians made claims about what they thought was true.
+But some of these claims were later shown to be false.
+I, too, have at times believed that something was true, only to later find a counterexample
+and a flaw in my reasoning. This made me very uncomfortable. How can I ever trust myself now?
+Eventually, mathematicians found a way out of this existential problem.
+They found a technique that can establish the truth of a statement
+in a way that leaves no room for doubt. This technique is called \emph{proof}.
+
+Somewhat confusingly, the word `proof' already exists in the English language,
+and it's meaning is similar, but not exactly the same, as the word `proof' in math.
+Many people falsely believe that an explanation for why they think a statement is true
+is a mathematical proof if the explanation is detailed enough and
+written using enough amount of mathematics. But that's not necessarily true.
+The word `proof' has a very specific meaning in math.
 
 As an analogy, if you want to explain someone an algorithm,
 one option is to explain the algorithm using English sentences.
@@ -110,7 +137,7 @@ using arguments written in a specific language.
 Writing arguments in such a language would force you to be unambiguous.
 
 The ability to precisely state something is often taken for granted.
-A 10-year-old child can probably explain how to sort a list of numbers.
+A 10-year-old child can probably explain how to sort a list of numbers in ascending order.
 But when I was new to programming, writing a program to sort a list of numbers
 was non-trivial for me. Many of my friends had a similar experience.
 It was difficult not because we didn't know what loops and conditionals were.
@@ -127,12 +154,10 @@ the compiler successfully compiles you code,
 you can be sure that there are no syntax errors in your code.
 Similarly, there is a simple mechanical way to check whether a proof is correct.
 
-\begin{comment}
 In fact, there are computer programs, like \href{https://coq.inria.fr/}{Coq},
 that can validate your proofs if they're written in a certain proof language.
 If such a program says that your proof is correct,
 you can be absolutely sure that your proof is correct.
-\end{comment}
 
 \section{What is a proof?}
 
