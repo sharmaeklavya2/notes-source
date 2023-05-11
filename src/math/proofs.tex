@@ -5,7 +5,7 @@
 \onehalfspacing
 
 \DeclareMathOperator{\isOdd}{isOdd}
-\newcommand*{\todotext}[1]{\textcolor{red}{#1}}
+\newcommand*{\todotext}[1]{\textcolor{textRed}{#1}}
 \newenvironment*{tightemize}{\begin{itemize}[noitemsep,topsep=0pt]}{\end{itemize}}
 
 \renewcommand{\algorithmiccomment}[1]{\hfill\textcolor{gray}{\texttt{//} \textit{#1}}}
@@ -13,7 +13,7 @@
 \newenvironment*{formalproof}%
 {\begin{lrbox}{\formalproofbox}\begin{minipage}{0.9\textwidth}\phantomsection\algorithmic[1]}%
 {\endalgorithmic\end{minipage}\end{lrbox}\vspace{\parskip}\noindent
-\colorbox[HTML]{EEEEEE}{\usebox{\formalproofbox}}\vspace{\parskip}}
+\colorbox{textColor!7!bgColor}{\usebox{\formalproofbox}}\vspace{\parskip}}
 
 \title{Understanding Proofs}
 
