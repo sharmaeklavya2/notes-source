@@ -95,7 +95,7 @@ Examples:
 1.  yes - हाउदु
 2.  no - इल्ला/अल्ला
 
-[My interpretation: It's unclear when to use इल्ला and when to use अल्ला. Mixing them up is not a big deal, so don't worry.]
+[It's not mentioned in this lesson, but there's a difference between इल्ला and अल्ला. See <https://www.youtube.com/watch?v=zHkoh4_VXRg>]
 
 Examples:
 
