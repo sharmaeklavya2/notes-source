@@ -12,7 +12,7 @@
 निन्नदु is pure Kannada. निंदु is colloquial Kannada.
 
 1.  किसका - यारदु
-2.  कौनसा - यावुदु
+2.  कौन सा - यावुदु
 3.  isn't it? - Alvaa?
 4.  ये - इदु / ई
 5.  वो - अदु / आ
@@ -27,7 +27,7 @@
 
 Here we used ई instead of इदु because यारदु/नन्नदु/अवरदु already ends in दु.
 
-1.  तुम्हारा pen कौनसा है? - निम्मा pen यावुदु?
+1.  तुम्हारा pen कौन सा है? - निम्मा pen यावुदु?
 2.  वो pen मेरा है। - आ pen नंदु.
 
 Note that in Hindi, "वो pen मेरा है।" and "वो मेरा pen है।" are both correct, but in Kannada, "आ pen नंदु." is the only correct option.

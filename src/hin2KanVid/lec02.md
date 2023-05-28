@@ -17,7 +17,7 @@ Note how we append an आ to पुस्तक. Although 'book' is called 'प�
 Here we see 3 synonyms of money. Their popularity varies with geographical regions within Karnataka, but they're all understood everywhere. हणा is pure Kannada. Duddu is popular in North Karnataka. कासु is popular in Bangalore, Mysore, and a few other places. Use हणा if you're not sure which to use.
 
 1.  यह किसकी पुस्तक है? - इदु यारा पुस्तका?
-2.  कौनसी book? - यावा पुस्तका? / यावा book?
+2.  कौन सी book? - यावा पुस्तका? / यावा book?
 3.  कौनसी पुस्तक तुम्हारी है? - निन्ना पुस्तका यावुदु?
 
 Like Hindi, sometimes people mix a few English words into Kannada. 'Book' is sometimes called book instead of पुस्तका.
@@ -38,7 +38,7 @@ Some English words take on a slightly different pronunciation in Kannada, becaus
 
 Append अवरा to a person's name to give respect. It's the Hindi equivalent of जी.
 
-1.  यह कौनसी पुस्तक है? - इदु यावा पुस्तका.
+1.  यह कौन सी पुस्तक है? - इदु यावा पुस्तका.
 2.  यह कहानी की पुस्तक है। - इदु कथॆ पुस्तका.
 3.  क्या वह तुम्हारी shirt है? - अदु निन्ना अंगिया?
 4.  नहीं, वह राजेश जी की shirt है। - अल्ला, अदु राजेशवरा अंगि.
