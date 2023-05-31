@@ -103,6 +103,6 @@ Examples:
 2.  हाँ, मैं डॉक्टर हूँ। - ಹೌದು, ನಾನು doctor.
 3.  नहीं, मैं engineer हूँ। - ಇಲ್ಲ, ನಾನು engineer.
 
-Note how we dropped हो in the question. Also, we append aa/आ to specify that we're asking a question.
+Note how we dropped हैं in the question. Also, we append aa/आ to specify that we're asking a question.
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trin.js?ui=true&addCss=true"></script>
