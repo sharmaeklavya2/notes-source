@@ -4,10 +4,10 @@ I'm watching a [YouTube playlist](https://www.youtube.com/playlist?list=PLOb5Wwt
 to learn Kannada from Hindi. I'll write down notes from each video because
 reading these notes is easier than rewatching the videos.
 
-In Kannada (and also Hindi), spelling is a very reliable guide to pronunciation.
-Hence, I'll write Kannada in the Kannada script (unlike the video, which uses English characters),
+In Kannada (and also in Hindi), spelling is a very reliable guide to pronunciation.
+Hence, I'll write Kannada in the Kannada script (unlike the video, which uses English characters).
 However, I'm only interested in learning spoken Kannada, and not written Kannada,
-so how will I read my own notes? I'll use a tool called
+so to be able to read my own notes, I'll use a tool called
 [trin](https://sharmaeklavya2.github.io/trin/)
 to transliterate Kannada to Devanagari
 (look out for the
