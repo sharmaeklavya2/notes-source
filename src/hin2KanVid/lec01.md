@@ -105,4 +105,4 @@ Examples:
 
 Note how we dropped हैं in the question. Also, we append aa/आ to specify that we're asking a question.
 
-<script type="module" src="https://sharmaeklavya2.github.io/trin/trin.js?ui=true&addCss=true"></script>
+<script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>

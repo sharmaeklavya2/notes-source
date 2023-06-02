@@ -43,4 +43,4 @@ Append ವರಾ to a person's name to give respect. It's the Hindi equivalent o
 3.  क्या वह तुम्हारी shirt है? - ಅದು ನಿನ್ನ ಅಂಗಿಯ?
 4.  नहीं, वह राजेश जी की shirt है। - ಅಲ್ಲ, ಅದು ರಾಜೇಶವರಾ ಅಂಗಿ.
 
-<script type="module" src="https://sharmaeklavya2.github.io/trin/trin.js?ui=true&addCss=true"></script>
+<script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>

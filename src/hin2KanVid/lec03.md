@@ -35,4 +35,4 @@ Note that in Hindi, "वो pen मेरा है।" and "वो मेरा
 1.  यह पुस्तक तुम्हारी है ना? - ಈ ಪುಸ್ತಕ ನಿಮ್ಮದು ಅಲ್ಲವಾ?
 2.  नहीं, यह पुस्तक मेरी नहीं है। - ಅಲ್ಲ, ಈ ಪುಸ್ತಕ ನನ್ನದು ಅಲ್ಲ.
 
-<script type="module" src="https://sharmaeklavya2.github.io/trin/trin.js?ui=true&addCss=true"></script>
+<script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
