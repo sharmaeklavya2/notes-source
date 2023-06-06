@@ -20,6 +20,10 @@ If you know how to read Kannada and come across a spelling error in my notes
 or an instance where I didn't use the Kannada script, please let me know
 the correct spelling so that I can fix my notes.
 
+Text in square brackets are my comments, and are not part of the videos.
+
+The videos often use incorrect Hindi. I have fixed those in my notes.
+
 Common abbreviations I'll use in my notes:
 
 * `en`: english
