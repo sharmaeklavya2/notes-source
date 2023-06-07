@@ -1,15 +1,15 @@
 # Lesson 3
 
-1.  मेरा - ನನ್ನದು/नंदु
-2.  तेरा/तुम्हारा - ನಿನ್ನದು/निंदु
-3.  तुम्हारा/आपका - ನಿಮ್ಮದು
+1.  मेरा - ನನ್ನದು / ನಂದು
+2.  तेरा / तुम्हारा - ನಿನ್ನದು / ನಿಂದು
+3.  तुम्हारा / आपका - ನಿಮ್ಮದು
 4.  इसका (m) - ಇವನದು
 5.  इनका - ಇವರದು
 6.  उसका - ಅವನದು
 7.  उनका - ಅವರದು
 
-ನನ್ನದು is pure Kannada. नंदु is colloquial Kannada.
-ನಿನ್ನದು is pure Kannada. निंदु is colloquial Kannada.
+ನನ್ನದು is pure Kannada. ನಂದು is colloquial Kannada.
+ನಿನ್ನದು is pure Kannada. ನಿಂದು is colloquial Kannada.
 
 1.  किसका - ಯಾರದು
 2.  कौन सा - ಯಾವುದು
@@ -29,9 +29,9 @@
 Here we used ಈ instead of ಇದು because ಯಾರದು/ನನ್ನದು/ಅವರದು already ends in ದು.
 
 1.  तुम्हारा pen कौन सा है? - ನಿಮ್ಮ pen ಯಾವುದು?
-2.  वो pen मेरा है। - ಆ pen नंदु.
+2.  वो pen मेरा है। - ಆ pen ನಂದು.
 
-Note that in Hindi, "वो pen मेरा है।" and "वो मेरा pen है।" are both correct, but in Kannada, "ಆ pen नंदु." is the only correct option.
+Note that in Hindi, "वो pen मेरा है।" and "वो मेरा pen है।" are both correct, but in Kannada, "ಆ pen ನಂದು." is the only correct option.
 [A Kannadiga friend says this is incorrect. "वो pen मेरा है।" translates to "ಆ pen ನನ್ನದು.", and "वो मेरा pen है।" becomes "ಅದು ನನ್ನ pen.".]
 
 1.  यह पुस्तक तुम्हारी है ना? - ಈ ಪುಸ್ತಕ ನಿಮ್ಮದು ಅಲ್ಲವಾ?
