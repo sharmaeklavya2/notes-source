@@ -19,6 +19,7 @@
 
 ये gets translated to ಇದು or ಈ depending on context. A rule of thumb is that we usually shouldn't have two words ending with ದು in the same sentence.
 [My interpretation: ಇದು is a noun, ಈ is an adjective.]
+[A Kannadiga friend gave me a counterexample: "this is mine" translates to "ಇದು ನನ್ನದು", which has two words ending with ದು.]
 
 1.  यह पुस्तक किसकी है? - ಈ ಪುಸ್ತಕ ಯಾರದು?
 2.  यह पुस्तक मेरी है। - ಈ ಪುಸ್ತಕ ನನ್ನದು.
