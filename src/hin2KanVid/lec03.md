@@ -31,6 +31,7 @@ Here we used ಈ instead of ಇದು because ಯಾರದು/ನನ್ನದು
 2.  वो pen मेरा है। - ಆ pen नंदु.
 
 Note that in Hindi, "वो pen मेरा है।" and "वो मेरा pen है।" are both correct, but in Kannada, "ಆ pen नंदु." is the only correct option.
+[A Kannadiga friend says this is incorrect. "वो pen मेरा है।" translates to "ಆ pen ನನ್ನದು.", and "वो मेरा pen है।" becomes "ಅದು ನನ್ನ pen.".]
 
 1.  यह पुस्तक तुम्हारी है ना? - ಈ ಪುಸ್ತಕ ನಿಮ್ಮದು ಅಲ್ಲವಾ?
 2.  नहीं, यह पुस्तक मेरी नहीं है। - ಅಲ್ಲ, ಈ ಪುಸ್ತಕ ನನ್ನದು ಅಲ್ಲ.

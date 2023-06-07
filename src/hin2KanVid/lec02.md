@@ -23,6 +23,7 @@ Here we see 3 synonyms of money. Their popularity varies with geographical regio
 Like Hindi, sometimes people mix a few English words into Kannada. 'Book' is sometimes called book instead of ಪುಸ್ತಕ.
 
 In Hindi, "कौनसी पुस्तक तुम्हारी है?" and "तुम्हारी पुस्तक कौनसी है?" are both acceptable, but in Kannada, the correct way is analogous to the second one.
+[A Kannadiga friend told me this is incorrect. "कौनसी पुस्तक तुम्हारी है?" translates to "ಯಾವ ಪುಸ್ತಕ ನಿನ್ನದು?", and "तुम्हारी पुस्तक कौनसी है?" becomes "ನಿನ್ನ ಪುಸ್ತಕ ಯಾವುದು?".]
 
 1.  यह मेरी पुस्तक है। - ಇದು ನನ್ನ ಪುಸ್ತಕ.
 2.  वह मेरी book है। - ಅದು ನನ್ನ बुक्कु.
@@ -36,7 +37,8 @@ Some English words take on a slightly different pronunciation in Kannada, becaus
 5.  मेरा घर वह है। - ನನ್ನ ಮನೆ ಅದು.
 6.  वह मेरा घर है। - ಅದು ನನ್ನ ಮನೆ.
 
-Append ವರಾ to a person's name to give respect. It's the Hindi equivalent of जी.
+Append ಅವರ to a person's name to give respect. It's the Hindi equivalent of जी.
+[It's unclear if it should be ರಾಜೇಶವರಾ or ರಾಜೇಶ್ ಅವರ.]
 
 1.  यह कौन सी पुस्तक है? - ಇದು ಯಾವ ಪುಸ್ತಕ?
 2.  यह कहानी की पुस्तक है। - ಇದು ಕಥೆ ಪುಸ್ತಕ.
