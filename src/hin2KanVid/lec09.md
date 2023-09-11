@@ -1,6 +1,6 @@
 # Lesson 9
 
-(status: unreviewed)
+[status: unreviewed]
 
 Comparative suffixes in Kannada
 

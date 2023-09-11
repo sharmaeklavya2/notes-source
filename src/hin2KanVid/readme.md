@@ -16,6 +16,9 @@ icon in the notes).
 
 Since the videos don't mention the spelling of words, I need to find out their spelling from elsewhere.
 I usually use Google translate for this, but it doesn't always give me the right answer.
+Also, sometimes the videos have minor errors.
+Hence, I get these lecture notes reviewed by some of my Kannadiga friends.
+(Perhaps you are one of them, and are reading this page because I asked you to.)
 If you know Kannada and you find an error in my notes
 (either a translation error, or a spelling error, or something else),
 please let me know so that I can fix my notes.

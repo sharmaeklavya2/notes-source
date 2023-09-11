@@ -1,6 +1,6 @@
 # Lesson 10
 
-(status: unreviewed)
+[status: unreviewed]
 
 Words for people:
 
