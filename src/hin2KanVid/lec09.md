@@ -40,7 +40,7 @@ Travel:
 
 1.  railway station - ರೈಲು ನಿಲ್ದಾಣ
 2.  ship - ಹಡಗು
-3.  boat - ಹಡಗು
+3.  boat - ದೋಣಿ
 4.  समुद्र - ಸಮುದ್ರ
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
