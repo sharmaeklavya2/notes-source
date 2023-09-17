@@ -1,7 +1,5 @@
 # Lesson 5
 
-[status: unreviewed]
-
 1.  कितना - ಎಷ್ಟು
 2.  तुझे - ನಿನಗೆ
 3.  आपको - ನಿಮಗೆ
@@ -12,10 +10,10 @@ Example:
 1.  इस कुर्सी का दाम क्या है? - ಈ ಕುರ್ಚಿಯ ಬೆಲೆ ಎಷ್ಟು?
 2.  आपको कितने आम चाहिए? - ನಿಮಗೆ ಎಷ್ಟು ಮಾವಿನ ಹಣ್ಣು ಬೇಕು?
 
-The names of all fruits end with ಹಣ್ಣು. ಹಣ್ಣು means fruit.
+The names of most fruits end with ಹಣ್ಣು. ಹಣ್ಣು means fruit.
 
 1.  उतना नहीं - not much - ಅಷ್ಟು ಅಲ್ಲ (or sometimes ಅಷ್ಟು ಇಲ್ಲ)
-2.  क्या यह बहुत ऊँची इमारत है? - ಇದು ತುಂಬಾ ಎತ್ತರವದ ಕಟ್ಟಡವ?
+2.  क्या यह बहुत ऊँची इमारत है? - ಇದು ತುಂಬಾ ಎತ್ತರವಾದ ಕಟ್ಟಡವ?
 3.  नहीं, यह इतनी ऊँची नहीं है। - ಇಲ್ಲ, ಇದು ಅಷ್ಟು ಎತ್ತರವಿಲ್ಲ.
 
 We could have also used ಅಲ್ಲ instead of ಇಲ್ಲ.
@@ -29,6 +27,7 @@ Here we *are* translating है to ಇದೆ. ಎತ್ತರ and ಇದೆ get
 2.  वे केले हैं। - ಅವೆಲ್ಲ ಬಾಳೆಹಣ್ಣುಗಳು.
 
 "ಅವು ಏನು?" is the most popular. "ಅದೆಲ್ಲ ಏನು?" is the least popular.
+[My Kannadiga friend says otherwise: "ಅದೆಲ್ಲ ಏನು?" is more popular than "ಅವು ಏನು?"]
 
 1.  ये क्या हैं? - ಇವೆಲ್ಲ ಏನು? / ಇವು ಏನು? / ಇದೆಲ್ಲ ಏನು?
 2.  ये घड़ियाँ हैं। - ಇವೆಲ್ಲ ಗಡಿಯಾರಗಳು. / ಇದೆಲ್ಲ ಗಡಿಯಾರಗಳು.
@@ -46,9 +45,10 @@ Note how we append ಯು to ಪ್ರಾಣಿ and ಹಕ್ಕಿ. [It's not e
 We could have also said "ಅದು ಕೋಗಿಲೆ" or "ಅದು ಬೆಕ್ಕು".
 
 1.  दूध - ಹಾಲು
-2.  यह गाय अच्छा दूध देती है। - ಈ ಹಸು ವಳ್ಳೆಯ ಹಾಲನ್ನು ಕೊಡುತದೆ.
+2.  यह गाय अच्छा दूध देती है। - ಈ ಹಸು ಒಳ್ಳೆಯ ಹಾಲನ್ನು ಕೊಡುತ್ತದೆ.
 
-Note how 'ಹಾಲು' got changed to 'ಹಾಲನ್ನು'. We could have also simply used 'ಹಾಲು', and that would have been fine too.
+Note how 'ಹಾಲು' got changed to 'ಹಾಲನ್ನು'.
+[The video says that ಹಾಲು is fine too, which is wrong according to my Kannadiga friend.]
 
 1.  वह पहाड़ सुन्दर है। - ಆ ಬೆಟ್ಟ ಸುಂದರವಾಗಿದೆ.
 2.  वे पहाड़ सुन्दर हैं। - ಆ ಬೆಟ್ಟಗಳು ಸುಂದರವಾಗಿವೆ.
