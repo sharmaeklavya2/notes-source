@@ -25,3 +25,7 @@ a:visited {color: var(--vlink-color);}
     ul {padding-left: 1em;}
     ol {padding-left: 1.2em;}
 }
+
+/* extra */
+table {border-collapse: collapse;}
+td, th {border: 1px solid var(--text-secondary); padding: 0.1rem 0.5rem;}
