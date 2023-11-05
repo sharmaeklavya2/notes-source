@@ -1,19 +1,27 @@
-html {font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, 'Open Sans', sans-serif;}
-body {margin: 0; padding: 0 2.5em; line-height: 1.5; font-size: 1.1em;}
+/* color scheme */
+body {
+    --bg-color: white; --text-color: #202020; --text-secondary: #888;
+    --link-color: #1a0dab; --vlink-color: #681da8;
+}
+@media (prefers-color-scheme: dark) {
+    body {
+        --bg-color: #1b1e20; --text-color: #c8c8c8;
+        --link-color: #8ab4f8; --vlink-color: #c58af9;
+    }
+    img {filter: brightness(.8) contrast(1.2);}
+}
+
+/* basic */
+body {
+    font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, 'Open Sans', sans-serif;
+    margin: 0; padding: 0 2.5em; line-height: 1.5; font-size: 1.1em;
+    color: var(--text-color); background-color: var(--bg-color);
+}
 a:not(:hover) {text-decoration: none;}
+a {color: var(--link-color);}
+a:visited {color: var(--vlink-color);}
 @media (max-width: 820px) {
     body {padding: 0 1em;}
     ul {padding-left: 1em;}
     ol {padding-left: 1.2em;}
-}
-
-/* color scheme */
-body {color: #202020;}
-a {color: #1a0dab;}
-a:visited {color: #681da8;}
-@media (prefers-color-scheme: dark) {
-    body {background: #1b1e20; color: #c8c8c8;}
-    a {color: #8ab4f8;}
-    a:visited {color: #c58af9;}
-    img {filter: brightness(.8) contrast(1.2);}
 }
