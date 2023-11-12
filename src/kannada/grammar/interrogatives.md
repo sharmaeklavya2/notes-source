@@ -51,3 +51,5 @@
 1.  ಎಷ್ಟು - कितना - how much
 2.  ಇಷ್ಟು - इतना - this much
 3.  ಅಷ್ಟು - उतना - that much
+
+<script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
