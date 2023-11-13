@@ -44,7 +44,7 @@ Exceptions:
 
 ## Simple Tense
 
-In the simple tense, the verb is conjugated as 'augmented verb root + suffix' (+ denotes concatenation (without संधि)). The augmentation depends on the tense. The suffix depends on the tense and the subject's PNG (Person type (1st, 2nd, 3rd), Number, Gender).
+In the simple tense, the verb is conjugated as 'augmented verb root + participle + PNG suffix' (+ denotes concatenation (without संधि)). The augmentation depends on the tense. The participle and PNG suffix depends on the tense and the subject's PNG (Person type (1st, 2nd, 3rd), Number, Gender).
 
 Examples:
 
@@ -55,27 +55,51 @@ Examples:
 ### Augmenting the verb root
 
 1.  ಉ-ending: No change for present and future. For past, remove ಉ and append ಇ.
-2.  ಎ or ಇ: Append ಯು for past. No change for present and future.
+2.  ಎ or ಇ: Append ಯು for present and future. No change for past.
 
-### Suffix
+### Participle and Suffix
+
+This tables lists 'participle + suffix' for each case.
+Exceptional cases are highlighted.
 
 <table>
 <thead>
 <tr><th>Subject</th><th>Present</th><th>Past</th><th>Future</th></tr>
 </thead>
 <tbody>
-<tr><td>ನಾನು</td><td>ತ್ತೇನೆ</td><td>ದೆನು</td><td>ವೆನು</td></tr>
-<tr><td>ನಾವು</td><td>ತ್ತೇವೆ</td><td>ದೆವು</td><td>ವೆವು</td></tr>
-<tr><td>ನೀನು</td><td>ತ್ತೀಯ</td><td>ದೆ</td><td>ವಿಯೆ/ವೆ</td></tr>
-<tr><td>ನೀವು</td><td>ತ್ತೀರಿ</td><td>ದಿರಿ</td><td>ವಿರಿ</td></tr>
-<tr><td>ಅವನು</td><td>ತ್ತಾನೆ</td><td>ದನು</td><td>ವನು</td></tr>
-<tr><td>ಅವಳು</td><td>ತ್ತಾಳೆ</td><td>ದಳು</td><td>ವಳು</td></tr>
-<tr><td>ಅವರು</td><td>ತ್ತಾರೆ</td><td>ದರು</td><td>ವರು</td></tr>
-<tr><td>ಅದು</td><td>ತ್ತದೆ</td><td>ತು/ಯಿತು*</td><td>ವುದು</td></tr>
-<tr><td>ಅವು</td><td>ತ್ತವೆ</td><td>ದವು</td><td>ವವು</td></tr>
+<tr><td>ನಾನು</td><td>ತ್ತೇನೆ (ತ್ತ್ + ಏನೆ)</td><td>ದೆನು (ದ್ + ಎನು)</td><td>ವೆನು (ವ್ + ಎನು)</td></tr>
+<tr><td>ನಾವು</td><td>ತ್ತೇವೆ (ತ್ತ್ + ಏವೆ)</td><td>ದೆವು (ದ್ + ಎವು)</td><td>ವೆವು (ವ್ + ಎವು)</td></tr>
+<tr><td>ನೀನು</td><td>ತ್ತೀಯ (ತ್ತ್ + ಈಯ)</td><td>ದೆ (ದ್ + ಎ)</td><td>ವಿಯೆ/ವೆ (ವ್ + ಎ/ಎವು)</td></tr>
+<tr><td>ನೀವು</td><td>ತ್ತೀರಿ (ತ್ತ್ + ಈರಿ)</td><td>ದಿರಿ (ದ್ + ಇರಿ)</td><td>ವಿರಿ (ವ್ + ಇರಿ)</td></tr>
+<tr><td>ಅವನು</td><td>ತ್ತಾನೆ (ತ್ತ್ + ಆನೆ)</td><td>ದನು (ದ್ + ಅನು)</td><td>ವನು (ವ್ + ಅನು)</td></tr>
+<tr><td>ಅವಳು</td><td>ತ್ತಾಳೆ (ತ್ತ್ + ಆಳೆ)</td><td>ದಳು (ದ್ + ಅಳು)</td><td>ವಳು (ವ್ + ಅಳು)</td></tr>
+<tr><td>ಅವರು</td><td>ತ್ತಾರೆ (ತ್ತ್ + ಆರೆ)</td><td>ದರು (ದ್ + ಅರು)</td><td>ವರು (ವ್ + ಅರು)</td></tr>
+<tr><td>ಅದು</td><td>ತ್ತದೆ (ತ್ತ್ + ಅದೆ)</td><td class="warning">ತು/ಯಿತು*</td><td class="warning">ವುದು</td></tr>
+<tr><td>ಅವು</td><td>ತ್ತವೆ (ತ್ತ್ + ಅವೆ)</td><td>ದವು (ದ್ + ಅವು)</td><td>ವವು (ವ್ + ಅವು)</td></tr>
 </tbody>
 </table>
 
-\* ತು for ಉ-ending and ಯಿತು for ಎ-ending.
+\* ತು for ಉ-ending and ಯಿತು for ಎ/ಒ-ending.
+
+### Past Augmentation Exceptions
+
+For simple past, some verb roots have a different augmentation.
+
+1.  हो / be: ಇರು → ಇದ್.
+2.  जाओ / go: ಹೋಗು → ಹೋ
+3.  आओ / come: ಬರು → ಬಂ
+4.  लाओ / bring: ತರು → ತಂ
+5.  खाओ / eat: ತಿನ್ನು → ತಿಂ
+
+### Other Exceptions
+
+1.  ಇರು (हो/be):
+    1.  Present: augmented verb root + participle is ಇದ್ದ್	.
+    2.  Present: It is - वह है - ಅದು ಇದೆ.
+    3.  Present: They are - वे हैं - ಅವು ಇವೆ.
+    4.  Past: It was - वह था - ಅದು ಇತ್ತು.
+    5.  Future: The augmented verb root is ಇರು (as usual), but the participle + PNG suffix is (except in extremely formal Kannada) of the present form. E.g., I will be - ನಾನು ಇರುತ್ತೇನೆ.
+2.  It ate - उसने खाया - ಅದು ತಿಂದಿತು.
+3.  Past tense of दो / give / ಕೊಡು: Augmented verb root + participle is ಕೊಟ್ಟ್.
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
