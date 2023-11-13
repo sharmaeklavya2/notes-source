@@ -1,0 +1,81 @@
+# Verbs and Tenses
+
+[sources: <https://www.youtube.com/watch?v=FDtDetY5C8I>, <https://www.youtube.com/watch?v=j1SWRN2MF2A>, <https://kannadakalike.org/grammar/imperative-mood>]
+
+There are 9 tenses in Kannada: {past,present,future} × {simple,continuous,perfect}.
+English also has 'perfect continuous' tenses. Those are mapped to 'continuous' tenses in Kannada. In Kannada, the simple present tense is also called the <em>present habitual tense</em> when the verb is not ಇರು (होना, to be).
+
+Other than these tenses, we also have the imperative mood.
+
+## Imperative mood (ಆಜ್ಞಾರ್ಥಕ ರೂಪಗಳು) and verb root
+
+When we want to give a command, suggestion, or request to someone, we use the imperative mood. If a sentence contains just a verb and nothing else, it's the imperative mood. There are two varieties: informal singular and plural/formal.
+
+Examples of informal singular:
+
+1.  look - देखो - ನೋಡು
+2.  go - जाओ - ಹೋಗು
+3.  write - लिखो - ಬರೆ
+
+Examples of plural/formal:
+
+1.  look - देखिए - ನೋಡಿ
+2.  go - जाइए - ಹೋಗಿ
+3.  write - लिखिए - ಬರೆಯಿರಿ
+
+### Converting informal singular to plural/formal
+
+1.  ends with ಉ: remove ಉ and append ಇ.
+    1.  look: ನೋಡು (देखो) → ನೋಡಿ (देखिए).
+2.  ends with ಎ or ಇ: append ಯಿರಿ.
+    1.  write: ಬರೆ (लिखो) → ಬರೆಯಿರಿ (लिखिए).
+    2.  drink: ಕುಡಿ (पिओ) → ಕುಡಿಯಿರಿ (पीजिए).
+3.  misc:
+    1.  bring: ತಾ (लाओ) → ತನ್ನಿ (लाइए).
+    2.  come: ಬಾ (आओ) → ಬನ್ನಿ (आइए).
+
+### Verb root
+
+The <em>root</em> of a verb is its singular informal imperative form.
+Exceptions:
+
+1.  bring/लाओ: ತಾ → ತರು.
+2.  come/आओ: ಬಾ → ಬರು.
+
+## Simple Tense
+
+In the simple tense, the verb is conjugated as 'augmented verb root + suffix' (+ denotes concatenation (without संधि)). The augmentation depends on the tense. The suffix depends on the tense and the subject's PNG (Person type (1st, 2nd, 3rd), Number, Gender).
+
+Examples:
+
+1.  Present: I see. - मैं देखता हूँ। - ನಾನು ನೋಡುತ್ತೇನೆ (ನೋಡು + ತ್ತೇನೆ).
+2.  Past: I saw. - मैंने देखा। - ನಾನು ನೋಡಿದೆನು (ನೋಡಿ + ದೆನು).
+3.  Future: I will see. - मैं देखूँगा। - ನಾನು ನೋಡುವೆನು (ನೋಡು + ವೆನು).
+
+### Augmenting the verb root
+
+1.  ಉ-ending: No change for present and future. For past, remove ಉ and append ಇ.
+2.  ಎ or ಇ: Append ಯು for past. No change for present and future.
+
+### Suffix
+
+<table>
+<thead>
+<tr><th>Subject</th><th>Present</th><th>Past</th><th>Future</th></tr>
+</thead>
+<tbody>
+<tr><td>ನಾನು</td><td>ತ್ತೇನೆ</td><td>ದೆನು</td><td>ವೆನು</td></tr>
+<tr><td>ನಾವು</td><td>ತ್ತೇವೆ</td><td>ದೆವು</td><td>ವೆವು</td></tr>
+<tr><td>ನೀನು</td><td>ತ್ತೀಯ</td><td>ದೆ</td><td>ವಿಯೆ/ವೆ</td></tr>
+<tr><td>ನೀವು</td><td>ತ್ತೀರಿ</td><td>ದಿರಿ</td><td>ವಿರಿ</td></tr>
+<tr><td>ಅವನು</td><td>ತ್ತಾನೆ</td><td>ದನು</td><td>ವನು</td></tr>
+<tr><td>ಅವಳು</td><td>ತ್ತಾಳೆ</td><td>ದಳು</td><td>ವಳು</td></tr>
+<tr><td>ಅವರು</td><td>ತ್ತಾರೆ</td><td>ದರು</td><td>ವರು</td></tr>
+<tr><td>ಅದು</td><td>ತ್ತದೆ</td><td>ತು/ಯಿತು*</td><td>ವುದು</td></tr>
+<tr><td>ಅವು</td><td>ತ್ತವೆ</td><td>ದವು</td><td>ವವು</td></tr>
+</tbody>
+</table>
+
+\* ತು for ಉ-ending and ಯಿತು for ಎ-ending.
+
+<script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
