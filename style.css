@@ -1,12 +1,14 @@
 /* color scheme */
 body {
-    --bg-color: white; --text-color: #202020; --text-secondary: #888;
+    --bg-color: white; --text-color: #202020; --text-secondary: #888; --emph-color: #101010;
     --link-color: #1a0dab; --vlink-color: #681da8;
+    --text-danger: #dc3545; --text-warning: #ffc107; --text-success: #198754;
 }
 @media (prefers-color-scheme: dark) {
     body {
-        --bg-color: #1b1e20; --text-color: #c8c8c8;
+        --bg-color: #1b1e20; --text-color: #c8c8c8; --emph-color: #e4e4e4;
         --link-color: #8ab4f8; --vlink-color: #c58af9;
+        --text-danger: #e74c3c; --text-warning: #f39c12; --text-success: #00bc8c;
     }
     img {filter: brightness(.8) contrast(1.2);}
 }
@@ -25,7 +27,27 @@ a:visited {color: var(--vlink-color);}
     ul {padding-left: 1em;}
     ol {padding-left: 1.2em;}
 }
-
-/* extra */
 table {border-collapse: collapse;}
 td, th {border: 1px solid var(--text-secondary); padding: 0.1rem 0.5rem;}
+
+/* extra */
+h1, h2, h3, h4, h5, h6 {line-height: initial; color: var(--emph-color);}
+strong, em {color: var(--emph-color);}
+.danger {color: var(--text-danger);}
+.success {color: var(--text-success);}
+
+/* numbered headings */
+body {counter-reset: section;}
+body h2 {counter-reset: subsection;}
+body h2::before {
+    counter-increment: section;
+    content: counter(section) ". ";
+}
+body h3::before {
+    counter-increment: subsection;
+    content: counter(section) "." counter(subsection) ". ";
+}
+body h2::before, body h3::before {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
