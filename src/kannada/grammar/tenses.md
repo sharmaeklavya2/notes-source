@@ -94,12 +94,13 @@ For simple past, some verb roots have a different augmentation.
 ### Other Exceptions
 
 1.  ಇರು (हो/be):
-    1.  Present: augmented verb root + participle is ಇದ್ದ್	.
+    1.  Present and past: augmented verb root + participle is ಇದ್ದ್.
     2.  Present: It is - वह है - ಅದು ಇದೆ.
     3.  Present: They are - वे हैं - ಅವು ಇವೆ.
     4.  Past: It was - वह था - ಅದು ಇತ್ತು.
     5.  Future: The augmented verb root is ಇರು (as usual), but the participle + PNG suffix is (except in extremely formal Kannada) of the present form. E.g., I will be - ನಾನು ಇರುತ್ತೇನೆ.
 2.  It ate - उसने खाया - ಅದು ತಿಂದಿತು.
 3.  Past tense of दो / give / ಕೊಡು: Augmented verb root + participle is ಕೊಟ್ಟ್.
+    It gave - उसने दिया - ಅದು ಕೊಟ್ಟಿತು.
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
