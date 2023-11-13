@@ -34,6 +34,7 @@ td, th {border: 1px solid var(--text-secondary); padding: 0.1rem 0.5rem;}
 h1, h2, h3, h4, h5, h6 {line-height: initial; color: var(--emph-color);}
 strong, em {color: var(--emph-color);}
 .danger {color: var(--text-danger);}
+.warning {color: var(--text-warning);}
 .success {color: var(--text-success);}
 
 /* numbered headings */
