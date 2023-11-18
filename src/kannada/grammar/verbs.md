@@ -7,6 +7,8 @@ English also has 'perfect continuous' tenses. Those are mapped to 'continuous' t
 
 Other than these tenses, we also have the imperative mood.
 
+Let + denote concatenation without संधि, and ⊕ denote concatenation with संधि.
+
 ## Imperative mood (ಆಜ್ಞಾರ್ಥಕ ರೂಪಗಳು) and verb root
 
 When we want to give a command, suggestion, or request to someone, we use the imperative mood. If a sentence contains just a verb and nothing else, it's the imperative mood. There are two varieties: informal singular and plural/formal.
@@ -44,7 +46,7 @@ Exceptions:
 
 ## Simple Tense
 
-In the simple tense, the verb is conjugated as 'augmented verb root + participle + PNG suffix' (+ denotes concatenation (without संधि)). The augmentation depends on the tense. The participle and PNG suffix depends on the tense and the subject's PNG (Person type (1st, 2nd, 3rd), Number, Gender).
+In the simple tense, the verb is conjugated as 'augmented verb root + participle + PNG suffix'. The augmentation depends on the tense. The participle mostly depends on the tense. The PNG suffix depends on the tense and the subject's PNG (Person type (1st, 2nd, 3rd), Number, Gender).
 
 Examples:
 
@@ -55,11 +57,14 @@ Examples:
 ### Augmenting the verb root
 
 1.  ಉ-ending: No change for present and future. For past, remove ಉ and append ಇ.
-2.  ಎ or ಇ: Append ಯು for present and future. No change for past.
+2.  ಎ or ಇ ending: Append ಯು for present and future. No change for past.
 
 ### Participle and Suffix
 
-This tables lists 'participle + suffix' for each case.
+The participle is 'ತ್ತ್' for simple present and 'ವ್' for simple future.
+For simple past, the participle is usually 'ದ್', but there are some exceptions.
+
+This table lists the 'participle + suffix' for each case.
 Exceptional cases are highlighted.
 
 <table>
@@ -74,7 +79,7 @@ Exceptional cases are highlighted.
 <tr><td>ಅವನು</td><td>ತ್ತಾನೆ (ತ್ತ್ + ಆನೆ)</td><td>ದನು (ದ್ + ಅನು)</td><td>ವನು (ವ್ + ಅನು)</td></tr>
 <tr><td>ಅವಳು</td><td>ತ್ತಾಳೆ (ತ್ತ್ + ಆಳೆ)</td><td>ದಳು (ದ್ + ಅಳು)</td><td>ವಳು (ವ್ + ಅಳು)</td></tr>
 <tr><td>ಅವರು</td><td>ತ್ತಾರೆ (ತ್ತ್ + ಆರೆ)</td><td>ದರು (ದ್ + ಅರು)</td><td>ವರು (ವ್ + ಅರು)</td></tr>
-<tr><td>ಅದು</td><td>ತ್ತದೆ (ತ್ತ್ + ಅದೆ)</td><td class="warning">ತು/ಯಿತು*</td><td class="warning">ವುದು</td></tr>
+<tr><td>ಅದು</td><td>ತ್ತದೆ (ತ್ತ್ + ಅದೆ)</td><td class="warning">ತು/ಯಿತು* (ತ್/ಯಿತ್ + ಉ)</td><td>ವುದು (ವ್ + ಉದು)</td></tr>
 <tr><td>ಅವು</td><td>ತ್ತವೆ (ತ್ತ್ + ಅವೆ)</td><td>ದವು (ದ್ + ಅವು)</td><td>ವವು (ವ್ + ಅವು)</td></tr>
 </tbody>
 </table>
@@ -102,5 +107,46 @@ For simple past, some verb roots have a different augmentation.
 2.  It ate - उसने खाया - ಅದು ತಿಂದಿತು.
 3.  Past tense of दो / give / ಕೊಡು: Augmented verb root + participle is ಕೊಟ್ಟ್.
     It gave - उसने दिया - ಅದು ಕೊಟ್ಟಿತು.
+
+## Continuous Tense
+
+Examples:
+
+1.  Present: I am seeing. - मैं देख रहा हूँ। - ನಾನು ನೋಡುತ್ತಾ ಇದ್ದೇನೆ.
+2.  Past: I was seeing. - मैं देख रहा था। - ನಾನು ನೋಡುತ್ತಾ ಇದ್ದೆನು.
+3.  Future: I will be seeing. - मैं देख रहा होऊँगा। - ನಾನು ನೋಡುತ್ತಾ ಇರುತ್ತೇನೆ.
+
+Let X ∈ {present,past,future}. In the X continuous tense, the verb is conjugated into two words.
+The first word is obtained by appending ತ್ತಾ to the augmented verb root.
+The second word is the conjugation of ಇರು in the X simple tense.
+
+Augmenting verb root:
+
+1.  ಉ-ending: No change.
+2.  ಎ or ಇ ending: Append ಯು.
+
+Sometimes these two words are joined by संधि. This is unusual in spoken form but sometimes happens in written form. To do this, replace the ತ್ತಾ by ತ್ತ್. E.g., ನೋಡುತ್ತಾ ⊕ ಇದ್ದೇನೆ = ನೋಡುತ್ತಿದ್ದೇನೆ.
+
+## Perfect Tense
+
+Examples:
+
+1.  Present: I have seen. - मैं देख चुका हूँ। / मैंने देखा है। - ನಾನು ನೋಡಿದ್ದೇನೆ.
+2.  Past: I had seen. - मैं देख चुका था। / मैंने देखा था। - ನಾನು ನೋಡಿದ್ದೆನು.
+3.  Future: I will have seen. - मैं देख चुका होऊँगा। - ನಾನು ನೋಡಿರುತ್ತೇನೆ.
+
+Let X ∈ {present,past,future}. In the X perfect tense, the verb is conjugated as 'augmented verb root + suffix'. The suffix is the conjugation of ಇರು in the X simple tense.
+
+Augmentation:
+
+1.  ಉ-ending: Remove ಉ.
+2.  ಎ or ಇ ending: Append ದ್.
+
+Augmentation exceptions:
+
+1.  आओ / come: ಬರು → ಬಂದ್
+2.  लाओ / bring: ತರು → ತಂದ್
+3.  खाओ / eat: ತಿನ್ನು → ತಿಂದ್
+4.  दो / give: ಕೊಡು → ಕೊಟ್ಟ್
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
