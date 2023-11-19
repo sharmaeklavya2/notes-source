@@ -107,6 +107,8 @@ For simple past, some verb roots have a different augmentation.
 2.  It ate - उसने खाया - ಅದು ತಿಂದಿತು.
 3.  Past tense of दो / give / ಕೊಡು: Augmented verb root + participle is ಕೊಟ್ಟ್.
     It gave - उसने दिया - ಅದು ಕೊಟ್ಟಿತು.
+4.  Past tense of हँसो / laugh / ನಗು: Augmented verb root + participle is ನಕ್ಕ್.
+    It laughed - वह हँसा - ಅದು ನಕ್ಕಿತು.
 
 ## Negative Simple Tense
 
@@ -181,5 +183,6 @@ Augmentation exceptions:
 2.  लाओ / bring: ತರು → ತಂದ್
 3.  खाओ / eat: ತಿನ್ನು → ತಿಂದ್
 4.  दो / give: ಕೊಡು → ಕೊಟ್ಟ್
+5.  हँसो / laugh: ನಗು → ನಕ್ಕ್
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
