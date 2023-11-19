@@ -108,6 +108,39 @@ For simple past, some verb roots have a different augmentation.
 3.  Past tense of दो / give / ಕೊಡು: Augmented verb root + participle is ಕೊಟ್ಟ್.
     It gave - उसने दिया - ಅದು ಕೊಟ್ಟಿತು.
 
+## Negative Simple Tense
+
+In the negative simple tense, the verb is conjugated as 'augmented verb root + suffix'. Suffix depends on tense, augmented verb root doesn't.
+
+Examples:
+
+1.  Present: I do not see. - मैं नहीं देखता। - ನಾನು ನೋಡಲ್ಲ.
+2.  Past: I did not see. - मैंने नहीं देखा। - ನಾನು ನೋಡಲಿಲ್ಲ.
+3.  Future: I will not see. - मैं नहीं देखूँगा। - ನಾನು ನೋಡುವುದಿಲ್ಲ.
+
+Augmentation:
+
+1.  ಉ-ending: Remove ಉ.
+2.  ಎ or ಇ ending: Append ಯ್.
+
+Suffix:
+
+1.  Present: ಅಲ್ಲ.
+2.  Past: ಆಲಿಲ್ಲ.
+3.  Future: ಉವುದಿಲ್ಲ.
+
+Exception: augmented verb root + suffix for ಇರು:
+
+1.  Present: ಇಲ್ಲ.
+2.  Past: ಇರಲಿಲ್ಲ.
+3.  Future: ಇರಲ್ಲ.
+
+### Converting to question
+
+Change the last character of the suffix from ಲ್ಲ to ಲ್ವಾ.
+
+Example for present: Don't you see? - तुम नहीं देखते?। - ನೀನು ನೋಡಲ್ವಾ?
+
 ## Continuous Tense
 
 Examples:
@@ -116,7 +149,7 @@ Examples:
 2.  Past: I was seeing. - मैं देख रहा था। - ನಾನು ನೋಡುತ್ತಾ ಇದ್ದೆನು.
 3.  Future: I will be seeing. - मैं देख रहा होऊँगा। - ನಾನು ನೋಡುತ್ತಾ ಇರುತ್ತೇನೆ.
 
-Let X ∈ {present,past,future}. In the X continuous tense, the verb is conjugated into two words.
+Let X ∈ {positive,negative} × {present,past,future}. In the X continuous tense, the verb is conjugated into two words.
 The first word is obtained by appending ತ್ತಾ to the augmented verb root.
 The second word is the conjugation of ಇರು in the X simple tense.
 
@@ -135,7 +168,7 @@ Examples:
 2.  Past: I had seen. - मैं देख चुका था। / मैंने देखा था। - ನಾನು ನೋಡಿದ್ದೆನು.
 3.  Future: I will have seen. - मैं देख चुका होऊँगा। - ನಾನು ನೋಡಿರುತ್ತೇನೆ.
 
-Let X ∈ {present,past,future}. In the X perfect tense, the verb is conjugated as 'augmented verb root + suffix'. The suffix is the conjugation of ಇರು in the X simple tense.
+Let X ∈ {positive,negative} × {present,past,future}. In the X perfect tense, the verb is conjugated as 'augmented verb root + suffix'. The suffix is the conjugation of ಇರು in the X simple tense.
 
 Augmentation:
 
