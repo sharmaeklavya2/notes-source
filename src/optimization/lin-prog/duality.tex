@@ -77,10 +77,10 @@ Adapted from S\'ebastien Lahaie's \href{http://www.cs.columbia.edu/coms6998-3/lp
     \item $g_j(y) \ge 0$ if $x_j$ is non-negative.
     \item $g_j(y) = 0$ if $x_j$ is unrestricted.
     \end{tightenum}
-\[ \min_{y \in \mathbb{R}^m: y_J \ge 0} b^Ty \quad\textrm{where}\quad
+\[ \max_{y \in \mathbb{R}^m: y_J \ge 0} b^Ty \quad\textrm{where}\quad
 (c_j - (A^Ty)_j \ge 0, \forall j \in J) \textrm{ and } (c_j - (A^Ty)_j = 0, \forall j \in [n]-J). \]
 \item Rearrange into suitable form
-\[ \min_{y \in \mathbb{R}^m: y_J \ge 0} b^Ty \quad\textrm{where}\quad
+\[ \max_{y \in \mathbb{R}^m: y_J \ge 0} b^Ty \quad\textrm{where}\quad
 ((A^Ty)_j \le c_j, \forall j \in J) \textrm{ and } ((A^Ty)_j = c_j, \forall j \in [n]-J). \]
 \end{enumerate}
 
