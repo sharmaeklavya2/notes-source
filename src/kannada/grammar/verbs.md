@@ -128,7 +128,7 @@ Augmentation:
 Suffix:
 
 1.  Present: ಅಲ್ಲ.
-2.  Past: ಆಲಿಲ್ಲ.
+2.  Past: ಅಲಿಲ್ಲ.
 3.  Future: ಉವುದಿಲ್ಲ.
 
 Exception: augmented verb root + suffix for ಇರು:
