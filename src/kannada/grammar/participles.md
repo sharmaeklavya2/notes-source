@@ -120,7 +120,7 @@ Rule to convert past relative participle to past verbal participle:
 Examples of present verbal participle:
 
 1.  The horse is <em>running and</em> walking. - घोड़ा <em>भाग रहा है और</em> चल रहा है। -
-    ಕುದುರೆ <em>ಓಡುತ್ತಾ</em> ಜಿಗಿಯುತ್ತದೆ.
+    ಕುದುರೆ <em>ಓಡುತ್ತಾ</em> ನಡೆಯುತ್ತದೆ.
 2.  She came <em>singing</em>. - वह <em>गाते हुए</em> आई। - ಅವಳು <em>ಹಾಡುತ್ತಾ</em> ಬಂದಳು.
 3.  They came dancing, singing, and laughing. -
     वे नाचते, गाते, और हँसते हुए आए। - ಅವರು ಆಡುತ್ತಾ ಹಾಡುತ್ತಾ ನಗುತ್ತಾ ಬಂದರು.
