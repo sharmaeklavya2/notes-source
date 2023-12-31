@@ -64,6 +64,14 @@ Used for commands and requests.
     Should we <strong>go</strong> there? - वहाँ <strong>जाएँ</strong>? -
     ಅಲ್ಲಿ <strong>ಹೋಗೋಣ್ವಾ</strong>?
 
+2nd person imperative form has already been discussed at <a href="04-verbs.html">04-verbs.html</a>.
+
+Rule to construct first person imperative forms from verb root:
+
+1.  If root ends with ಉ, remove ಉ, otherwise add ಯ್.
+2.  Then add suffix: ಅಲಿ for singular affirmative, ಲಾ for singular interrogative,
+    ಓಣ for plural affirmative, ಓಣ್ವಾ for plural interrogative.
+
 Other examples:
 
 1.  Let it be. - रहने दो। - ಇರಲು.
