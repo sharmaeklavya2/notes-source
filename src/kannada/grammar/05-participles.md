@@ -95,7 +95,7 @@ Exceptions for past relative participle:
 <tr><td>forget</td><td>भूल</td><td>ಮರೆ → ಮರೆತ</td></tr>
 <tr><td>steal</td><td>चुरा</td><td>ಕದಿ → ಕದ್ದ</td></tr>
 <tr><td>wait/protect</td><td></td><td>ಕಾ → ಕಾದ</td></tr>
-<tr><td>die</td><td>मारो</td><td>ಸಾ → ಸತ್ತ</td></tr>
+<tr><td>die</td><td>मरो</td><td>ಸಾ → ಸತ್ತ</td></tr>
 <tr><td>laugh</td><td>हँसो</td><td>ನಗು → ನಕ್ಕ</td></tr>
 <tr><td>learn</td><td>सीखो</td><td>ಕಲಿ → ಕಲಿತ</td></tr>
 <tr><td>cry</td><td>रो</td><td>ಅಳು → ಅತ್ತ</td></tr>
