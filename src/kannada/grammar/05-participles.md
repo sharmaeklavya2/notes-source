@@ -133,4 +133,22 @@ Examples of past verbal participle:
 3.  After watching the movie, we had dinner outside. -
     Movie <em>देखकर</em> हमने बाहर खाना खाया। - Movie <em>ನೋಡಿ</em>, ನಾವು ಹೊರಗಡೆ ರಾತ್ರಿ-ಊಟ ಮಾಡಿದೆವು.
 
+## Negative Participles
+
+Constructing past negative participles from imperative form of verb:
+
+1.  If verb doesn't end with ಉ, add ಯು.
+2.  Remove ಉ.
+3.  Add ಅದ for relative participle. Add ಅದೆ for verbal participle.
+
+<table>
+<tr><th>Imperative</th><th>Past negative relative participle</th><th>Past negative verbal participle</th></tr>
+<tr><td>ಮಾಡು</td><td>ಮಾಡದ</td><td>ಮಾಡದೆ</td></tr>
+<tr><td>ಕೂಡಿ</td><td>ಕುಡಿಯದ</td><td>ಕುಡಿಯದೆ</td></tr>
+<tr><td>ಕರೆ</td><td>ಕರೆಯದ</td><td>ಕರೆಯದೆ</td></tr>
+</table>
+
+1.  He went without doing the work. - वह काम किए बिना चला गया। - ಅವನು ಕೆಲಸ ಮಾಡದೆ ಹೋದನು.
+2.  Work that is not done. - ಮಾಡದ ಕೆಲಸ.
+
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
