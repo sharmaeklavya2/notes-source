@@ -84,7 +84,11 @@ They have already been covered in <a href="04-verbs.html">04-verbs.html</a>.)
 
 ## Potential
 
+(Already covered in <a href="07-modals.html">07-modals.html</a>.)
+
 ## Obligative
+
+(Already covered in <a href="07-modals.html">07-modals.html</a>.)
 
 ## Conditional
 
