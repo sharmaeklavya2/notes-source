@@ -92,6 +92,27 @@ They have already been covered in <a href="04-verbs.html">04-verbs.html</a>.)
 
 ## Conditional
 
-## Negative
+(draft)
+
+'If' condition: past relative participle + ರ.
+
+1.  If you had gone there, this wouldn't have happened. -
+    तुम वहाँ <strong>गए होते तो</strong> ये <strong>नहीं होता</strong>। -
+    ನೀನು ಅಲ್ಲಿ <strong>ಹೋಗಿದ್ದರೆ</strong> ಅದು <strong>ಆಗುತ್ತಿರಲಿಲ್ಲ</strong>.
+2.  If I had seen him properly yesterday, I could have easily identified him today. -
+    कल उसे मैंने ठीक से देखा होता तो आज मैं उसे आसानी से पहचान सकता था। -
+    ನಿನ್ನೆ ಅವನನ್ನು ನಾನು ಸ್ಪಷ್ಟವಾಗಿ ನೋಡಿದ್ದರೆ, ಇವತ್ತು ಸುಲಭವಾಗಿ ಗುರುತ್ತಿಸ ಬಹುದಾಗಿತ್ತು.
+3.  If it rains, we must use the umbrella. -
+    बारिश आए तो छतरी इस्तेमाल करनी चाहिये। -
+    ಮಳೆ ಬಂದರೆ ಛತ್ರಿ ಬಳಸ ಬೇಕು.
+3.  If you study hard, you will pass the exam. -
+    तुम मेहनत से पढ़ोगे तो परीक्षा में पास होगे। -
+    ನೀನು ಕಷ್ಟಪಟ್ಟು ಓದಿದರೆ ಪರೀಕ್ಷೆಯಲ್ಲಿ paas ಆಗುತ್ತಿಯ.
+4.  If you don't go fast, you will miss the train. -
+    ಬೇಗವಾಗಿ ಹೋಗದಿದ್ದರೆ ನೀನು train ತಪ್ಪಿಸಿಕೊಲ್ಲುತ್ತಿಯ.
+5.  What if it rains? - बारिश आई तो क्या होगा? - ಮಳೆ ಬಂದರೆ ಏನಾಗುತ್ತೆ?
+
+'Even if' condition: past relative participle + ರೂ
+(or ಆಗಿಯೂ instead of ರೂ).
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
