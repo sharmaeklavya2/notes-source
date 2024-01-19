@@ -132,6 +132,7 @@ Examples of past verbal participle:
     घर साफ़ <em>करके</em> तृप्ति मिल गई। - ಮನೆ ಸ್ವಚ್ಛ <em>ಮಾಡಿ</em> ತೃಪ್ತಿ ಕೊಂಡ.
 3.  After watching the movie, we had dinner outside. -
     Movie <em>देखकर</em> हमने बाहर खाना खाया। - Movie <em>ನೋಡಿ</em>, ನಾವು ಹೊರಗಡೆ ರಾತ್ರಿ-ಊಟ ಮಾಡಿದೆವು.
+4.  I called him and asked him. - मैंने उसे <em>बुलाकर</em> उससे पूछा। - ನಾನು ಅವನನ್ನು <em>ಕರೆದು</em> ಕೇಳಿದೆನು.
 
 ## Negative Participles
 
