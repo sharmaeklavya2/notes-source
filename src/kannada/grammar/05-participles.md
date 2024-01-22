@@ -20,10 +20,10 @@ More examples (subordinate clause is emphasized):
 2.  <em>After entering the house</em>, I switched on the TV. -
     <em>घर में घुसके</em> मैंने TV चलाया।
 
-## Participles
-
-Participles are suffixes added to verbs.
 Kannada implements subordinate and independent clauses using participles.
+Participles are forms of verbs.
+We have seen in <a href="04-verbs.html">04-verbs.html</a>
+how to get a verb's participles from its root.
 
 These are the types (and subtypes) of participles we will see:
 
@@ -33,19 +33,6 @@ These are the types (and subtypes) of participles we will see:
 ## Relative Participles
 
 Used to <em>adjectivfy</em> a verb. They are used before nouns.
-
-This is the rule for converting verb root to relative participle
-(there are exceptions for past relative participle):
-
-<table>
-<thead>
-<tr><th></th><th>Present/Future</th><th>Past</th></tr>
-</thead>
-<tbody>
-<tr><td>ಉ-ending</td><td>+ವ</td><td>-ಉ+ಇದ</td></tr>
-<tr><td>non-ಉ-ending</td><td>+ಯುವ</td><td>+ದ</td></tr>
-</tbody>
-</table>
 
 Examples of present relative participle:
 
@@ -80,42 +67,10 @@ Examples of past relative participle:
 6.  Did you see the movie that I saw? - जो movie मैंने देखी वो तुमने देखी क्या? -
     ನಾನು <em>ನೋಡಿದ</em> movie ನೀನು ನೋಡಿದಿಯಾ?
 
-Exceptions for past relative participle:
-
-<table>
-<tr><td>be</td><td>हो</td><td>ಇರು → ಇದ್ದ</td></tr>
-<tr><td>come</td><td>आओ</td><td>ಬರು → ಬಂದ</td></tr>
-<tr><td>bring</td><td>लाओ</td><td>ತರು → ತಂದ</td></tr>
-<tr><td>eat</td><td>खाओ</td><td>ತಿನ್ನು → ತಿಂದ</td></tr>
-<tr><td>give</td><td>दो</td><td>ಕೊಡು → ಕೊಟ್ಟ</td></tr>
-<tr><td>keep</td><td>रखो</td><td>ಇದು → ಇಟ್ಟ</td></tr>
-<tr><td>go</td><td>जाओ</td><td>ಹೋಗು → ಹೋದ</td></tr>
-<tr><td>become</td><td></td><td>ಆಗು → ಆದ</td></tr>
-<tr><td>buy</td><td>ख़रीदो</td><td>ಕೊಳ್ಳು → ಕೊಂಡ</td></tr>
-<tr><td>forget</td><td>भूल</td><td>ಮರೆ → ಮರೆತ</td></tr>
-<tr><td>steal</td><td>चुरा</td><td>ಕದಿ → ಕದ್ದ</td></tr>
-<tr><td>wait/protect</td><td></td><td>ಕಾ → ಕಾದ</td></tr>
-<tr><td>die</td><td>मरो</td><td>ಸಾ → ಸತ್ತ</td></tr>
-<tr><td>laugh</td><td>हँसो</td><td>ನಗು → ನಕ್ಕ</td></tr>
-<tr><td>learn</td><td>सीखो</td><td>ಕಲಿ → ಕಲಿತ</td></tr>
-<tr><td>cry</td><td>रो</td><td>ಅಳು → ಅತ್ತ</td></tr>
-</table>
-
 ## Verbal Participles
 
 Used to join two or more verbs when they happen simultaneously or sequentially.
 They are used before verbs (unlike relative participles, which are used before nouns.)
-
-Rule to convert verb root to present verbal participle:
-
-1.  ಉ-ending: append ತ್ತಾ.
-2.  non-ಉ-ending: append ಯುತ್ತಾ.
-
-Rule to convert past relative participle to past verbal participle:
-
-1.  Regular ಉ-ending: remove ದ.
-2.  Non-ಉ-ending and irregular ಉ-ending: add ಉ.
-3.  Exceptions: ಹೋಗು → ಹೋಗಿ, ಆಗು → ಆಗಿ.
 
 Examples of present verbal participle:
 
@@ -136,14 +91,14 @@ Examples of past verbal participle:
 
 ## Negative Participles
 
-Constructing past negative participles from imperative form of verb:
+Constructing past negative participle from verb root:
 
 1.  If verb doesn't end with ಉ, add ಯು.
 2.  Remove ಉ.
 3.  Add ಅದ for relative participle. Add ಅದೆ for verbal participle.
 
 <table>
-<tr><th>Imperative</th><th>Past negative relative participle</th><th>Past negative verbal participle</th></tr>
+<tr><th>Verb root</th><th>Past negative relative participle</th><th>Past negative verbal participle</th></tr>
 <tr><td>ಮಾಡು</td><td>ಮಾಡದ</td><td>ಮಾಡದೆ</td></tr>
 <tr><td>ಕೂಡಿ</td><td>ಕುಡಿಯದ</td><td>ಕುಡಿಯದೆ</td></tr>
 <tr><td>ಕರೆ</td><td>ಕರೆಯದ</td><td>ಕರೆಯದೆ</td></tr>
