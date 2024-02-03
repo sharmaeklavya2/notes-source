@@ -144,7 +144,7 @@ Irregular verbs:
 <tr><td>get/meet</td><td>मिलो</td><td>ಸಿಗು</td><td>ಸಿಕ್ಕ</td><td>ಸಿಕ್ಕಿ</td><td>ಸಿಕ್ಕಿತು</td></tr>
 <tr><td>give</td><td>दो</td><td>ಕೊಡು</td><td>ಕೊಟ್ಟ</td><td>ಕೊಟ್ಟು</td><td>ಕೊಟ್ಟಿತು</td></tr>
 <tr><td>go</td><td>जाओ</td><td>ಹೋಗು</td><td>ಹೋದ</td><td>ಹೋಗಿ</td><td>ಹೋಯಿತು</td></tr>
-<tr><td>keep</td><td>?</td><td>ಇಡು</td><td>ಇಟ್ಟ</td><td>ಇಟ್ಟು</td><td>ಇಟ್ಟಿತು</td></tr>
+<tr><td>keep</td><td>रखो</td><td>ಇಡು</td><td>ಇಟ್ಟ</td><td>ಇಟ್ಟು</td><td>ಇಟ್ಟಿತು</td></tr>
 <tr><td>laugh</td><td>हँसो</td><td>ನಗು</td><td>ನಕ್ಕ</td><td>ನಕ್ಕಿ</td><td>ನಕ್ಕಿತು</td></tr>
 <tr><td>learn</td><td>सीखो</td><td>ಕಲಿ</td><td>ಕಲಿತ</td><td>ಕಲಿತು</td><td>ಕಲಿತಿತು</td></tr>
 <tr><td>wait/protect</td><td>?</td><td>ಕಾ</td><td>ಕಾದ</td><td>ಕಾದು</td><td>ಕಾದಿತು</td></tr>
