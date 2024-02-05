@@ -132,21 +132,25 @@ Irregular verbs:
 
 <table>
 <tr><th>english</th><th>hindi</th><th>verb root</th><th>past RP</th><th>past VP</th><th>past ಅದು</th></tr>
-<tr><td>be</td><td>हो</td><td>ಇರು</td><td>ಇದ್ದ</td><td>ಇದ್ದು</td><td>ಇತ್ತು</td></tr>
+<tr><td>be/exist/stay</td><td>हो/रहो</td><td>ಇರು</td><td>ಇದ್ದ</td><td>ಇದ್ದು</td><td>ಇತ್ತು</td></tr>
 <tr><td>buy</td><td>ख़रीदो</td><td>ಕೊಳ್ಳು</td><td>ಕೊಂಡ</td><td>ಕೊಂಡು</td><td>ಕೊಂಡಿತು</td></tr>
-<tr><td>become</td><td></td><td>ಆಗು</td><td>ಆದ</td><td>ಆಗಿ</td><td>ಆಯಿತು</td></tr>
+<tr><td>become/happen</td><td>हो</td><td>ಆಗು</td><td>ಆದ</td><td>ಆಗಿ</td><td>ಆಯಿತು</td></tr>
 <tr><td>bring</td><td>लाओ</td><td>ತರು</td><td>ತಂದ</td><td>ತಂದು</td><td>ತಂದಿತು</td></tr>
 <tr><td>come</td><td>आओ</td><td>ಬರು</td><td>ಬಂದ</td><td>ಬಂದು</td><td>ಬಂತು</td></tr>
 <tr><td>cry</td><td>रो</td><td>ಅಳು</td><td>ಅತ್ತ</td><td>ಅತ್ತು</td><td>ಅತ್ತಿತು</td></tr>
 <tr><td>die</td><td>मरो</td><td>ಸಾ</td><td>ಸತ್ತ</td><td>ಸತ್ತು</td><td>ಸತ್ತಿತು</td></tr>
 <tr><td>eat</td><td>खाओ</td><td>ತಿನ್ನು</td><td>ತಿಂದ</td><td>ತಿಂದು</td><td>ತಿಂದಿತು</td></tr>
+<tr><td>experience/endure</td><td>सहो/?</td><td>ಪಡು</td><td>ಪಟ್ಟ</td><td>ಪಟ್ಟು</td><td>ಪಟ್ಟಿತು</td></tr>
+<tr><td>fall</td><td>गिरो</td><td>ಬೀಳು</td><td>ಬಿದ್ದ</td><td>ಬಿದ್ದು</td><td>ಬಿದ್ದಿತು</td></tr>
 <tr><td>forget</td><td>भूलो</td><td>ಮರೆ</td><td>ಮರೆತ</td><td>ಮರೆತು</td><td>ಮರೆತಿತು</td></tr>
 <tr><td>get/meet</td><td>मिलो</td><td>ಸಿಗು</td><td>ಸಿಕ್ಕ</td><td>ಸಿಕ್ಕಿ</td><td>ಸಿಕ್ಕಿತು</td></tr>
+<tr><td>get up / wake up</td><td>उठो</td><td>ಏಳು</td><td>ಎದ್ದ</td><td>ಎದ್ದು</td><td>ಎದ್ದಿತು</td></tr>
 <tr><td>give</td><td>दो</td><td>ಕೊಡು</td><td>ಕೊಟ್ಟ</td><td>ಕೊಟ್ಟು</td><td>ಕೊಟ್ಟಿತು</td></tr>
 <tr><td>go</td><td>जाओ</td><td>ಹೋಗು</td><td>ಹೋದ</td><td>ಹೋಗಿ</td><td>ಹೋಯಿತು</td></tr>
 <tr><td>keep</td><td>रखो</td><td>ಇಡು</td><td>ಇಟ್ಟ</td><td>ಇಟ್ಟು</td><td>ಇಟ್ಟಿತು</td></tr>
 <tr><td>laugh</td><td>हँसो</td><td>ನಗು</td><td>ನಕ್ಕ</td><td>ನಕ್ಕಿ</td><td>ನಕ್ಕಿತು</td></tr>
 <tr><td>learn</td><td>सीखो</td><td>ಕಲಿ</td><td>ಕಲಿತ</td><td>ಕಲಿತು</td><td>ಕಲಿತಿತು</td></tr>
+<tr><td>leave</td><td>?</td><td>ಬಿಡು</td><td>ಬಿಟ್ಟ</td><td>ಬಿಟ್ಟು</td><td>ಬಿಟ್ಟಿತು</td></tr>
 <tr><td>wait/protect</td><td>?</td><td>ಕಾ</td><td>ಕಾದ</td><td>ಕಾದು</td><td>ಕಾದಿತು</td></tr>
 <tr><td>say</td><td>कहो</td><td>ಅನ್ನು</td><td>ಅಂದ</td><td>ಅಂದು</td><td>ಅಂದಿತು</td></tr>
 <tr><td>steal</td><td>चुराओ</td><td>ಕದಿ</td><td>ಕದ್ದ</td><td>ಕದ್ದು</td><td>?</td></tr>
