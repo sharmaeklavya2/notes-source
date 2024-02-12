@@ -53,7 +53,7 @@ Examples:
 
 (TODO: add more examples.)
 
-## ಆಗ (while)
+## ಆಗ - while
 
 Used to denote the time when an action is taking place.
 It's like adding 'when' or 'while' in English.
@@ -78,7 +78,7 @@ Examples:
 3.  ನಾನು ಹೋಗಿದ್ದಾಗ - मैं जब जा चुका था। - when I had gone
 4.  ನಾನು ಅಲ್ಲಿ ಇದ್ದಾಗ - मैं जब वहाँ था। - when I was there
 
-## ಮೇಲೆ
+## ಮೇಲೆ - के बाद
 
 Roughly translates to 'के बाद' in Hindi. Added to Past RP of verb.
 
@@ -93,7 +93,7 @@ Examples:
     तुम कह रहे हो कि बड़ा घर है तो पैसा भी अच्छा ही होगा। -
     ದೊಡ್ಡ ಮನೆ ಅಂದ ಮೇಲೆ, ದುಡ್ಡೂ ಚೆನ್ನಾಗಿಯೇ ಇರುತ್ತದೆ.
 
-## ಕೊಳ್ಳು / ಕೊಂದ
+## ಕೊಳ್ಳು / ಕೊಂದ - reflexive actions
 
 Used to indicate that an action is done on oneself.
 
@@ -141,15 +141,20 @@ Past RP of ಪಡು is ಪಟ್ಟ.
 
 1.  I endured hardship. - मैंने परेशानी सही। - ನಾನು ಕಷ್ಟ ಪಟ್ಟೆನು.
 
-## ಇಂದ
+## ಇಂದ / ರಿಂದ - because of / की वजह से
 
 Past RP + ಇಂದ : because of
 
 Present RP + ಇಂದ : by doing something
 
+ಸಂಧಿ the verb's ವುದು form with ಅರಿಂದ: because of / की वजह से
+
 1.  I didn't get anything by watching this movie. -
     ये movie देखकर कोई भी फ़ायदा नहीं हुआ। -
     ಈ movie ನೋಡಿದರಿಂದ ಏನೂ ಲಾಭವು ಇರಲಿಲ್ಲ.
+2.  An umbrella should be taken because it's raining. -
+    बारिश होने की वजह से छाता ले जाना चाहिये। -
+    ಮಳೆ ಹೊಯ್ಯುವುದರಿಂದ ಛತ್ರಿ ತೊಗೊಳ್ಳ ಬೇಕು.
 
 ## ಅಂತೆ - like / as per
 
@@ -166,10 +171,79 @@ Present RP + ಇಂದ : by doing something
 1.  Wise person - ಬುದ್ಧಿವಂತ.
 2.  Rich person - ಶ್ರೀಮಂತ.
 
-## ತನ - 'ness'
+## ತನ - ness
 
 1.  ಒಳ್ಳೆಯತನ = goodness
 2.  ದೊಡ್ಡತನ = largeness
 3.  ಕೆಟ್ಟತನ = badness
+
+## ಆಗಿ - जैसे
+
+Roughly means 'सा' or 'जैसे' or 'की तरह'.
+Converts a noun or adjective to something like an adverb.
+
+## ಅಷ್ಟು - जितना
+
+Roughly means 'जितना' or 'as ... as'.
+
+1.  I haven't seen as house as beautiful as yours in this world. -
+    आपके घर जितना सुंदर घर दुनिया में मैंने नहीं देखा है। -
+    ನಿಮ್ಮ ಮನೆಯಷ್ಟು ಸುಂದರವಾದ ಮನೆ ಪ್ರಪಂಚದಲ್ಲಿ ನಾನು ನೋಡಿಲ್ಲ.
+
+## ತರ - की तरह
+
+Roughly means 'की तरह'. Examples:
+
+1.  ಹುಚ್ಚಂತರ - like a madman.
+2.  ದಡ್ಡಂತರ - like a fool.
+
+## ಅಂತೂ
+
+Usually added to pronouns, 'xಅಂತೂ' roughly means 'as for x'.
+
+1.  As for me, I'm not going. - मैं तो नहीं जाऊँगा। - ನಾನಂತೂ ಹೋಗಲ್ಲ.
+
+## ಆಗಿರುವಾಗ - being a / while being
+
+1.  Being a father, you should be more responsible. -
+    एक पिता होने के नाते, आपको और जिम्मेदार होना चाहिए। -
+    ಒಂದು ತಂದೆಯಾಗಿರುವಾಗ, ನೀವು ಇನ್ನು ಕೂಡ ಜವಾಬ್ದಾರಿ ಒಡನೆ ಇರು ಬೇಕು.
+
+## ಇರುವುದರ - होने का
+
+1.  Only I know the difficulties of being a rich man. -
+    अमीर होने की परेशानी सिर्फ़ मुझे पता है। -
+    ಶ್ರೀಮಂತರಾಗಿ ಇರುವುದರ ಕಷ್ಟ ನನಗೆ ಗೊತ್ತು.
+
+## ಬಹುದಾದ / ಲರ್ಹ - able
+
+1.  ಮಾಡಬಹುದಾದ - doable.
+2.  ಎಣಿಸಬಹುದಾದ - countable.
+3.  ನಂಬಲರ್ಹ - reliable
+
+## ಅಂತಿಲ್ಲ (ಅಂತೆ + ಇಲ್ಲ) - not to be
+
+1.  ಅನುವಾದಿಸುವಂತಿಲ್ಲ - not to be translated.
+2.  copy ಮಾಡುವಂತಿಲ್ಲ - not to be copied.
+
+## ಮೊದಲು / ಮುಂಚೆ - before
+
+Verb's present RP + ಮುಂಚೆ/ಮೊದಲು.
+
+Example: ಮಾಡುವ ಮುಂಚೆ = ಮಾಡುವ ಮೊದಲು - करने के पहले - before doing.
+
+## ನಂತರ / ಮೇಲೆ - after
+
+Verb's past RP + ನಂತರ/ಮೇಲೆ.
+
+Example: ಮಾಡಿದ ನಂತರ = ಮಾಡಿದ ಮೇಲೆ - करने के बाद - after doing.
+
+## ಇನ್ನೂ - more / other
+
+Roughly means 'और', as in 'एक और' (one more).
+
+1.  In addition to Ravi, two other people are going to the marriage. -
+    रवि के अलावा दो और लोग शादी में जाएँगे। -
+    ರವಿ ಅಲ್ಲದೆ ಇನ್ನೂ ಎರಡು ಜನರು ಮದುವೆಗೆ ಹೋಗುತ್ತಾರೆ.
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
