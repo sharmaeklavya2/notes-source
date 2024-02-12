@@ -1,8 +1,13 @@
 # Notes from Kannada lectures
 
-I'm watching a [YouTube playlist](https://www.youtube.com/playlist?list=PLOb5Wwt1GhOmfwBXC5IGuDvtNc-Ub8N1c)
+I <s>am</s> was watching [Kannada TV's YouTube playlist](https://www.youtube.com/playlist?list=PLOb5Wwt1GhOmfwBXC5IGuDvtNc-Ub8N1c)
 to learn Kannada from Hindi. I'll write down notes from each video because
 reading these notes is easier and faster than rewatching the videos.
+
+**Update**: I have switched to a different strategy for learning Kannada.
+I don't think this video series is useful after the first few videos. I recommend
+[@correctKannada's YouTube series](https://www.youtube.com/playlist?list=PLTxAYLa10QKPQQtkRqM7nltjHIEwEPTBC) instead.
+You can find my notes for that series [here](../grammar/).
 
 In Kannada (and also in Hindi), spelling is a very reliable guide to pronunciation.
 Hence, I'll write Kannada in the Kannada script (unlike the videos, which use English characters).

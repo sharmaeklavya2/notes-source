@@ -4,8 +4,6 @@
 <https://www.youtube.com/watch?v=I5451A5sP-I>,
 <https://www.youtube.com/watch?v=HCmz6FJTG48>]
 
-(incomplete)
-
 A post-position is a group of letters or words appended to a verb
 (or sometimes a noun) to give additional meaning.
 
