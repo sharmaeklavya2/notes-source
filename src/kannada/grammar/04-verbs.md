@@ -150,7 +150,7 @@ Irregular verbs:
 <tr><td>keep</td><td>रखो</td><td>ಇಡು</td><td>ಇಟ್ಟ</td><td>ಇಟ್ಟು</td><td>ಇಟ್ಟಿತು</td></tr>
 <tr><td>laugh</td><td>हँसो</td><td>ನಗು</td><td>ನಕ್ಕ</td><td>ನಕ್ಕಿ</td><td>ನಕ್ಕಿತು</td></tr>
 <tr><td>learn</td><td>सीखो</td><td>ಕಲಿ</td><td>ಕಲಿತ</td><td>ಕಲಿತು</td><td>ಕಲಿತಿತು</td></tr>
-<tr><td>leave</td><td>?</td><td>ಬಿಡು</td><td>ಬಿಟ್ಟ</td><td>ಬಿಟ್ಟು</td><td>ಬಿಟ್ಟಿತು</td></tr>
+<tr><td>leave</td><td>छोड़ो</td><td>ಬಿಡು</td><td>ಬಿಟ್ಟ</td><td>ಬಿಟ್ಟು</td><td>ಬಿಟ್ಟಿತು</td></tr>
 <tr><td>wait/protect</td><td>?</td><td>ಕಾ</td><td>ಕಾದ</td><td>ಕಾದು</td><td>ಕಾದಿತು</td></tr>
 <tr><td>say</td><td>कहो</td><td>ಅನ್ನು</td><td>ಅಂದ</td><td>ಅಂದು</td><td>ಅಂದಿತು</td></tr>
 <tr><td>steal</td><td>चुराओ</td><td>ಕದಿ</td><td>ಕದ್ದ</td><td>ಕದ್ದು</td><td>?</td></tr>
