@@ -27,7 +27,7 @@ See <a href="05-participles.html">05-participles.html</a> for details.)
 A plus sign (+) denotes concatenation without संधि, and ⊕ denotes concatenation with संधि.
 A minus sign denotes removing a suffix, e.g., ಮಾಡುತ್ತಾ - ಆ = ಮಾಡುತ್ತ್.
 
-## Imperative mood (ಆಜ್ಞಾರ್ಥಕ ರೂಪಗಳು) and verb root
+## Imperative mood (ಆಜ್ಞಾರ್ಥಕ ರೂಪ) and verb root
 
 When we want to give a command, suggestion, or request to someone, we use the imperative mood.
 (If a sentence contains just a verb and nothing else, it's the imperative mood.)
@@ -66,7 +66,7 @@ For all other verbs, this is how we derive the plural imperative form from the v
 1.  if the verb root ends with ಉ, remove ಉ and append ಇ.
 2.  if the verb root with ಎ or ಇ: append ಯಿರಿ.
 
-## Verbs Forms
+## Verb Forms
 
 There are two kinds of verbs: <em>regular</em> and <em>irregular</em>.
 Regular verbs can be conjugated by following standard rules,

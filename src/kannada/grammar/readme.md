@@ -13,7 +13,7 @@ There are two main reasons why I wrote these notes:
 2.  Kannada's grammar is very similar to Hindi and very different from English.
     Hence, it's easier to learn Kannada from Hindi than from English.
     However, I couldn't find any good sources that teach Kannada from Hindi.
-    Hence, I learned from this video series (that teach Kannada from English) and 'Hindified' it,
+    Hence, I learned from this video series (that teaches Kannada from English) and 'Hindified' it,
     i.e., translated its (English) sentences to Hindi and used those to infer a mapping between
     Kannada words and concepts to their Hindi equivalents.
 
