@@ -36,8 +36,10 @@
 
 1.  ಯಾವಾಗ - कब - when
 2.  ಯಾವಾಗಾದರೂ - कभी - at some time
-3.  ಈವಾಗ - अब - now
-4.  ಆವಾಗ - तब - then
+3.  ಈಗ / ಈವಾಗ - अब - now
+4.  ಆಗ / ಆವಾಗ - तब - then
+5.  ಈಗಲೇ - अभी - (right) now
+6.  ಆಗಲೇ - तभी - then / already
 
 ## Where
 
@@ -51,5 +53,11 @@
 1.  ಎಷ್ಟು - कितना - how much
 2.  ಇಷ್ಟು - इतना - this much
 3.  ಅಷ್ಟು - उतना - that much
+
+## What kind of
+
+1.  ಎಂಥ - कैसा - what kind of
+2.  ಇಂಥ - ऐसा - this kind of / such a
+3.  ಅಂಥ - वैसा - that kind of / such a
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
