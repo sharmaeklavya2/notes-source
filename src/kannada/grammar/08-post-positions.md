@@ -184,7 +184,7 @@ Converts a noun or adjective to something like an adverb.
 
 Roughly means 'जितना' or 'as ... as'.
 
-1.  I haven't seen as house as beautiful as yours in this world. -
+1.  I haven't seen a house as beautiful as yours in this world. -
     आपके घर जितना सुंदर घर दुनिया में मैंने नहीं देखा है। -
     ನಿಮ್ಮ ಮನೆಯಷ್ಟು ಸುಂದರವಾದ ಮನೆ ಪ್ರಪಂಚದಲ್ಲಿ ನಾನು ನೋಡಿಲ್ಲ.
 
