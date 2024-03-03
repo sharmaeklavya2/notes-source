@@ -50,6 +50,7 @@ Adjectives:
 1.  ಆಗಾಗೆ / ಹೆಚ್ಚಾಗಿ / ಅಡಿಗಡಿಗೆ / ಸಂದುಗೊಂದು - often / frequently
 1.  ಕೆಲವೊಮ್ಮೆ - कभी-कभी - sometimes
 1.  ಸಂದರ್ಭವಿದ್ದಾಗ - मौक़ा मिलने पर - occasionally
+1.  ಇನ್ನೂ - अभी भी - still
 1.  ಅಷ್ಟು ಕಷ್ಟ - मुश्किल से - hardly ever
 1.  ಅಪರೂಪವಾಗಿ - rarely
 1.  ಯಾವತ್ತೂ - किसी भी दिन - any day (usually used to say 'never')
