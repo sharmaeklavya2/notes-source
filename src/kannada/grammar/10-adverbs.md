@@ -1,6 +1,6 @@
 # Adverbs and Adjectives
 
-(incomplete)
+[source: <https://www.youtube.com/watch?v=MwdZZcmq2RE>]
 
 ## Adverbs of Quality
 
