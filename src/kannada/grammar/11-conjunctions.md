@@ -72,12 +72,6 @@ I finished his work so that he could sleep.
 
 ### ಆಮೇಲೆ = और फिर = and then
 
-### ವರೆಗೂ / ತನಕ = (जब) तक = as long as / till
-
-1.  ನೀವು ನಮ್ಮ ಜೊತೆ ಇರುವವರೆಗೂ ನಾವು ಯಾರನ್ನು ಕಂಡು ಹೆದರಿಕೆ ಕೊಳ್ಳ ಅವಶ್ಯಕತೆ ಇಲ್ಲ.
-    = जब तक आप हमारे साथ हैं, हमें किसी से डरने की जरूरत नहीं है.
-    = As long as you are with us, we need not fear anyone.
-
 ### ಕೂಡಲೇ / ತಕ್ಷಣ = as soon as
 
 1.  Police ನೋಡಿದ ತಕ್ಷಣ ಕಳ್ಳರು ಹೆದರಿಕೆ ಆದರು.
@@ -85,6 +79,12 @@ I finished his work so that he could sleep.
     = As soon as they saw the police, the thieves got scared.
 
 Note how we used past RP of ನೋಡು before ತಕ್ಷಣ.
+
+### ವರೆಗೂ / ತನಕ = (जब) तक = as long as / till
+
+1.  ನೀವು ನಮ್ಮ ಜೊತೆ ಇರುವವರೆಗೂ ನಾವು ಯಾರನ್ನು ಕಂಡು ಹೆದರಿಕೆ ಕೊಳ್ಳ ಅವಶ್ಯಕತೆ ಇಲ್ಲ.
+    = जब तक आप हमारे साथ हैं, हमें किसी से डरने की जरूरत नहीं है.
+    = As long as you are with us, we need not fear anyone.
 
 ### ಅಷ್ಟರಲ್ಲಿ = उतने में / तब तक = by the time
 
