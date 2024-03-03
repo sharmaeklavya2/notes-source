@@ -66,4 +66,45 @@ Note how we used past RP of ನೋಡು before ತಕ್ಷಣ.
     = जब तक मैं पहुँचा तब तक मेरा दोस्त चला गया।
     = My friend left just before I arrived.
 
-## ಅಲ್ಲದೇ = वरना / नहीं तो = else / otherwise
+## ಹೊರತು = unless = जब तक … नहीं … तब तक
+
+Use negative relative participle of verb before ಹೊರತು.
+
+1.  ಅವನು ಈ ಕೆಲಸ ಮಾಡದ ಹೊರತು ನಾನು ಇಲ್ಲಿಂದ ಹೋಗುವುದಿಲ್ಲ.
+    = जब तक वह यह काम नहीं करता, मैं यहाँ से नहीं जाऊँगा।
+    = Unless he does this work, I will leave.
+2.  ಬಿಸಿ ನೀರು ಕುಡಿಯುವ ಹೊರತು ಶೀತ ಮತ್ತು ಕೆಮ್ಮು ಹೋಗುವುದಿಲ್ಲ.
+    = जब तक गर्म पानी नहीं पियोगे तब तक सर्दी-खांसी नहीं जाएगी।
+
+## When / while = +ಆಗ
+
+See ಆಗ in <a href="08-post-positions.html">08-post-positions.html</a>.
+
+## (ಯಾವಾಗೆಲ್ಲಾ …) ಆವಾಗೆಲ್ಲ = जब भी … तब = Whenever
+
+1.  Whenever I start the topic of marriage, you run away.
+    = जब भी मैं शादी की बात शुरू करता हूँ, तुम भाग जाते हो।
+    = ಯಾವಾಗೆಲ್ಲಾ ನಾನು ಮದುವೆ ಬಗ್ಗೆ ಚರ್ಚೆ ಶುರು ಮಾಡುತ್ತೇನೆ, ಆವಾಗೆಲ್ಲ ನೀನು ಓದಿ ಬಿಡುತ್ತೀಯ.
+    = ನಾನು ಮದುವೆ ಬಗ್ಗೆ ಚರ್ಚೆ ಶುರು ಮಾಡುವಾಗೆಲ್ಲ, ನೀನು ಓದಿ ಬಿಡುತ್ತೀಯ.
+
+The second Kannada sentence in the above example is constructed by
+using the appropriate ಆಗ form of the verb and adding ಎಲ್ಲ with ಸಂಧಿ.
+
+## ಇಲ್ಲದಿದ್ದರೆ / = वरना / नहीं तो = else / otherwise
+
+1.  ಇವತ್ತು ಸಂಜೆ ಒಳಗೆ ಹಣ ಕೊಡಲೇ ಬೇಕು, ಇಲ್ಲದಿದ್ದರೆ ನಾನು ನಿನ್ನನ್ನು ಹೊಡೆಯುತ್ತೇನೆ.
+    = आज शाम तक पैसे देने ही पड़ेंगे, वरना मैं तुम्हें मारूँगा।
+
+## Either … or = ಒಂದು … ಅಥವಾ
+
+1.  Either you should go or I should go.
+    = या तो तुम्हें जाना चाहिये या फिर मुझे जाना चाहिये।
+    = ಒಂದು ನೀನು ಹೋಗ ಬೇಕು ಅಥವಾ ನಾನು ಹೋಗ ಬೇಕು.
+
+## Neither … nor
+
+Use the ಊ clitic.
+
+1.  I want neither coffee nor tea.
+    = मुझे coffee भी नहीं चाहिए और चाय भी नहीं चाहिए।
+    = ನನಗೆ coffeeಯೂ ಬೇಡ ಚಹಾವೂ ಬೇಡ.
