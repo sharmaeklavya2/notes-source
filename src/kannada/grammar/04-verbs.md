@@ -24,6 +24,10 @@ past relative participle, past verbal participle, past ಅದು form.
 (In addition to conjugating verbs, participles have other uses in Kannada.
 See <a href="05-participles.html">05-participles.html</a> for details.)
 
+In Kannada, there is a difference between the written form and the colloquial (spoken) form regarding verb conjugation.
+This document focuses on the written form, but I'll briefly talk about the colloquial form too.
+The written form is standard, whereas slight variations exist in the colloquial form.
+
 A plus sign (+) denotes concatenation without संधि, and ⊕ denotes concatenation with संधि.
 A minus sign denotes removing a suffix, e.g., ಮಾಡುತ್ತಾ - ಆ = ಮಾಡುತ್ತ್.
 
@@ -202,6 +206,69 @@ Conjugation rule for ಇರು:
 To implement संधि, remove the vowel from the first part (participle)
 and then concatenate it with the second part (suffix).
 
+## Colloquializing the Simple Tense
+
+If the verb's imperative form ends with ಎ, replace the ಎ with ಇ.
+This modified imperative form is used to construct other verb forms,
+like the RPs and VPs.
+
+### Past Tense
+
+1.  The suffix for ನಾನು is ಎ instead of ಎನು.
+2.  The suffix for ನಾವು is ವಿ instead of ಎವು.
+2.  The suffix for ಅವನು is ಅ instead of ಅನು.
+
+### Present Tense
+
+The present VP can depend on the subject's pronoun.
+The table below gives the present VP construction rule for regular verbs.
+
+<table>
+<tr><th>verb ending</th><th>pronoun</th>
+    <th>written present VP</th><th>colloquial present VP</th></tr>
+<tr><td>ends with ಉ</td><td>-</td>
+    <td>+ತ್ತಾ</td><td>-ಉ+ತಾ / -ಉ+ತ್ತಾ</td></tr>
+<tr><td>ends with ಇ</td><td>ನಾನು, ನಾವು, ನೀನು, ನೀವು</td>
+    <td>+ಯುತ್ತಾ</td><td>ತಾ / ತ್ತಾ</td></tr>
+<tr><td>ends with ಇ</td><td>ಅವನು, ಅವಳು, ಅವರು</td>
+    <td>+ಯುತ್ತಾ</td><td>ತ್ತಾ</td></tr>
+<tr><td>ends with ಇ</td><td>ಅದು, ಅವು</td>
+    <td>+ಯುತ್ತಾ</td><td>(same as written)</td></tr>
+</table>
+
+Some suffixes are different:
+
+<table>
+<tr><th>Subject</th><th>written suffix</th><th>colloquial suffix</th></tr>
+<tr><td>ನಾನು</td><td>ಏನೆ</td><td>ಈನಿ/ಇನಿ</td></tr>
+<tr><td>ನಾವು</td><td>ಏವೆ</td><td>ಈವಿ/ಇವಿ</td></tr>
+<tr><td>ನೀನು</td><td>ಈಯ</td><td>(same)</td></tr>
+<tr><td>ನೀವು</td><td>ಈರಿ</td><td>ಈರ</td></tr>
+<tr><td>ಅವನು</td><td>ಆನೆ</td><td>(same)</td></tr>
+<tr><td>ಅವಳು</td><td>ಆಳೆ</td><td>(same)</td></tr>
+<tr><td>ಅವರು</td><td>ಆರೆ</td><td>(same)</td></tr>
+<tr><td>ಅದು</td><td>ಅದೆ</td><td>ಎ</td></tr>
+<tr><td>ಅವು</td><td>ಅವೆ</td><td>(same)</td></tr>
+</table>
+
+### Future Tense
+
+Colloquially, people use the present tense conjugation of a verb
+to talk about events in the future (except the ಇರು verb).
+They provide additional context for disambiguation
+using words like 'today', 'soon', 'later'.
+
+For ಇರು, the present VP is ಇರ್ತ್ತಾ / ಇರ್ತಾ instead of ಇರುತ್ತಾ.
+
+### Examples
+
+1.  I see. - मैं देखता हूँ। - ನಾನು ನೋಡ್‌ತೇನಿ.
+2.  It comes. - वह आता है। - ಅದು ಬರತ್ತೆ.
+3.  We went. - हम गए। - ನಾವು ಹೋಗಿದ್ವಿ.
+4.  She writes. - वह लिखती है। - ಅವಳು ಬರಿತ್ತಾಳೆ.
+5.  I'm here. - मैं यहाँ हूँ। - ನಾನು ಇಲ್ಲಿದ್ದೀನಿ.
+5.  He will be there. - वह उधर होगा। - ಅವನು ಅಲ್ಲಿರ್ತ್ತಾನೆ.
+
 ## Negative Simple Tense
 
 In the negative simple tense, the verb is conjugated as 'augmented verb root + suffix'.
@@ -230,6 +297,8 @@ Exception: augmented verb root + suffix for ಇರು:
 2.  Past: ಇರಲಿಲ್ಲ.
 3.  Future: ಇರಲ್ಲ.
 
+AFAIK, the colloquial and written forms are the same.
+
 ### Converting to question
 
 Change the last character of the suffix from ಲ್ಲ to ಲ್ವಾ.
@@ -254,6 +323,10 @@ This is unusual in spoken form but sometimes happens in written form.
 To do this, remove the vowel from the present VP (i.e., replace the ತ್ತಾ by ತ್ತ್).
 E.g., ನೋಡುತ್ತಾ ⊕ ಇದ್ದೇನೆ = ನೋಡುತ್ತಿದ್ದೇನೆ.
 
+To colloquialize, modify the present VP and the conjugation of ಇರು
+in the X simple tense as discussed in the section on
+colloquializing the simple tense.
+
 ## Perfect Tense
 
 Examples:
@@ -267,5 +340,8 @@ In the X perfect tense, the verb is conjugated as 'past VP ⊕ suffix'.
 The suffix is the conjugation of ಇರು in the X simple tense.
 
 To implement संधि, remove the vowel from the past VP.
+
+To colloquialize, modify the conjugation of ಇರು in the X simple tense
+as discussed in the section on colloquializing the simple tense.
 
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
