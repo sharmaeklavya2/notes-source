@@ -1,0 +1,231 @@
+\documentclass[a4paper, 12pt, fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{How Much Randomness is Needed to Sample from a Discrete Distribution?}
+
+\DeclareMathOperator{\sampleFromReal}{\mathtt{sampleFromReal}}
+\DeclareMathOperator{\sampleFromDie}{\mathtt{sampleFromDie}}
+\DeclareMathOperator{\throwDie}{\mathtt{throwDie}}
+\DeclareMathOperator{\unif}{unif}
+\DeclareMathOperator{\len}{len}
+\newcommand*{\Null}{\mathtt{null}}
+\newcommand*{\boolone}{:=}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+There is a discrete distribution $\Dcal$ of support $S \subseteq \mathbb{Z}$.
+We want to sample from $\Dcal$, and our only source of randomness is a
+(potentially unfair) $k$-sided die ($k \ge 2$), where the probability of each face is known.
+
+For $i \in \{1, \ldots, k\}$, let $q_i$ be the probability that the die shows $i$.
+\WLoG{} assume $0 < q_1 \le q_2 \le \ldots \le q_k$.
+For $i \in \{0, \ldots, k\}$, let $Q_i \defeq \sum_{j=1}^i q_j$.
+
+\section{Algorithm and Notation}
+
+Let $Z$ be a random variable from $\Dcal$.
+For any $i \in S$, let $p_i \defeq \Pr(Z = i)$
+and let $I_i$ be the half-open interval $(\Pr(Z < i), \Pr(Z \le i)]$.
+
+\begin{lemma}
+$(0, 1) \subseteq \bigcup_{i \in S} I_i \subseteq [0, 1]$.
+\end{lemma}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{algorithm}[htb]
+\caption{$\sampleFromDie$: Sample from $\Dcal$, where $\throwDie \sim \unif(\{1, 2, \ldots, k\}$).}
+\begin{algorithmic}[1]
+\State Set $\ell = 0$ and $r = 1$.
+\For{$t \in \mathbb{Z}_{\ge 0}$}
+    \If{$(\ell, r] \subseteq I_i$ for some $i \in S$}
+        \State \Return ($i$, $t$)
+    \EndIf
+    \State $v = \throwDie()$
+    \State $\ell, r = \ell + Q_{v-1}(r - \ell), \ell + Q_v(r - \ell)$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+Let $(Y, T)$ $\sampleFromDie$'s output.
+Here $Y$ is the random sample from $\Dcal$ we are looking for
+and $T$ is the number of times $\throwDie$ is called.
+
+For $t \in \mathbb{Z}_{\ge 1}$, let $v_t$ be the value of the $t\Th$ die roll.
+For $t \in \mathbb{Z}_{\ge 0}$, let $\ell_t$ and $r_t$ be the value of $\ell$ and $r$
+in $\sampleFromDie$ after $t$ iterations have completed.
+Let $J_t \defeq (\ell_t, r_t]$.
+(The algorithm may terminate before the $t\Th$ iteration completes.
+However, we look at the hypothetical scenario where we continue running the algorithm
+instead of terminating at return statements.
+Hence, $v_t$, $\ell_t$, and $r_t$ are well-defined for all $t$.)
+
+Let $\Jcal_t$ be the support of $J_t$.
+
+\section{Correctness}
+
+For any interval $I$, let $\len(I)$ be its length.
+
+\begin{lemma}
+For all $t \in \mathbb{Z}_{\ge 0}$ and $W_t \in \Jcal_t$, we have $\Pr(J_t = W_t) = \len(W_t)$.
+\end{lemma}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{theorem}
+Let $Y$ be $\sampleFromDie$'s output. Then $\Pr(Y = i) = p_i$ for all $i \in S$.
+\end{theorem}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\section{Running Time for Bounded \texorpdfstring{$|S|$}{|S|}}
+
+\WLoG{}, assume $S = \{1, 2, \ldots, n\}$.
+For $i \in \{0, 1, \ldots, n\}$, let $s_i \defeq \Pr(Z \le i)$.
+For any proposition $P$, let $\boolone(P)$ be 1 if $P$ is true and 0 if $P$ is false.
+
+\begin{lemma}
+For all $t \in \mathbb{Z}_{\ge 0}$ and $W_t \in \Jcal_t$, we have $\len(W_t) \in [q_1^t, q_k^t]$.
+\end{lemma}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{lemma}
+$\Pr(T > t) \le \min(q_k^t(n-1), 1)$.
+\end{lemma}
+\begin{proof}
+Let $C \defeq \{s_1, \ldots, s_{n-1}\}$.
+Then $T > t \iff C \cap J_t \neq \emptyset$.
+For any $W \in \Jcal_t$, let $n_W \defeq |C \cap W|$. Then
+\begin{align*}
+\Pr(T > t) &= \Pr(C \cap J_t \neq \emptyset)
+\\ &= \sum_{W \in \Jcal_t} \Pr(J_t = W)\boolone(n_W \ge 1)
+\\ &\le \sum_{W \in \Jcal_t} q_k^t n_W
+\\ &= q_k^t \sum_{W \in \Jcal_t} |C \cap W|
+\\ &= q_k^t (n-1).
+\qedhere \end{align*}
+\end{proof}
+
+\begin{corollary}
+Let $\delta \in (0, 1)$ and
+$\displaystyle t \defeq \ceil{\frac{\log(n-1) + \log(1/\delta)}{\log(1/q_k)}}$.
+Then $\Pr(T > t) \le \delta$.
+\end{corollary}
+
+\begin{theorem}
+Let $\displaystyle h \defeq \ceil{\frac{\log(n-1)}{\log(1/q_k)}}$. Then
+$\displaystyle \E(T) \le h + \frac{(n-1)q_k^h}{1 - q_k} \le h + \frac{1}{1 - q_k}$.
+\end{theorem}
+\begin{proof}
+For any $t \in \mathbb{Z}_{\ge 0}$,
+\begin{align*}
+t \ge h
+&\iff t \ge \frac{\log(n-1)}{\log(1/q_k)}
+\iff t\log(1/q_k) \ge \log(n-1)
+\\ &\iff q_k^{-t} \ge n-1
+\iff (n-1)q_k^t \le 1.
+\end{align*}
+Hence,
+\begin{align*}
+\E(T) &= \sum_{t=0}^{\infty} \Pr(T > t)
+\le \sum_{t=0}^{\infty} \min(1, q_k^t(n-1))
+\\ &\le h + \sum_{t=h}^{\infty} q_k^t(n-1)
+= h + (n-1)q_k^h \sum_{t=0}^{\infty} q_k^t
+\\ &= h + \frac{(n-1)q_k^h}{1 - q_k}
+\le h + \frac{1}{1 - q_k}.
+\qedhere \end{align*}
+\end{proof}
+
+If we have a fair $n$-sided die, then we get $\E(T) \le 2$.
+
+\section{Entropy-Based Bound}
+
+All intervals in $\Jcal_t$ are said to have \emph{depth} $t$.
+
+\begin{definition}
+Let $\Jcal \defeq \bigcup_{t=0}^{\infty} J_t$. An interval $W \in \Jcal$ is said to be
+\emph{maximal in} $I_i$ if $W \subseteq I_i$ and for all $W' \in \Jcal$,
+we have $W' \supsetneq W \implies W' \nsubseteq I_i$.
+
+A \emph{die-decomposition} of $I_i$ is the set of all sets in $\Jcal$ that are maximal in $I_i$.
+\end{definition}
+
+\begin{lemma}
+For any $i \in S$, let $\Kcal_i$ be a die-decomposition of $I_i$.
+Then $\bigcup_{W \in \Kcal_i} W = I_i$.
+\end{lemma}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{lemma}
+Let $(Y, T)$ be the output of $\sampleFromDie$. Then $(\ell_T, r_T) \in \Kcal_Y$.
+\end{lemma}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{lemma}
+For any $i \in S$ and $t \in \mathbb{Z}_{\ge 0}$, we get
+\[ \sum_{W \in \Kcal_i \cap \Jcal_t} \len(W) \le (2 - q_1 - q_k)q_k^{t-1}. \]
+\end{lemma}
+\begin{proof}
+(TODO)
+\end{proof}
+
+\begin{lemma}
+\[ \E(T) \le \frac{2-q_1-q_k}{1-q_k}\sum_{i \in S} p_i^{\frac{\log(1/q_k)}{\log(1/q_1)}}
+    \left(\ceil{\frac{\log(1/p_i)}{\log(1/q_1)}} + \frac{q_k}{1-q_k}\right). \]
+\end{lemma}
+\begin{proof}
+Let $\beta_{i,t} \defeq \sum_{W \in \Kcal_i \cap \Jcal_t} \len(W)$.
+Then $\beta_{i,t} \le \min(p_i, (2-q_1-q_k)q_k^{t-1})$.
+$\beta_{i,t} > 0 \iff |\Kcal_i \cap \Jcal_t| > 0 \implies q_1^t \le p_i$.
+Let $h_i \defeq \ceil{\frac{\log(1/p_i)}{\log(1/q_1)}}$. Then
+\[ q_1^t \le p_i \iff t\log(1/q_1) \ge \log(1/p_i) \iff t \ge h_i. \]
+Hence, $t < h_i \implies \beta_{i,t} = 0$.
+
+\begin{align*}
+\E(T) &= \sum_{i \in S} \sum_{t=0}^{\infty} \E(T | J_T \in \Kcal_i \cap \Jcal_t)\Pr(J_T \in \Kcal_i \cap \Jcal_t)
+\\ &= \sum_{i \in S} \sum_{t=0}^{\infty} t\Pr(J_T \in \Kcal_i \cap \Jcal_t)
+\\ &= \sum_{i \in S} \sum_{t=0}^{\infty} t\beta_{i,t}
+= \sum_{i \in S} \sum_{t=h_i}^{\infty} t\beta_{i,t}
+\\ &\le (2-q_1-q_k)\sum_{i \in S} \sum_{t=h_i}^{\infty} tq_k^{t-1}
+\\ &= \frac{2-q_1-q_k}{1-q_k}\sum_{i \in S} q_k^{h_i-1}\left(h_i + \frac{q_k}{1-q_k}\right)
+\\ &= \frac{2-q_1-q_k}{1-q_k}\sum_{i \in S} p_i^{\frac{\log(1/q_k)}{\log(1/q_1)}}\left(h_i + \frac{q_k}{1-q_k}\right)
+\qedhere \end{align*}
+\end{proof}
+
+Suppose $q_1 = q_k = 1/k$. Then we get
+\begin{align*}
+\E(T) &\le \frac{2(1-1/k)}{1-1/k}\sum_{i \in S} p_i\left(\ceil{\log_k(1/p_i)} + \frac{k}{k-1}\right)
+\\ &= 2\sum_{i \in S} p_i\ceil{\log_k(1/p_i)} + \frac{2k}{k-1}.
+\end{align*}
+
+%\bibliographystyle{plainurl}
+%\bibliography{bibdb.bib}
+
+\end{document}
