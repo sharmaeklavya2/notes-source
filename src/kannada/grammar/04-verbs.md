@@ -323,6 +323,9 @@ This is unusual in spoken form but sometimes happens in written form.
 To do this, remove the vowel from the present VP (i.e., replace the ತ್ತಾ by ತ್ತ್).
 E.g., ನೋಡುತ್ತಾ ⊕ ಇದ್ದೇನೆ = ನೋಡುತ್ತಿದ್ದೇನೆ.
 
+Kannada lacks a separate past habitual tense.
+It uses the past continuous tense instead.
+
 To colloquialize, modify the present VP and the conjugation of ಇರು
 in the X simple tense as discussed in the section on
 colloquializing the simple tense.
