@@ -89,9 +89,9 @@ Here RP means relative participle and VP means verbal participle.
 <tr><td>look</td><td>देखो</td><td>ನೋಡು</td>
     <td>ನೋಡಿದ</td><td>ನೋಡಿ</td><td>ನೋಡುವ</td><td>ನೋಡುತ್ತಾ</td><td>ನೋಡಿತು</td></tr>
 <tr><td>write</td><td>लिखो</td><td>ಬರೆ</td>
-    <td>ಬರೆದ</td><td>ಬರೆದು</td><td>ಬರೆಯುವ</td><td>ಬರೆಯುತ್ತಾ</td><td>ಬರೆದಿತು</td></tr>
+    <td>ಬರೆದ</td><td>ಬರೆದು</td><td>ಬರೆಯುವ</td><td>ಬರೆಯುತ್ತಾ</td><td>ಬರೆಯಿತು</td></tr>
 <tr><td>drink</td><td>पियो</td><td>ಕುಡಿ</td>
-    <td>ಕುಡಿದ</td><td>ಕುಡಿದು</td><td>ಕುಡಿಯುವ</td><td>ಕುಡಿಯುತ್ತಾ</td><td>ಕುಡಿದಿತು</td></tr>
+    <td>ಕುಡಿದ</td><td>ಕುಡಿದು</td><td>ಕುಡಿಯುವ</td><td>ಕುಡಿಯುತ್ತಾ</td><td>ಕುಡಿಯಿತು</td></tr>
 </table>
 
 ### Deriving verb forms from verb roots
@@ -110,7 +110,7 @@ Rule to obtain past RP, past VP, and past ಅದು form from verb root for regu
 <table>
 <tr><th></th><th>past RP</th><th>past VP</th><th>past ಅದು</th></tr>
 <tr><td>ends with ಉ</td><td>-ಉ+ಇದ</td><td>-ಉ+ಇ</td><td>-ಉ+ಇತು</td></tr>
-<tr><td>non-ಉ-ending</td><td>+ದ</td><td>+ದು</td><td>+ದಿತು</td></tr>
+<tr><td>non-ಉ-ending</td><td>+ದ</td><td>+ದು</td><td>+ಯಿತು</td></tr>
 </table>
 
 ### List of verbs
