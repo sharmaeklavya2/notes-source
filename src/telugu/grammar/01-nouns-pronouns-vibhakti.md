@@ -368,4 +368,33 @@ Example of applying अधिकरण कारक to possessive pronouns:
     = वह <strong>मेरी में</strong> है।
     = అతను <strong>నాదానిలో</strong> ఉన్నాడు.
 
+## Noun Plurals
+
+Generally, we pluralize a noun by adding లు.
+E.g., అబ్బాయి (लड़का) → అబ్బాయిలు (लड़के).
+
+Exceptions:
+
+* Xట్టు → Xట్లు. E.g., చెట్టు (tree) → చెట్లు (trees).
+* Xఅం → Xఆలు. E.g., పుస్తకం (book) → పుస్తకాలు (books).
+
+<p>
+<table>
+<thead>
+<tr><th>हिंदी</th><th>singluar</th><th>plural</th></tr>
+</thead>
+<tbody>
+<tr><td>घर</td><td>ఇల్లు</td><td>ఇళ్లు</td></tr>
+<tr><td>मंदिर</td><td>గుడి</td><td>గుళ్లు</td></tr>
+<tr><td>आँख</td><td>కన్ను</td><td>కళ్లు</td></tr>
+<tr><td>दोस्त</td><td>స్నేహితుడు</td><td>స్నేహితులు</td></tr>
+<tr><td>बिल्ली</td><td>పిల్లి</td><td>పిల్లులు</td></tr>
+<tr><td>फूल</td><td>పువ్వు</td><td>పూలు</td></tr>
+<tr><td>साल</td><td>ఏడు</td><td>ఏళ్లు</td></tr>
+<tr><td>हाथ</td><td>చెయ్యి</td><td>చేతులు</td></tr>
+<tr><td>फल</td><td>పండు</td><td>పళ్లు</td></tr>
+</tbody>
+</table>
+</p>
+
 <script type="module" src="https://sharmaeklavya2.github.io/trin/trinUI.js?init=true&addCss=true"></script>
