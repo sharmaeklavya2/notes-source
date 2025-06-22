@@ -43,24 +43,19 @@ but some exceptions exist (called irregular nouns).
 
 <p>
 <table>
-<thead>
 <tr><th>Sno</th><th>कारक</th><th>ఇ-ending</th><th>non-ఇ-ending</th></tr>
-</thead>
-<tbody>
 <tr><td>2</td><td>कर्म</td><td>Xని</td><td>Xను</td></tr>
 <tr><td>3</td><td>करण</td><td colspan="2">Xతో</td></tr>
 <tr><td>4a</td><td rowspan="2">संप्रदान</td><td>Xకి</td><td>Xకు</td></tr>
 <tr><td>4b</td><td colspan="2">X కోసం</td></tr>
 <tr><td>5</td><td>अपादान</td><td colspan="2">X నుండి / X నుంచి</td></tr>
 <tr><td>7</td><td>अधिकरण</td><td colspan="2">Xలో</td></tr>
-</tbody>
 </table>
 </p>
 
 Examples:
 
 <table>
-<thead>
 <tr>
 <th>(1) कर्ता</th>
 <th>(2) कर्म</th>
@@ -71,8 +66,6 @@ Examples:
 <th>(7) अधिकरण</th>
 <th>हिंदी</th>
 </tr>
-</thead>
-<tbody>
 <tr>
 <td>గోడ</td>
 <td>గోడను</td>
@@ -93,7 +86,6 @@ Examples:
 <td>రవిలో</td>
 <td>रवि</td>
 </tr>
-</tbody>
 </table>
 
 ## Irregular Nouns
@@ -110,7 +102,6 @@ Nouns that are irregular because of their संबंध कारक:
 Nouns that are <span class="danger">irregular</span> because of other कारकs:
 
 <table>
-<thead>
 <tr>
 <th>(1) कर्ता</th>
 <th>(2) कर्म</th>
@@ -121,8 +112,6 @@ Nouns that are <span class="danger">irregular</span> because of other कार�
 <th>हिंदी</th>
 <th>english</th>
 </tr>
-</thead>
-<tbody>
 <tr>
 <td>పుస్తకం</td>
 <td class="danger">పుస్తకాన్ని</td>
@@ -135,15 +124,24 @@ Nouns that are <span class="danger">irregular</span> because of other कार�
 </tr>
 <tr>
 <td>గుడి</td>
-<td>?</td>
-<td>?</td>
-<td>?</td>
+<td>గుడిని</td>
+<td>గుడితో</td>
+<td>గుడికి</td>
 <td>గుడి</td>
 <td class="danger">గుళ్లో</td>
 <td>मंदिर</td>
 <td>temple</td>
 </tr>
-</tbody>
+<tr>
+<td>ఊరు</td>
+<td>ఊరును</td>
+<td>ఊరుతో</td>
+<td>ఊరుకు</td>
+<td>ఊరు</td>
+<td class="danger">ఊళ్లో</td>
+<td>-</td>
+<td>town</td>
+</tr>
 </table>
 
 ## Personal Pronouns

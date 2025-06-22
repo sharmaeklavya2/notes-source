@@ -29,6 +29,7 @@ a:visited {color: var(--vlink-color);}
 }
 table {border-collapse: collapse;}
 td, th {border: 1px solid var(--text-secondary); padding: 0.1rem 0.5rem;}
+thead th, .sticky th {position: sticky; top: 0; background-color: var(--bg-color);}
 
 /* extra */
 h1, h2, h3, h4, h5, h6 {line-height: initial; color: var(--emph-color);}
