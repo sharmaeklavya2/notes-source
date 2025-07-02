@@ -389,21 +389,31 @@ Follows from \cref{thm:scaling-sup-inf}.
 
 \begin{lemma}
 \label{thm:dint:l-le-u}
-Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
-Then $U_{f,W}(a, b) \ge L_{f,W}(a, b)$.
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic. Then
+\[ U_{f,W}(a, b) - L_{f,W}(a, b) = \inf_{P \in \Pcal(a, b)} (U_{f,W}(P) - L_{f,W}(P)) \ge 0. \]
 \end{lemma}
 \begin{proof}
-Assume $U_{f,W}(a, b) < L_{f,W}(a, b)$. Let $0 < \eps < (L_{f,W}(a, b) - U_{f,W}(a, b)) / 2$.
+For any $P \in \Pcal(a, b)$, we have $U_{f,W}(a, b) \le U_{f,W}(P)$
+and $L_{f,W}(a, b) \ge L_{f,W}(P)$.
+Hence, $U_{f,W}(a, b) - L_{f,W}(a, b) \le U_{f,W}(P) - L_{f,W}(P) \ge 0$.
+Since this is true for all $P \in \Pcal(a, b)$, we get
+Hence, $U_{f,W}(a, b) - L_{f,W}(a, b) \le \inf_{P \in \Pcal(a, b)} (U_{f,W}(P) - L_{f,W}(P)) \ge 0$.
+
+Let $\alpha \defeq \inf_{P \in \Pcal(a, b)} (U_{f,W}(P) - L_{f,W}(P))$.
+Let $\beta \defeq U_{f,W}(a, b) - L_{f,W}(a, b)$.
+We want to show that $\beta \ge \alpha$. Assume $\beta < \alpha$.
+Let $0 < \eps < (\alpha - \beta) / 2$.
 Then $\exists P_U \in \Pcal$ such that $U_{f,W}(P_U) < U_{f,W}(a, b) + \eps$
 and $\exists P_L \in \Pcal$ such that $L_{f,W}(P_L) > L_{f,W}(a, b) - \eps$.
-Hence, $U_{f,W}(P_U) < L_{f,W}(P_L)$.
+Hence, $U_{f,W}(P_U) - L_{f,W}(P_L) \le \beta + 2\eps < \alpha$.
 
 Let $P = (x_0, \ldots, x_n)$ be a merger of $P_L$ and $P_U$,
 i.e., for all $i$, $x_i \in P_L \cup P_U$.
 Then $P$ is a refinement of both $P_L$ and $P_U$.
-By \cref{thm:dsum:refinement}, $U_{f,W}(P) \le U_{f,W}(P_U) < L_{f,W}(P_L) \le L_{f,W}(P)$,
-so $U_{f,W}(P) < L_{f,W}(P) < 0$, which is a contradiction.
-Hence, $U_{f,W}(a, b) \ge L_{f,W}(a, b)$.
+By \cref{thm:dsum:refinement}, $U_{f,W}(P) \le U_{f,W}(P_U)$ and $L_{f,W}(P_L) \le L_{f,W}(P)$,
+so $U_{f,W}(P) - L_{f,W}(P) < U_{f,W}(P_U) - L_{f,W}(P_L) < \alpha$, which is a contradiction.
+Hence, $\beta \ge \alpha$, which implies
+\[ U_{f,W}(a, b) - L_{f,W}(a, b) = \inf_{P \in \Pcal(a, b)} (U_{f,W}(P) - L_{f,W}(P)). \]
 \end{proof}
 
 \begin{lemma}
@@ -529,18 +539,18 @@ Hence, assume $W(a) < W(b)$ and $f(a) < f(b)$.
 Pick any $\eps > 0$. By \cref{thm:fine-split},
 there exists $P = (x_0, \ldots, x_n) \in \Pcal(a, b)$ such that
 $W^-(x_i) - W^+(x_{i-1}) \le \eps(W^-(b) - W^+(a)) \le \eps(W(b) - W(a))$ for all $i \in [n]$.
-Now, $U_{f,W}(a, b) \le U_{f,W}(P)$ and $L_{f,W}(a, b) \ge L_{f,W}(P)$. Hence,
+Now,
 \begin{align*}
-U_{f,W}(a, b) - L_{f,W}(a, b) &\le U_{f,W}(P) - L_{f,W}(P)
+& U_{f,W}(P) - L_{f,W}(P)
 \\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
     \left(\sup_{x \in (x_{i-1}, x_i)} f(x) - \inf_{x \in (x_{i-1}, x_i)} f(x)\right)
 \\ &\le \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))(f(x_i) - f(x_{i-1})).
 \\ &\le \eps(W(b)-W(a)) \sum_{i=1}^n (f(x_i) - f(x_{i-1})).
 \\ &= \eps(W(b)-W(a))(f(b)-f(a)).
 \end{align*}
-By picking an arbitrarily small $\eps$, we get $U_{f,W}(a, b) - L_{f,W}(a, b) \le 0$.
-Also, $U_{f,W}(a, b) \ge L_{f,W}(a, b)$ by \cref{thm:dint:l-le-u}.
-Hence, $U_{f,W}(a, b) = L_{f,W}(a, b)$.
+By picking an arbitrarily small $\eps$, using \cref{thm:dint:l-le-u}, we get
+\[ U_{f,W}(a, b) - L_{f,W}(a, b) = \inf_{P \in \Pcal(a, b)} (U_{f,W}(P) - L_{f,W}(P)) = 0.
+\qedhere \]
 \end{proof}
 
 \begin{lemma}
@@ -562,16 +572,17 @@ By \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}, we get
 \[ \sup_{x \in (x_{i-1}, x_i)} f(x) - \inf_{x \in (x_{i-1}, x_i)} f(x)
     = \sup_{x, y \in (x_{i-1}, x_i)} f(x) - f(y) \le \eps. \]
 %
-Moreover, $U_{f,W}(a, b) \le U_{f,W}(P)$ and $L_{f,W}(a, b) \ge L_{f,W}(P)$. Hence,
+Hence,
 \begin{align*}
-& U_{f,W}(a, b) - L_{f,W}(a, b) \le U_{f,W}(P) - L_{f,W}(P)
+& U_{f,W}(P) - L_{f,W}(P)
 \\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
     \left(\sup_{x \in (x_{i-1}, x_i)} f(x) - \inf_{x \in (x_{i-1}, x_i)} f(x)\right)
 \\ &\le \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))\eps
 \\ &\le \eps(W^-(b) - W^+(a)).
 \end{align*}
-By making $\eps$ arbitrarily small, we get $U_{f,W}(a, b) \le L_{f,W}(a, b)$.
-By \cref{thm:dint:l-le-u}, we get $U_{f,W}(a, b) = L_{f,W}(a, b)$.
+By making $\eps$ arbitrarily small and using \cref{thm:dint:l-le-u}, we get
+\[ U_{f,W}(a, b) - L_{f,W}(a, b) = \inf_{P \in \Pcal(a, b)} (U_{f,W}(P) - L_{f,W}(P)) = 0.
+\qedhere \]
 \end{proof}
 
 \begin{lemma}
