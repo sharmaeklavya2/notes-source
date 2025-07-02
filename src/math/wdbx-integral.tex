@@ -1,0 +1,842 @@
+\documentclass[a4paper,12pt,fleqn]{article}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{comment}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage[bookmarksnumbered=true,hypertexnames=false]{hyperref}
+%\usepackage{algorithm, algpseudocode}
+\usepackage[capitalize,sort]{cleveref}
+
+%\def\colorscheme{dark}
+\input{colorscheme.tex}
+\hypersetup{colorlinks,linkcolor=textRed,citecolor=textRed,urlcolor=textBlue}
+\input{macros.tex}
+
+\newenvironment*{tightenum}{\begin{enumerate}[noitemsep]}{\end{enumerate}}
+
+\DeclareMathOperator{\rank}{rank}
+
+\author{Eklavya Sharma}
+\date{\empty}
+
+\title{Weighted Darboux Integrals}
+
+\begin{document}
+
+\maketitle
+\setlength{\parskip}{0.2em}
+
+We modify the theory of Darboux integration to incorporate \emph{weights}.
+This is similar to how the
+\href{https://en.wikipedia.org/wiki/Riemann\%E2\%80\%93Stieltjes_integral}{Riemann-Stieltjes integral}
+is obtained by incorporating weights in the definition of Riemann integral.
+
+\section{Preliminaries}
+
+We assume that the domain of all functions is non-empty,
+i.e., if we write $f: X \to Y$, then we assume $X \neq \emptyset$.
+
+\begin{definition}[monotonic function]
+A function $f: [a, b] \to \mathbb{R}$ is \emph{monotonic} if
+$f(y) \le f(z)$ for all $a \le y < z \le b$.
+\end{definition}
+
+\subsection{Supremum and Infimum}
+
+For a set $X \subseteq \mathbb{R}$,
+if $X$ does not have an upper bound, then $\sup(X) \defeq \infty$,
+and if $X$ does not have a lower bound, then $\inf(X) \defeq -\infty$.
+
+\begin{definition}[monotonic limits]
+Let $f: [a, b] \to \mathbb{R}$ be a monotonic function.
+For $c \in (a, b]$, define $f^-(c) \defeq \sup_{x \in (a, c)} f(x)$.
+For $c \in [a, b)$, define $f^+(c) \defeq \inf_{x \in (c, b)} f(x)$.
+\end{definition}
+
+\begin{lemma}
+\label{thm:sum-of-sup-inf}
+For any $f, g: X \to \mathbb{R}$,
+\begin{align*}
+& \sup_{x \in X} (f(x) + g(x)) \le \sup_{x \in X} f(x) + \sup_{x \in X} g(x),
+&& \inf_{x \in X} (f(x) + g(x)) \ge \inf_{x \in X} f(x) + \inf_{x \in X} g(x).
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+\label{thm:scaling-sup-inf}
+For any $f: X \to \mathbb{R}$ and $z \in \mathbb{R} - \{0\}$,
+\[ \sup_{x \in X} zf(x) = \begin{cases}
+z\sup_{x \in X} f(x) & \text{ if } z > 0
+\\ z\inf_{x \in X} f(x) & \text{ if } z < 0
+\end{cases}. \]
+\end{lemma}
+
+\begin{lemma}
+\label{thm:sum-of-sup-inf-2}
+Let $f: X \to \mathbb{R}$ and $g: Y \to \mathbb{R}$. Then
+\[ \sup_{x \in X} f(x) + \sup_{y \in Y} g(y)
+= \sup_{x \in X, y \in Y} (f(x) + g(y)). \]
+\[ \inf_{x \in X} f(x) + \inf_{y \in Y} g(y)
+= \inf_{x \in X, y \in Y} (f(x) + g(y)). \]
+\end{lemma}
+
+\subsection{Splitting Intervals}
+
+\begin{lemma}
+\label{thm:half-split}
+Let $W: [a, b] \to \mathbb{R}$ be monotonic and $a < b$.
+Let $0 < \delta < 1$ and $\mu \defeq (1-\delta) W^+(a) + \delta W^-(b)$.
+Then $\exists c \in (a, b)$ such that $W^-(c) \le \mu$ and $W^+(c) \ge \mu$.
+\end{lemma}
+\begin{proof}
+For all $x \in (a, b)$, we have $W^+(a) \le W(x) \le W^-(b)$.
+If $W^+(a) = W^-(b)$, then $W(x) = W^+(a) = W^-(b) = \mu$ for all $x \in (a, b)$.
+Hence, for $c = (a+b)/2$, we get $W^-(c) = W(c) = W^+(c) = \mu$.
+Now assume $W^+(a) < W^-(b)$. Then $W^+(a) < \mu < W^-(b)$.
+
+Let $A \defeq \{z \in (a, b): W(z) < \mu\}$
+and $B \defeq \{z \in (a, b): W(z) \ge \mu\}$.
+If $A$ is empty, then $W(z) \ge \mu > W^+(a)$ for all $z \in (a, b)$,
+which contradicts the fact that $W^+(a) = \inf_{x \in (a, b)} W(x)$.
+Hence, $A \neq \emptyset$. Similarly, $B \neq \emptyset$.
+
+Let $c \defeq \inf(B)$. Then $(a, c) \subseteq A$ and $(c, b) \subseteq B$.
+Hence, $W^-(c) = \sup_{x \in (a, c)} W(x) \le \mu$
+and $W^+(c) = \inf_{x \in (c, b)} W(x) \ge \mu$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:half-split-2}
+Let $W: [a, b] \to \mathbb{R}$ be monotonic and $a < b$.
+Let $0 < \delta < 1$ and $\mu \defeq (1-\delta) W^+(a) + \delta W^-(b)$.
+Then $\exists y, z \in (a, b)$ such that $W(y) \le \mu$ and $W(z) \ge \mu$.
+\end{lemma}
+\begin{proof}
+By \cref{thm:half-split}, we get $c \in (a, b)$ such that
+$W^-(c) \le \mu$ and $W^+(c) \ge \mu$.
+Pick $y \defeq (a+c)/2$ and $z \defeq (c+b)/2$.
+Then $\mu \ge W^-(c) = \sup_{x \in (a, c)} W(x) \ge W(y)$
+and $\mu \le W^+(c) = \inf_{x \in (c, b)} W(x) \le W(z)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:k-split}
+Let $W_1, \ldots, W_k: [a, b] \to \mathbb{R}$ be monotonic and $a < b$.
+Then $\exists P^* = (x_0, \ldots, x_{k+1}) \in \Pcal(a, b)$ such that
+$W_j^-(x_i) - W_j^+(x_{i-1}) \le (W_j^-(b) - W_j^+(a))/2$ for all $j \in [k+1]$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+For any partition $P = (y_0, \ldots, y_n) \in \Pcal(a, b)$ and any $j \in [k]$,
+there exists at most one $i \in [n]$ such that
+$W_j^-(y_i) - W_j^+(y_{i-1}) > (W_j^-(b) - W_j^+(a))/2$.
+We call such an $i$ a $W_j$-long index.
+
+Let $P_0 = (a, b) \in \Pcal(a, b)$.
+For all $j \in [k]$, construct $P_j$ by finding a $W_j$-long index in $P_{j-1}$
+(if it exists) and splitting it into two using \cref{thm:half-split}.
+If a $W_j$-long index doesn't exist, then set $P_j = P_{j-1}$.
+Then $P_k$ is our $P^*$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:fine-split}
+Let $W_1, \ldots, W_k: [a, b] \to \mathbb{R}$ be monotonic functions and $a < b$.
+Then for any $0 < \eps < 1$ there exists $P = (x_0, \ldots, x_n) \in \Pcal(a, b)$
+such that $n \le (k+1)^{\ceil{\log_2(1/\eps)}} \le (k+1)(1/\eps)^{\log_2(k+1)}$
+and for all $i \in [n]$ and $j \in [k]$, we have
+$W_j^-(x_i) - W_j^+(x_{i-1}) \le \eps(W_j^-(b) - W_j^+(a))$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Set $P_0 = (a, b) \in \Pcal(a, b)$. For any $t \in \mathbb{N}$,
+we now show how to construct $P_t$ using $P_{t-1}$.
+Let $P_{t-1} = (y_0, \ldots, y_m)$. For each $i \in [n]$,
+split each interval $[y_{i-1}, y_i]$ into a subpartition using \cref{thm:k-split}.
+This gives us $P_t$, and $P_t$ is a sequence of at most $1+m(k+1)$ numbers.
+Hence, if $P_t = (x_0, \ldots, x_n)$, then $n \le (k+1)^t$
+and for every $i \in [n]$ and $j \in [k]$, we get
+$W^-(x_i) - W^+(x_{i-1}) \le 2^{-t}(W^-(b) - W^+(a))$.
+If we set $t = \ceil{\log_2(1/\eps)}$, then $2^{-t} \le \eps$.
+\end{proof}
+
+\subsection{Uniform Continuity}
+
+\begin{definition}[Uniform Continuity]
+\label{defn:unif-cont}
+For $X \subseteq \mathbb{R}$, the function $f: X \to \mathbb{R}$
+is \emph{uniformly continuous} if
+for every $\eps > 0$, there exists a $\delta > 0$ such that for every $x, y \in X$,
+if $|x-y| \le \delta$, then $|f(x)-f(y)| \le \eps$.
+\end{definition}
+
+\begin{definition}
+\label{defn:lipschitz}
+Let $\gamma \in \mathbb{R}_{\ge 0}$, $X \subseteq \mathbb{R}$, and $f: X \to \mathbb{R}$.
+$f$ is $\gamma$-\emph{lipschitz} if
+$|f(x) - f(y)| \le \gamma|x - y|$ for all $x, y \in X$.
+\end{definition}
+
+\begin{lemma}
+\label{thm:monotone-ucont-iff-cont}
+Let $f: [a, b] \to \mathbb{R}$ be a monotonic function.
+The following are equivalent:
+\begin{enumerate}
+\item $f^-(x) = f(x)$ for all $x \in (a, b]$ and $f^+(x) = f(x)$ for all $x \in [a, b)$.
+\item $f$ is uniformly continuous on $[a, b]$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Suppose $f$ is uniformly continuous.
+
+Pick any $z \in (a, b]$. Pick any $\eps > 0$.
+By $f$'s uniform continuity, $\exists 0 < \delta < z-a$ such that
+for all $a \le x < y \le b$, $|x-y| \le \delta$ implies $|f(x)-f(y)| \le \eps$.
+Then $f(z) - f(z-\delta) \le \eps$. Hence,
+\[ f(z) \ge f^-(z) = \sup_{y \in (a, z)} f(y) \ge f(z-\delta) \ge f(z) - \eps. \]
+Since this holds for all $\eps > 0$, we get $f^-(z) = f(z)$.
+
+Pick any $z \in [a, b)$. Pick any $\eps > 0$.
+By $f$'s uniform continuity, $\exists 0 < \delta < b-z$ such that
+for all $a \le x < y \le b$, $|x-y| \le \delta$ implies $|f(x)-f(y)| \le \eps$.
+Then $f(z+\delta) - f(z) \le \eps$. Hence,
+\[ f(z) \le f^+(z) = \inf_{y \in (z, b)} f(y) \le f(z+\delta) \ge f(z) + \eps. \]
+Since this holds for all $\eps > 0$, we get $f^+(z) = f(z)$.
+
+Now suppose $f^-(x) = f(x)$ for all $x \in (a, b]$ and $f^+(x) = f(x)$ for all $x \in [a, b)$.
+We want to show that $f$ is uniformly continuous.
+If $f(a) = f(b)$, then $f(x) = f(a)$ for all $x \in [a, b]$, since $f$ is monotone.
+so uniform continuity trivially holds. Now assume $f(a) < f(b)$.
+
+Pick $0 < \eps < 1$. Let $n \in \mathbb{N}$ such that $n \ge 2(f(b)-f(a))/\eps$.
+For $0 \le i \le n$, define $y_i \defeq f(a) + (f(b)-f(a))(i/n)$.
+Then $Q \defeq (y_0, \ldots, y_n) \in \Pcal(f(a), f(b))$.
+Let $x_0 \defeq a$ and $x_n \defeq b$.
+For all $i \in [n-1]$, using \cref{thm:half-split},
+we can find $x_i$ such that $f(x_i) = y_i$.
+Hence, $P \defeq (x_0, \ldots, x_n) \in \Pcal(a, b)$.
+
+Let $\delta \defeq \min_{i=1}^n (x_i - x_{i-1})$.
+Suppose $a \le y < z \le b$ such that $z - y \le \delta$.
+If $x_{i-1} \le y < z \le x_i$, then
+$f(z) - f(y) \le f(x_i) - f(x_{i-1}) = y_i - y_{i-1} = (f(b)-f(a))/n \le \eps/2$.
+Now suppose $y < x_i < z$. Then $x_{i-1} \le y < x_i < z \le x_{i+1}$, so
+$f(z) - f(y) \le f(x_{i+1}) - f(x_{i-1}) = y_{i+1} - y_{i-1} = 2(f(b)-f(a))/n \le \eps$.
+Hence, $f$ is uniformly continuous.
+\end{proof}
+
+\subsection{Defining Weighted Darboux Integrals}
+
+\begin{definition}[Weighted Darboux Integral]
+\label{defn:darboux-integral}
+Let $a, b \in \mathbb{R}$ such that $a \le b$.
+Let $f, W: [a, b] \to \mathbb{R}$ be functions where $W$ is monotonic.
+Let $P \defeq (x_0, x_1, \ldots, x_n)$ where $a = x_0 < x_1 < \ldots < x_n = b$.
+Then the jump, lower, and upper \emph{weighted Darboux sums} of $f$ on $P$ with weight $W$
+are denoted by $J_{f,W}(P)$, $L_{f,W}(P)$, and $U_{f,W}(P)$, respectively.
+If $a = b$, then $P = (a)$ and $J_{f,W}(P) = L_{f,W}(P) = U_{f,W}(P) = 0$. Otherwise,
+\begin{align*}
+J_{f,W}(P) &\defeq f(x_0)(W^+(x_0) - W(x_0))
+    + \sum_{i=1}^{n-1} f(x_i)(W^+(x_i) - W^-(x_i))
+    \\ &\quad + f(x_n)(W(x_n) - W^-(x_n)),
+\\ L_{f,W}(P) &\defeq J_{f,W}(P)
+    + \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))\left(\inf_{x \in (x_{i-1}, x_i)} f(x)\right),
+\\ U_{f,W}(P) &\defeq J_{f,W}(P)
+    + \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))\left(\sup_{x \in (x_{i-1}, x_i)} f(x)\right).
+\end{align*}
+Let $\Pcal(a, b) \defeq \{(x_0, \ldots, x_n): n \in \mathbb{N}, a = x_0 < \ldots < x_n = b\}$.
+$\Pcal(a, b)$ is called the set of \emph{partitions} of $[a, b]$.
+The lower and upper \emph{weighted Darboux integrals} of $f$ with weight $W$ are
+\begin{align*}
+L_{f,W}(a, b) &\defeq \sup_{P \in \Pcal(a, b)} L_{f,W}(P)
+& U_{f,W}(a, b) &\defeq \inf_{P \in \Pcal(a, b)} U_{f,W}(P)
+\end{align*}
+If $L_{f,W}(a, b) = U_{f,W}(a, b)$, then $f$ is said to be
+$W$-\emph{Darboux integrable} on $[a, b]$,
+and we denote $L_{f,W}(a, b)$ and $U_{f,W}(a, b)$ by $\int_a^b f(x)dW(x)$.
+
+When $W$ is the identity function, we write $L_f$ and $U_f$
+instead of $L_{f,W}$ and $U_{f,W}$, respectively.
+If $L_f(a, b) = U_f(a, b)$, we denote them by $\int_a^b f(x)dx$.
+\end{definition}
+
+\subsection{Properties of Darboux Sums}
+
+\begin{definition}[concatenation]
+\label{defn:concat}
+For any $P \defeq (x_0, \ldots, x_m) \in \Pcal(a, c)$
+and $Q \defeq (y_0, \ldots, y_n) \in \Pcal(c, b)$,
+define $P \mid Q \defeq (x_0, \ldots, x_m, y_1, \ldots, y_n) \in \Pcal(a, b)$
+to be the \emph{concatenation} of $P$ and $Q$.
+\end{definition}
+
+\begin{lemma}
+\label{thm:dsum:concat}
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
+Let $P \in \Pcal(a, c)$ and $Q \in \Pcal(c, b)$.
+Then $L_{f,W}(P \mid Q) = L_{f,W}(P) + L_{f,W}(Q)$
+and $U_{f,W}(P \mid Q) = U_{f,W}(P) + U_{f,W}(Q)$.
+\end{lemma}
+\begin{proof}
+Let $P = (x_0, \ldots, x_n)$ and $Q = (y_0, \ldots, y_m)$.
+For $i \in [m+n] \setminus [n]$ define $x_i \defeq y_{i-n}$.
+Then $P \mid Q = (x_0, \ldots, x_{m+n})$.
+\begin{align*}
+J_{f,W}(P) + J_{f,W}(Q) &= f(x_0)(W^+(x_0) - W(x_0)) + \sum_{i=1}^{n-1} f(x_i)(W^+(x_i) - W^-(x_i))
+    \\ &\quad + f(x_n)(W(x_n) - W^-(x_n)) + f(y_0)(W^+(y_0) - W(y_0))
+    \\ &\quad + \sum_{i=1}^{m-1} f(y_i)(W^+(y_i) - W^-(y_i)) + f(y_m)(W^+(y_i) - W^-(y_i))
+\\ &= f(x_0)(W^+(x_0) - W(x_0)) + \sum_{i=1}^{m+n-1} f(x_i)(W^+(x_i) - W^-(x_i))
+    \\ &\quad + f(x_{m+n-1})(W(x_{m+n}) - W^-(x_{m+n}))
+\\ &= J_{f,W}(P \mid Q)
+\end{align*}
+It's easy to see that
+$L_{f,W}(P \mid Q) - J_{f,W}(P \mid Q)
+    = (L_{f,W}(P) - J_{f,W}(P)) + (L_{f,W}(Q) - J_{f,W}(Q))$,
+so $L_{f,W}(P \mid Q) = L_{f,W}(P) + L_{f,W}(Q)$.
+Similarly, $U_{f,W}(P \mid Q) = U_{f,W}(P) + U_{f,W}(Q)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dsum:bounds}
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic. Let
+\begin{align*}
+\alpha &\defeq \inf_{x \in (a, b)} f(x),
+& \beta &\defeq \sup_{x \in (a, b)} f(x).
+\end{align*}
+For any $P \in \Pcal(a, b)$, we get
+\begin{align*}
+& f(a)(W^+(a)-W(a)) + \alpha(W^-(b) - W^+(a)) + f(b)(W(b) - W^-(b))
+\\ &\le L_{f,W}(P) \le U_{f,W}(P)
+\\ & f(a)(W^+(a)-W(a)) + \beta(W^-(b) - W^+(a)) + f(b)(W(b) - W^-(b)).
+\end{align*}
+\end{lemma}
+\begin{proof}
+(Trivial)
+\end{proof}
+
+\begin{lemma}
+\label{thm:dsum:bounds-simple}
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
+Let $\alpha \le f(x) \le \beta$ for all $x \in [a, b]$.
+Then for any $P \in \Pcal(a, b)$, we get
+$\alpha(W(b) - W(a)) \le L_{f,W}(P) \le U_{f,W}(P) \le \beta(W(b) - W(a))$.
+\end{lemma}
+\begin{proof}
+A trivial corollary of \cref{thm:dsum:bounds}.
+\end{proof}
+
+\begin{definition}[Refinement]
+\label{defn:refinement}
+Let $P_1 \defeq (x_0, \ldots, x_n) \in \Pcal(a, b)$
+and $P_2 \defeq (y_0, \ldots, y_m) \in \Pcal(a, b)$.
+Then $P_2$ is a \emph{refinement} of $P_1$ if
+for every $i$, there exists $j$ such that $x_i = y_j$.
+\end{definition}
+
+\begin{lemma}
+\label{thm:dsum:refinement}
+Let $P, Q \in \Pcal(a, b)$ such that $Q$ is a refinement of $P$.
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
+Then $L_{f,W}(P) \le L_{f,W}(Q) \le U_{f,W}(Q) \le U_{f,W}(P)$.
+\end{lemma}
+\begin{proof}
+Let $P = (x_0, \ldots, x_n)$ and $Q = (y_0, \ldots, y_m)$.
+Since $Q$ is a refinement of $P$, we get that $m \ge n$
+and there is a sequence $(i_0, \ldots, i_n) \in \Pcal(0, m)$ such that $x_j = y_{i_j}$.
+
+For $j \in [n]$, define $P_j \defeq (x_{j-1}, x_j)$ and $Q_j \defeq (y_k)_{k=i_{j-1}}^{i_j}$.
+Then we get $L_{f,W}(P_j) \le L_{f,W}(Q_j) \le U_{f,W}(Q_j) \le U_{f,W}(P_j)$
+using \cref{thm:dsum:bounds}.
+Sum these inequalities over $j \in [n]$ and use \cref{thm:dsum:concat} to get
+$L_{f,W}(P) \le L_{f,W}(Q) \le U_{f,W}(Q) \le U_{f,W}(P)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dsum:sum}
+Let $f, g, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic and let $P \in \Pcal(a, b)$.
+Then $L_{f+g,W}(P) \ge L_{f,W}(P) + L_{g,W}(P)$
+and $U_{f+g,W}(P) \le U_{f,W}(P) + U_{g,W}(P)$.
+\end{lemma}
+\begin{proof}
+It is easy to see that $J_{f+g,W}(P) = J_{f,W}(P) + J_{g,W}(P)$.
+Using \cref{thm:sum-of-sup-inf}, we get
+$L_{f+g,W}(P) - J_{f+g,W}(P) \ge (L_{f,W}(P) - J_{f,W}(P)) + (L_{g,W}(P) - J_{g,W}(P))$,
+and $U_{f+g,W}(P) - J_{f+g,W}(P) \le (U_{f,W}(P) - J_{f,W}(P)) + (U_{g,W}(P) - J_{g,W}(P))$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dsum:scaling}
+Let $f, W: [a, b] \to \mathbb{R}$, $W$ be monotonic,
+$z \in \mathbb{R} - \{0\}$, and $P \in \Pcal(a, b)$. Then
+\begin{align*}
+L_{zf,W}(P) &= \begin{cases}
+    zL_{f,W}(P) & \text{ if } z > 0
+    \\ zU_{f,W}(P) & \text{ if } z < 0
+\end{cases},
+& U_{zf,W}(P) &= \begin{cases}
+    zU_{f,W}(P) & \text{ if } z > 0
+    \\ zL_{f,W}(P) & \text{ if } z < 0
+\end{cases}.
+\end{align*}
+\end{lemma}
+\begin{proof}
+Follows from \cref{thm:scaling-sup-inf}.
+\end{proof}
+
+\subsection{Properties of Darboux Integrals}
+
+\begin{lemma}
+\label{thm:dint:l-le-u}
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
+Then $U_{f,W}(a, b) \ge L_{f,W}(a, b)$.
+\end{lemma}
+\begin{proof}
+Assume $U_{f,W}(a, b) < L_{f,W}(a, b)$. Let $0 < \eps < (L_{f,W}(a, b) - U_{f,W}(a, b)) / 2$.
+Then $\exists P_U \in \Pcal$ such that $U_{f,W}(P_U) < U_{f,W}(a, b) + \eps$
+and $\exists P_L \in \Pcal$ such that $L_{f,W}(P_L) > L_{f,W}(a, b) - \eps$.
+Hence, $U_{f,W}(P_U) < L_{f,W}(P_L)$.
+
+Let $P = (x_0, \ldots, x_n)$ be a merger of $P_L$ and $P_U$,
+i.e., for all $i$, $x_i \in P_L \cup P_U$.
+Then $P$ is a refinement of both $P_L$ and $P_U$.
+By \cref{thm:dsum:refinement}, $U_{f,W}(P) \le U_{f,W}(P_U) < L_{f,W}(P_L) \le L_{f,W}(P)$,
+so $U_{f,W}(P) < L_{f,W}(P) < 0$, which is a contradiction.
+Hence, $U_{f,W}(a, b) \ge L_{f,W}(a, b)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:concat}
+Let $f, W: [a, b] \to \mathbb{R}$, $W$ be monotonic, and $a \le c \le b$.
+Then $L_{f,W}(a, b) = L_{f,W}(a, c) + L_{f,W}(c, b)$
+and $U_{f,W}(a, b) = U_{f,W}(a, c) + U_{f,W}(c, b)$.
+\end{lemma}
+\begin{proof}
+For any $\eps > 0$,
+$\exists P_1 \in \Pcal(a, c)$ such that $L_{f,W}(P_1) > L_{f,W}(a, c) - \eps$
+and $\exists P_2 \in \Pcal(c, b)$ such that $L_{f,W}(P_2) > L_{f,W}(c, b) - \eps$.
+Using \cref{thm:dsum:concat}, we get
+$L_{f,W}(a, b) \ge L_{f,W}(P_1 \mid P_2) > L_{f,W}(a, c) + L_{f,W}(c, b) - 2\eps$.
+By picking $\eps$ arbitrarily small, we get $L_{f,W}(a, b) \ge L_{f,W}(a, c) + L_{f,W}(c, b)$.
+
+For any $P \in \Pcal(a, b)$, there exists a refinement $\Phat$ of $P$ such that $c \in \Phat$.
+Then $\Phat = P_1 \mid P_2$ for some $P_1 \in \Pcal(a, c)$ and $P_2 \in \Pcal(c, b)$.
+By \cref{thm:dsum:refinement}, we get
+$L_{f,W}(P) \le L_{f,W}(\Phat) = L_{f,W}(P_1) + L_{f,W}(P_2) \le L_{f,W}(a, c) + L_{f,W}(c, b)$.
+Since this is true for all $P \in \Pcal(a, b)$, we get
+$L_{f,W}(a, b) \le L_{f,W}(a, c) + L_{f,W}(c, b)$.
+
+Hence, $L_{f,W}(a, b) = L_{f,W}(a, c) + L_{f,W}(c, b)$.
+We can similarly prove that $U_{f,W}(a, b) = U_{f,W}(a, c) + U_{f,W}(c, b)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:bounds}
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic. Let
+\begin{align*}
+\alpha &\defeq \inf_{x \in (a, b)} f(x),
+& \beta &\defeq \sup_{x \in (a, b)} f(x).
+\end{align*}
+Then
+\begin{align*}
+& f(a)(W^+(a)-W(a)) + \alpha(W^-(b) - W^+(a)) + f(b)(W(b) - W^-(b))
+\\ &\le L_{f,W}(a, b) \le U_{f,W}(a, b)
+\\ & f(a)(W^+(a)-W(a)) + \beta(W^-(b) - W^+(a)) + f(b)(W(b) - W^-(b)).
+\end{align*}
+\end{lemma}
+\begin{proof}
+Follows from \cref{thm:dsum:bounds}.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:bounds-simple}
+Let $f, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
+Let $\alpha$ and $\beta$ be lower and upper bounds, respectively, on $f$.
+Then $(W(b)-W(a))\alpha \le L_{f,W}(a, b) \le U_{f,W}(a, b) \le (W(b)-W(a))\beta$.
+\end{lemma}
+\begin{proof}
+Follows from \cref{thm:dsum:bounds-simple}.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:sum}
+Let $f, g, W: [a, b] \to \mathbb{R}$ and $W$ be monotonic.
+Then $L_{f+g,W}(a, b) \ge L_{f,W}(a, b) + L_{g,W}(a, b)$
+and $U_{f+g,W}(a, b) \le U_{f,W}(a, b) + U_{g,W}(a, b)$.
+\end{lemma}
+\begin{proof}
+Let $P_1, P_2 \in \Pcal(a, b)$.
+Let $P \in \Pcal(a, b)$ be the merger of $P_1$ and $P_2$,
+i.e., $x \in P$ iff $x \in P_1 \cup P_2$.
+Then $P$ is a refinement of $P_1$ and $P_2$.
+Using \cref{thm:dsum:sum,thm:dsum:refinement}, we get
+$L_{f+g,W}(a, b) \ge L_{f+g,W}(P) \ge L_{f,W}(P) + L_{g,W}(P) \ge L_{f,W}(P_1) + L_{g,W}(P_2)$.
+By taking suprema over $P_1$ and $P_2$, we get
+$L_{f+g,W}(a, b) \ge L_{f,W}(a, b) + L_{g,W}(a, b)$.
+We can similarly prove $U_{f+g,W}(a, b) \le U_{f,W}(a, b) + U_{g,W}(a, b)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:scaling}
+Let $f, W: [a, b] \to \mathbb{R}$, $W$ be monotonic, and $z \in \mathbb{R} - \{0\}$. Then
+\begin{align*}
+L_{zf,W}(a, b) &= \begin{cases}
+    zL_{f,W}(a, b) & \text{ if } z > 0
+    \\ zU_{f,W}(a, b) & \text{ if } z < 0
+\end{cases},
+& U_{zf,W}(a, b) &= \begin{cases}
+    zU_{f,W}(a, b) & \text{ if } z > 0
+    \\ zL_{f,W}(a, b) & \text{ if } z < 0
+\end{cases}.
+\end{align*}
+\end{lemma}
+\begin{proof}
+Take supremum over $P$ in \cref{thm:dsum:scaling}.
+\end{proof}
+
+\subsection{Conditions for Integrability}
+
+\begin{lemma}
+\label{thm:dint:unbounded}
+Let $f, W: [a, b] \to \mathbb{R}$ where $W$ is strictly monotone
+(i.e, $a \le x < y \le b$ implies $W(x) < W(y)$).
+If $f$ has no upper-bound, then $U_{f,W}(a, b) = \infty$.
+If $f$ has no lower-bound, then $L_{f,W}(a, b) = -\infty$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+Let $P = (x_0, \ldots, x_n) \in \Pcal(a, b)$. Then
+\[ \sup_{x \in [a, b]} f(x) = \max\left(\max_{i=0}^n f(x_i),
+    \max_{i=1}^n\sup_{x \in (x_{i-1}, x_i)} f(x)\right). \]
+If $f$ is unbounded, one of the above must be $\infty$,
+which would make the corresponding term in $U_{f,W}(P)$ infinity.
+Since this is true for all $P \in \Pcal(a, b)$, we get $U_{f,W}(a, b) = \infty$.
+
+We can similarly prove that $L_{f,W}(a, b) = -\infty$ if $f$ has no lower bound.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:monotone}
+Let $f, W: [a, b] \to \mathbb{R}$ be monotone functions.
+Then $L_{f,W}(a, b) = U_{f,W}(a, b)$.
+\end{lemma}
+\begin{proof}
+By \cref{thm:dint:bounds-simple}, we get
+$(W(b)-W(a))f(a) \le L_{f,W}(a, b) \le U_{f,W}(a, b) \le (W(b)-W(a))f(b)$.
+Then $L_{f,W}(a, b) = U_{f,W}(a, b)$ if $f(a) = f(b)$ or $W(a) = W(b)$.
+Hence, assume $W(a) < W(b)$ and $f(a) < f(b)$.
+
+Pick any $\eps > 0$. By \cref{thm:fine-split},
+there exists $P = (x_0, \ldots, x_n) \in \Pcal(a, b)$ such that
+$W^-(x_i) - W^+(x_{i-1}) \le \eps(W^-(b) - W^+(a)) \le \eps(W(b) - W(a))$ for all $i \in [n]$.
+Now, $U_{f,W}(a, b) \le U_{f,W}(P)$ and $L_{f,W}(a, b) \ge L_{f,W}(P)$. Hence,
+\begin{align*}
+U_{f,W}(a, b) - L_{f,W}(a, b) &\le U_{f,W}(P) - L_{f,W}(P)
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \left(\sup_{x \in (x_{i-1}, x_i)} f(x) - \inf_{x \in (x_{i-1}, x_i)} f(x)\right)
+\\ &\le \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))(f(x_i) - f(x_{i-1})).
+\\ &\le \eps(W(b)-W(a)) \sum_{i=1}^n (f(x_i) - f(x_{i-1})).
+\\ &= \eps(W(b)-W(a))(f(b)-f(a)).
+\end{align*}
+By picking an arbitrarily small $\eps$, we get $U_{f,W}(a, b) - L_{f,W}(a, b) \le 0$.
+Also, $U_{f,W}(a, b) \ge L_{f,W}(a, b)$ by \cref{thm:dint:l-le-u}.
+Hence, $U_{f,W}(a, b) = L_{f,W}(a, b)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:unif-cont}
+Let $f, W: [a, b] \to \mathbb{R}$, where $W$ is monotone and $f$ is uniformly continuous.
+Then $L_{f,W}(a, b) = U_{f,W}(a, b)$.
+\end{lemma}
+\begin{proof}
+Pick $\eps > 0$. Since $f$ is uniformly continuous,
+$\exists \delta > 0$ such that for all $a \le x < y \le b$,
+$y - x \le \delta$ implies $|f(x) - f(y)| \le \eps$.
+
+Use \cref{thm:fine-split} to construct
+$P = (x_0, \ldots, x_n) \in \Pcal(a, b)$ such that
+for all $i \in [n]$, we have $x_i - x_{i-1} \le \delta$.
+Then for all $i \in [n]$ and $x, y \in (x_{i-1}, x_i)$,
+we have $|f(x) - f(y)| \le \eps$.
+By \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}, we get
+\[ \sup_{x \in (x_{i-1}, x_i)} f(x) - \inf_{x \in (x_{i-1}, x_i)} f(x)
+    = \sup_{x, y \in (x_{i-1}, x_i)} f(x) - f(y) \le \eps. \]
+%
+Moreover, $U_{f,W}(a, b) \le U_{f,W}(P)$ and $L_{f,W}(a, b) \ge L_{f,W}(P)$. Hence,
+\begin{align*}
+& U_{f,W}(a, b) - L_{f,W}(a, b) \le U_{f,W}(P) - L_{f,W}(P)
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \left(\sup_{x \in (x_{i-1}, x_i)} f(x) - \inf_{x \in (x_{i-1}, x_i)} f(x)\right)
+\\ &\le \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))\eps
+\\ &\le \eps(W^-(b) - W^+(a)).
+\end{align*}
+By making $\eps$ arbitrarily small, we get $U_{f,W}(a, b) \le L_{f,W}(a, b)$.
+By \cref{thm:dint:l-le-u}, we get $U_{f,W}(a, b) = L_{f,W}(a, b)$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:lipschitz}
+Let $R \subseteq \mathbb{R}$.
+Let $g: [a, b] \to R$ and $f: R \to \mathbb{R}$
+such that $f$ is $\gamma$-lipschitz.
+Let $W: [a, b] \to \mathbb{R}$ be monotonic.
+Let $h = f \cdot g$ be the composition of $f$ and $g$.
+Then $U_{h,W}(a, b) - L_{h,W}(a, b) \le \gamma(U_{g,W}(a, b) - L_{g,W}(a, b))$,
+and for any $P \in \Pcal(a, b)$, we get
+$U_{h,W}(P) - L_{h,W}(P) \le \gamma(U_{g,W}(P) - L_{g,W}(P))$.
+\end{lemma}
+\begin{proof}
+Let $P \in \Pcal(a, b)$. Then
+\begin{align*}
+& U_{h,W}(a, b) - L_{h,W}(a, b) \le U_{h,W}(P) - L_{h,W}(P)
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \left(\sup_{x \in (x_{i-1}, x_i)} h(x) - \inf_{x \in (x_{i-1}, x_i)} h(x)\right)
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \sup_{x, y \in (x_{i-1}, x_i)} |f(g(x)) - f(g(y))|
+    \tag{using \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}}
+\\ &\le \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \sup_{x, y \in (x_{i-1}, x_i)} \gamma|g(x) - g(y)|
+\\ &= \gamma\sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \left(\sup_{x \in (x_{i-1}, x_i)} g(x) - \inf_{x \in (x_{i-1}, x_i)} g(x)\right)
+    \tag{using \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}}
+\\ &= \gamma(U_{g,W}(P) - L_{g,W}(P)).
+\end{align*}
+Hence,
+\[ U_{h,W}(a, b) - L_{h,W}(a, b) \le \gamma\inf_{P \in \Pcal(a, b)} (U_{g,W}(P) - L_{g,W}(P)). \]
+Using \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}, we get
+\[ U_{g,W}(a, b) - L_{g,W}(a, b) = \inf_P U_{g,W}(P) - \sup_P L_{g,W}(P)
+= \inf_P (U_{g,W}(P) - L_{g,W}(P)). \]
+Hence, $U_{h,W}(a, b) - L_{h,W}(a, b) \le \gamma(U_{g,W}(a, b) - L_{g,W}(a, b))$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:prod}
+Let $W: [a, b] \to \mathbb{R}$ be monotonic.
+Let $f: [a, b] \to [-c, c]$ and $g: [a, b] \to [-d, d]$,
+where $c \ge 0$ and $d \ge 0$.
+Let $h(x) \defeq f(x)g(x)$ for all $x \in [a, b]$. Then
+$U_{h,W}(a, b) - L_{h,W}(a, b) = c(U_{f,W}(a, b) - L_{f,W}(a, b)) + d(U_{g,W}(a, b) - L_{g,W}(a, b))$.
+\end{lemma}
+\begin{proof}
+Let $P \in \Pcal(a, b)$. Then
+\begin{align*}
+& U_{h,W}(a, b) - L_{h,W}(a, b) \le U_{h,W}(P) - L_{h,W}(P)
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \left(\sup_{x \in (x_{i-1}, x_i)} h(x) - \inf_{x \in (x_{i-1}, x_i)} h(x)\right)
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \sup_{x, y \in (x_{i-1}, x_i)} (f(x)g(x) - f(y)g(y))
+    \tag{using \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}}
+\\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \sup_{x, y \in (x_{i-1}, x_i)} (g(x)(f(x) - f(y)) + f(y)(g(x) - g(y)))
+\\ &\le \gamma\sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+    \left(\sup_{x, y \in (x_{i-1}, x_i)} c|f(x) - f(y)|
+        + \sup_{x, y \in (x_{i-1}, x_i)} d|g(x) - g(y)|\right)
+    \tag{by \cref{thm:sum-of-sup-inf}}
+\\ &= c(U_{f,W}(P) - L_{f,W}(P)) + d(U_{g,W}(P) - L_{g,W}(P)).
+\end{align*}
+Using \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}, we get
+\[ U_{f,W}(a, b) - L_{f,W}(a, b) = \inf_P U_{f,W}(P) - \sup_P L_{f,W}(P)
+= \inf_P (U_{f,W}(P) - L_{f,W}(P)) \]
+and
+\[ U_{g,W}(a, b) - L_{g,W}(a, b) = \inf_P U_{g,W}(P) - \sup_P L_{g,W}(P)
+= \inf_P (U_{g,W}(P) - L_{g,W}(P)). \]
+Hence, we get
+$U_{h,W}(a, b) - L_{h,W}(a, b) = c(U_{f,W}(a, b) - L_{f,W}(a, b)) + d(U_{g,W}(a, b) - L_{g,W}(a, b))$.
+\end{proof}
+
+\subsection{Integration By Parts}
+
+\begin{lemma}
+\label{thm:dsum:by-parts}
+Let $f, g: [a, b] \to \mathbb{R}$ be monotonic functions.
+Let $P \defeq (x_0, \ldots, x_n) \in \Pcal(a, b)$.
+Let $K \defeq \sum_{i=1}^n [(f(x_i)-f^-(x_i))(g(x_i)-g^-(x_i))
+- (f^+(x_{i-1})-f(x_{i-1}))(g^+(x_{i-1})-g(x_{i-1}))]$.
+Then $L_{f,g}(P) + U_{g,f}(P) = U_{f,g}(P) + L_{g,f}(P) = f(b)g(b)-f(a)g(a) + K$.
+\end{lemma}
+\begin{proof}[Proof sketch]
+We prove this for the special case of $P = (a, b) \in \Pcal(a, b)$.
+The general result follows from the special case by applying \cref{thm:dsum:concat}.
+%
+\begin{align*}
+& L_{f,g}(P) + U_{g,f}(P)
+\\ = &f(a)(g^+(a)-g(a)) + f^+(a)(g^-(b)-g^+(a)) + f(b)(g(b)-g^-(b))
+    \\ + &g(a)(f^+(a)-f(a)) + g^-(b)(f^-(b)-f^+(a)) + g(b)(f(b)-f^-(b))
+\\ = &\textcolor{textRed}{f(a)g^+(a) - f(a)g(a) - f^+(a)g^+(a)} + f(b)g(b) \mathbin{\textcolor{textBlue}{-}} \textcolor{textBlue}{f(b)g^-(b)}
+    \\ \textcolor{textRed}{+} & \textcolor{textRed}{f^+(a)g(a)} - f(a)g(a) \mathbin{\textcolor{textBlue}{+}} \textcolor{textBlue}{f^-(b)g^-(b) + f(b)g(b) - f^-(b)g(b)}
+\\ = &f(b)g(b) - f(a)g(a)
+    \mathbin{\textcolor{textRed}{-}} \textcolor{textRed}{(f^+(a)-f(a))(g^+(a)-g(a))}
+    \mathbin{\textcolor{textBlue}{+}} \textcolor{textBlue}{(f(b)-f^-(b))(g(b)-g^-(b))}
+\\ = &f(b)g(b) - f(a)g(a) + K.
+\end{align*}
+Note that $K$ is symmetric in $f$ and $g$.
+Exchange $f$ and $g$ in the above result to get that
+$U_{f,g}(P) + L_{g,f}(P) = f(b)g(b) - f(a)g(a) + K$.
+\end{proof}
+
+\begin{lemma}
+\label{thm:dint:by-parts}
+Let $f, g: [a, b] \to \mathbb{R}$ be monotonic functions.
+(Then $\int_a^b f(x)dg(x)$ and $\int_a^b g(x)df(x)$ exist by \cref{thm:dint:monotone}.)
+If either $f$ or $g$ is uniformly continuous, then
+$\int_a^b f(x)dg(x) + \int_a^b g(x)df(x) = f(b)g(b) - f(a)g(a)$.
+\end{lemma}
+\begin{proof}
+Pick any $P \in \Pcal(a, b)$.
+Since either $f$ or $g$ is uniformly continuous,
+$K$ (as defined in \cref{thm:dsum:by-parts})
+is 0 by \cref{thm:monotone-ucont-iff-cont}.
+Let $\alpha \defeq f(b)g(b)-f(a)g(a)$.
+Hence, $L_{f,g}(P) + U_{g,f}(P) = U_{f,g}(P) + L_{g,f}(P) = \alpha$.
+
+Pick any $\eps > 0$. We can find $P_1$ and $P_2$ such that
+$L_{f,g}(a, b) - \eps \le L_{f,g}(P_1) \le L_{f,g}(a, b)$
+and $U_{g,f}(a, b) \le U_{g,f}(P_2) \le U_{g,f}(a, b) + \eps$.
+Let $P \defeq P_1 \cup P_2$. Then $P$ is a refinement of $P_1$ and $P_2$,
+so $L_{f,g}(P) \le L_{f,g}(a, b) \le L_{f,g}(P) + \eps$
+and $U_{g,f}(P) - \eps \le U_{g,f}(a, b) \le U_{g,f}(P)$.
+On adding the two equations, we get
+$\alpha - \eps \le L_{f,g}(a, b) + U_{g,f}(a, b) \le \alpha + \eps$.
+Since this holds true for all $\eps > 0$,
+we get $L_{f,g}(a, b) + U_{g,f}(a, b) = \alpha$.
+
+Swap $f$ and $g$ in the result above to get
+$U_{f,g}(a, b) + L_{g,f}(a, b) = \alpha$.
+\end{proof}
+
+\subsection{Integrals over Infinitesimal Intervals}
+
+\begin{lemma}
+\label{thm:dint:eps+}
+Let $f: [a, b] \to [0, M]$.
+Let $W: [a, b] \to \mathbb{R}$ be monotonic.
+For $x \in [a, b]$, let $\ell(x) \defeq L_{f,W}(a, x)$ and $u(x) \defeq U_{f,W}(a, x)$.
+(Then $\ell$ and $u$ are monotonic by \cref{thm:dint:concat} and non-negativity of $f$.)
+Then for any $c \in [a, b)$, $\ell^+(c) - \ell(c) = u^+(c) - u(c) = f(c)(W^+(c)-W(c))$,
+and for any $c \in (a, b]$, $\ell(c) - \ell^-(c) = u(c) - u^-(c) = f(c)(W(c)-W^-(c))$.
+\end{lemma}
+\begin{proof}
+Let $c \in \intCO{a, b}$.
+For any $x \in (c, b)$, using \cref{thm:dint:bounds}, we get
+\begin{align*}
+& L_{f,W}(c, x)
+\\ &\ge f(c)(W^+(c)-W(c)) + \left(\inf_{z \in \intOC{c, x}} f(z)\right)(W(x)-W^+(c))
+\\ &\ge f(c)(W^+(c)-W(c)).
+\end{align*}
+Hence, $\inf_{x \in (c, b)} L_{f,W}(c, x) \ge f(c)(W^+(c)-W(c))$.
+Now pick any $\eps > 0$.
+Using \cref{thm:half-split-2}, we can pick $y \in (c, b)$
+such that $W(y) - W^+(c) \le \eps(W^-(b)-W^+(c))$.
+Using \cref{thm:dint:bounds},
+\begin{align*}
+& \inf_{x \in (c, b)} U_{f,W}(c, x) \le U_{f,W}(c, y)
+\\ &\le f(c)(W^+(c)-W(c)) + \left(\sup_{z \in \intOC{c, y}}f(z)\right)(W(y)-W^+(c))
+\\ &\le f(c)(W^+(c)-W(c)) + M\eps(W^-(b)-W^+(c)).
+\end{align*}
+Since this is true for all $\eps > 0$, we get
+$\inf_{x \in (c, b)} U_{f,W}(c, x) \le f(c)(W^+(c)-W(c))$.
+Hence, $\inf_{x \in (c, b)} L_{f,W}(c, x) = \inf_{x \in (c, b)} U_{f,W}(c, x) = f(c)(W^+(c)-W(c))$.
+So,
+\[ \ell^+(c) - \ell(c) = \inf_{x \in (c, b)} (\ell(x) - \ell(c))
+    = \inf_{x \in (c, b)} L_{f,W}(c, x) = f(c)(W^+(c)-W(c)). \]
+\[ u^+(c) - u(c) = \inf_{x \in (c, b)} (u(x) - u(c))
+    = \inf_{x \in (c, b)} U_{f,W}(c, x) = f(c)(W^+(c)-W(c)). \]
+
+Let $c \in \intOC{a, b}$.
+For any $x \in (a, c)$, using \cref{thm:dint:bounds}, we get
+\begin{align*}
+& L_{f,W}(x, c)
+\\ &\ge \left(\inf_{z \in \intCO{x, c}} f(z)\right)(W^-(c)-W(x)) + f(c)(W(c)-W^-(c))
+\\ &\ge f(c)(W(c)-W^-(c)).
+\end{align*}
+Hence, $\inf_{x \in (a, c)} L_{f,W}(x, c) \ge f(c)(W(c)-W^-(c))$.
+Now pick any $\eps > 0$.
+Using \cref{thm:half-split-2}, we can pick $y \in (a, c)$
+such that $W^-(c) - W(y) \le \eps(W^-(c)-W^+(a))$.
+Using \cref{thm:dint:bounds},
+\begin{align*}
+& \inf_{x \in (a, c)} U_{f,W}(x, c) \le U_{f,W}(y, c)
+\\ &\le \left(\sup_{z \in \intCO{y, c}} f(z)\right)(W^-(c)-W(y)) + f(c)(W(c)-W^-(c))
+\\ &\le f(c)(W(c)-W^-(c)) + M\eps(W^-(c)-W^+(a)).
+\end{align*}
+Since this is true for all $\eps > 0$, we get
+$\inf_{x \in (a, c)} U_{f,W}(x, c) \le f(c)(W(c)-W^-(c))$.
+Hence, $\inf_{x \in (a, c)} L_{f,W}(x, c) = \inf_{x \in (a, c)} U_{f,W}(x, c) = f(c)(W(c)-W^-(c))$.
+So,
+\[ \ell(c) - \ell^-(c) = \inf_{x \in (a, c)} (\ell(c) - \ell(x))
+    = \inf_{x \in (a, c)} L_{f,W}(x, c) = f(c)(W(c)-W^-(c)). \]
+\[ u(c) - u^-(c) = \inf_{x \in (a, c)} (u(c) - u(x))
+    = \inf_{x \in (a, c)} U_{f,W}(x, c) = f(c)(W(c)-W^-(c)). \]
+\end{proof}
+
+\subsection{Double Integration}
+
+\begin{lemma}
+Let $V, W: [a, b] \to \mathbb{R}$ be monotonic and $W$ be uniformly continuous.
+Let $f: [a, b] \to [0, M]$ for some $M \in \mathbb{R}_{\ge 0}$
+such that $L_{f,V}(a, b) = U_{f,V}(a, b)$.
+Let $r: [a, b] \to \mathbb{R}_{\ge 0}$, where
+$r(x) \defeq \int_a^x f(y)dV(y)$.
+(Then $r$ is monotonic by $f$'s non-negativity,
+so $r$ is $W$-integrable over $[a, b]$.)
+
+Let $h(x) \defeq f(x)(W(b)-W(x))$ for all $x \in [a, b]$.
+(Then $h$ is $V$-integrable over $[a, b]$ by \cref{thm:dint:prod},
+since $f$ is $V$-integrable and $W$ is monotonic.)
+Then $\int_a^b r(x)dW(x) = \int_a^b h(x)dV(x)$.
+\end{lemma}
+\begin{proof}
+Let $P \defeq (x_0, \ldots, x_n) \in \Pcal(a, b)$.
+For $i \in [n]$, define $P_i \defeq (x_0, \ldots, x_i) \in \Pcal(a, x_i)$.
+Then for any $i \in [n]$, we get $r(x_i) \ge L_{f,V}(P_i)$.
+
+For $i \in [n]$, let $\alpha_i \defeq \inf_{x \in (x_{i-1}, x_i)} f(x)$
+and $\beta_i \defeq \sup_{x \in (x_{i-1}, x_i)} f(x)$.
+%
+Then (TODO),
+\begin{align*}
+L_{r,W}(P) &\ge \sum_{i=1}^n \alpha_i(V^-(x_i)-V^+(x_{i-1}))(W(b)-W^-(x_i))
+    \\ &\quad + \sum_{i=0}^{n-1} f(x_i)(V^+(x_i)-V(x_i))(W(b)-W^+(x_i))
+    \\ &\quad + \sum_{i=1}^n f(x_i)(V(x_i)-V^-(x_i))(W(b)-W^-(x_i)).
+\end{align*}
+(TODO)
+(Also, It's unclear if $W$ really needs to be uniformly continuous.)
+\end{proof}
+
+\subsection{Rate Sandwich Lemma}
+
+\begin{lemma}[Rate Sandwich Lemma]
+\label{thm:monotone-integral-value-2}
+Let $f, g: \mathbb{R}_{\ge 0} \to \mathbb{R}$ be functions where $f$ is monotone.
+Then the following are equivalent:
+\begin{enumerate}
+\item $\displaystyle f(y) \le \frac{g(z) - g(y)}{z - y} \le f(z)$ for all $0 \le y < z$.
+\item $\int_0^t f(x)dx = g(t) - g(0)$ for all $t \ge 0$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Suppose $\int_0^t f(x)dx = g(t) - g(0)$ for all $t \ge 0$.
+Then for any $0 \le y < z$, using
+\cref{thm:dint:concat,thm:dint:monotone,thm:dint:bounds-simple}, we get
+\[ g(z) - g(y) = \int_y^z f(x)dx \in [f(y)(z-y), f(z)(z - y)]. \]
+Now suppose
+\[ f(z) \ge \frac{g(z) - g(y)}{z - y} \ge f(y) \]
+for all $0 \le y < z$. Let $t \in \mathbb{R}_{\ge 0}$.
+Let $P \defeq (x_0, x_1, \ldots, x_n) \in \Pcal(0, t)$.
+For any $i \in [n]$, we get
+\[ f(x_{i-1}) \le \frac{g(x_i) - g(x_{i-1})}{x_i - x_{i-1}} \le f(x_i). \]
+Then the lower Darboux sum is
+\[ L_f(P) \defeq \sum_{i=1}^n (x_i - x_{i-1})f(x_{i-1})
+\le \sum_{i=1}^n (g(x_i) - g(x_{i-1}))
+= g(t) - g(0), \]
+and the upper Darboux sum is
+\[ U_f(P) \defeq \sum_{i=1}^n (x_i - x_{i-1})f(x_i)
+\ge \sum_{i=1}^n (g(x_i) - g(x_{i-1}))
+= g(t) - g(0). \]
+Hence, $L_f(P) \le g(t) - g(0) \le U_f(P)$.
+Hence, $L_f(0, t) \le g(t) - g(0) \le U_f(0, t)$.
+By \cref{thm:dint:monotone}, $U_f(0, t) = L_f(0, t)$,
+so we get $\int_0^t f(x)dx = g(t) - g(0)$.
+\end{proof}
+
+\end{document}
