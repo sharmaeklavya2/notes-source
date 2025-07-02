@@ -227,7 +227,7 @@ $f(z) - f(y) \le f(x_{i+1}) - f(x_{i-1}) = y_{i+1} - y_{i-1} = 2(f(b)-f(a))/n \l
 Hence, $f$ is uniformly continuous.
 \end{proof}
 
-\subsection{Defining Weighted Darboux Integrals}
+\section{Defining Weighted Darboux Integrals}
 
 \begin{definition}[Weighted Darboux Integral]
 \label{defn:darboux-integral}
@@ -262,7 +262,7 @@ instead of $L_{f,W}$ and $U_{f,W}$, respectively.
 If $L_f(a, b) = U_f(a, b)$, we denote them by $\int_a^b f(x)dx$.
 \end{definition}
 
-\subsection{Properties of Darboux Sums}
+\section{Properties of Darboux Sums}
 
 \begin{definition}[concatenation]
 \label{defn:concat}
@@ -385,7 +385,7 @@ L_{zf,W}(P) &= \begin{cases}
 Follows from \cref{thm:scaling-sup-inf}.
 \end{proof}
 
-\subsection{Properties of Darboux Integrals}
+\section{Properties of Darboux Integrals}
 
 \begin{lemma}
 \label{thm:dint:l-le-u}
@@ -505,7 +505,7 @@ L_{zf,W}(a, b) &= \begin{cases}
 Take supremum over $P$ in \cref{thm:dsum:scaling}.
 \end{proof}
 
-\subsection{Conditions for Integrability}
+\section{Conditions for Integrability}
 
 \begin{lemma}
 \label{thm:dint:unbounded}
@@ -655,7 +655,7 @@ Hence, we get
 $U_{h,W}(a, b) - L_{h,W}(a, b) = c(U_{f,W}(a, b) - L_{f,W}(a, b)) + d(U_{g,W}(a, b) - L_{g,W}(a, b))$.
 \end{proof}
 
-\subsection{Integration By Parts}
+\section{Integration By Parts}
 
 \begin{lemma}
 \label{thm:dsum:by-parts}
@@ -715,7 +715,7 @@ Swap $f$ and $g$ in the result above to get
 $U_{f,g}(a, b) + L_{g,f}(a, b) = \alpha$.
 \end{proof}
 
-\subsection{Integrals over Infinitesimal Intervals}
+\section{Integrals over Infinitesimal Intervals}
 
 \begin{lemma}
 \label{thm:dint:eps+}
@@ -780,7 +780,7 @@ So,
     = \inf_{x \in (a, c)} U_{f,W}(x, c) = f(c)(W(c)-W^-(c)). \]
 \end{proof}
 
-\subsection{Double Integration}
+\section{Double Integration}
 
 \begin{lemma}
 Let $V, W: [a, b] \to \mathbb{R}$ be monotonic and $W$ be uniformly continuous.
@@ -814,7 +814,7 @@ L_{r,W}(P) &\ge \sum_{i=1}^n \alpha_i(V^-(x_i)-V^+(x_{i-1}))(W(b)-W^-(x_i))
 (Also, It's unclear if $W$ really needs to be uniformly continuous.)
 \end{proof}
 
-\subsection{Rate Sandwich Lemma}
+\section{Rate Sandwich Lemma}
 
 \begin{lemma}[Rate Sandwich Lemma]
 \label{thm:monotone-integral-value-2}
