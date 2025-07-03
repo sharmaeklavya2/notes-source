@@ -639,7 +639,7 @@ Let $P \in \Pcal(a, b)$. Then
     \tag{using \cref{thm:sum-of-sup-inf-2,thm:scaling-sup-inf}}
 \\ &= \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
     \sup_{x, y \in (x_{i-1}, x_i)} (g(x)(f(x) - f(y)) + f(y)(g(x) - g(y)))
-\\ &\le \gamma\sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
+\\ &\le \sum_{i=1}^n (W^-(x_i) - W^+(x_{i-1}))
     \left(\sup_{x, y \in (x_{i-1}, x_i)} c|f(x) - f(y)|
         + \sup_{x, y \in (x_{i-1}, x_i)} d|g(x) - g(y)|\right)
     \tag{by \cref{thm:sum-of-sup-inf}}
@@ -810,8 +810,6 @@ L_{r,W}(P) &\ge \sum_{i=1}^n \alpha_i(V^-(x_i)-V^+(x_{i-1}))(W(b)-W^-(x_i))
     \\ &\quad + \sum_{i=0}^{n-1} f(x_i)(V^+(x_i)-V(x_i))(W(b)-W^+(x_i))
     \\ &\quad + \sum_{i=1}^n f(x_i)(V(x_i)-V^-(x_i))(W(b)-W^-(x_i)).
 \end{align*}
-(TODO)
-(Also, It's unclear if $W$ really needs to be uniformly continuous.)
 \end{proof}
 
 \section{Rate Sandwich Lemma}
