@@ -51,12 +51,6 @@ For a set $X \subseteq \mathbb{R}$,
 if $X$ does not have an upper bound, then $\sup(X) \defeq \infty$,
 and if $X$ does not have a lower bound, then $\inf(X) \defeq -\infty$.
 
-\begin{definition}[monotonic limits]
-Let $f: [a, b] \to \mathbb{R}$ be a monotonic function.
-For $c \in (a, b]$, define $f^-(c) \defeq \sup_{x \in (a, c)} f(x)$.
-For $c \in [a, b)$, define $f^+(c) \defeq \inf_{x \in (c, b)} f(x)$.
-\end{definition}
-
 \begin{lemma}
 \label{thm:sum-of-sup-inf}
 For any $f, g: X \to \mathbb{R}$,
@@ -83,6 +77,35 @@ Let $f: X \to \mathbb{R}$ and $g: Y \to \mathbb{R}$. Then
 \[ \inf_{x \in X} f(x) + \inf_{y \in Y} g(y)
 = \inf_{x \in X, y \in Y} (f(x) + g(y)). \]
 \end{lemma}
+
+\begin{definition}[monotonic limits]
+Let $f: [a, b] \to \mathbb{R}$ be a monotonic function.
+For $c \in (a, b]$, define $f^-(c) \defeq \sup_{x \in (a, c)} f(x)$.
+For $c \in [a, b)$, define $f^+(c) \defeq \inf_{x \in (c, b)} f(x)$.
+\end{definition}
+
+\begin{lemma}
+\label{thm:eps-compose}
+Let $f: [a, b] \to \mathbb{R}$ be a monotonic function.
+Then for any $c \in [a, b)$, we have $(f^+)^+(c) = (f^-)^+(c) = f^+(c)$,
+and for any $c \in (a, b]$, we have $(f^-)^-(c) = (f^+)^-(c) = f^-(c)$.
+\end{lemma}
+\begin{proof}
+Let $g(x) \defeq f^+(x)$ for $x \in [a, b)$. Pick any $\eps > 0$.
+$f^+(c) = \inf_{x \in (c, b)} f(x)$.
+Hence, $\exists z \in (c, b)$ such that $f(z) < f^+(c) + \eps$. Now
+$g(c) \le g^+(c) \le g((c+z)/2) = f^+((c+z)/2) \le f(z) < f^+(c) + \eps = g(c) + \eps$.
+Since this is true for all $\eps > 0$, we get $g^+(c) = g(c)$,
+so $(f^+)^+(c) = f^+(c)$.
+
+Now let $g(x) \defeq f^-(x)$ for all $x \in (a, b]$.
+$g^+(c) = \inf_{x \in (c, b)} g(x) \le \inf_{x \in (c, b)} f(x) = f^+(c)$.
+$g^+(c) = \inf_{x \in (c, b)} g(x) = \inf_{x \in (c, b)} f^-(x) \ge \inf_{x \in (c, b)} f((c+x)/2)
+= \inf_{x \in (c, (c+b)/2)} f(x) = f^+(c)$.
+Hence, $g^+(c) = f^+(c)$, so $(f^-)^+(c) = f^+(c)$.
+
+We can similarly show that for any $c \in (a, b]$, we have $(f^-)^-(c) = (f^+)^-(c) = f^-(c)$.
+\end{proof}
 
 \subsection{Splitting Intervals}
 
@@ -718,7 +741,7 @@ $U_{f,g}(a, b) + L_{g,f}(a, b) = \alpha$.
 \section{Integrals over Infinitesimal Intervals}
 
 \begin{lemma}
-\label{thm:dint:eps+}
+\label{thm:dint:eps}
 Let $f: [a, b] \to [0, M]$.
 Let $W: [a, b] \to \mathbb{R}$ be monotonic.
 For $x \in [a, b]$, let $\ell(x) \defeq L_{f,W}(a, x)$ and $u(x) \defeq U_{f,W}(a, x)$.
@@ -783,7 +806,8 @@ So,
 \section{Double Integration}
 
 \begin{lemma}
-Let $V, W: [a, b] \to \mathbb{R}$ be monotonic and $W$ be uniformly continuous.
+Let $V, W: [a, b] \to \mathbb{R}$ be monotonic functions
+and $V$ be right continuous, i.e., $V^+(x) = V(x)$ for all $x \in [a, b)$.
 Let $f: [a, b] \to [0, M]$ for some $M \in \mathbb{R}_{\ge 0}$
 such that $L_{f,V}(a, b) = U_{f,V}(a, b)$.
 Let $r: [a, b] \to \mathbb{R}_{\ge 0}$, where
@@ -791,25 +815,122 @@ $r(x) \defeq \int_a^x f(y)dV(y)$.
 (Then $r$ is monotonic by $f$'s non-negativity,
 so $r$ is $W$-integrable over $[a, b]$.)
 
-Let $h(x) \defeq f(x)(W(b)-W(x))$ for all $x \in [a, b]$.
+Let $h(x) \defeq f(x)(W(b)-W^-(x))$ for all $x \in (a, b]$,
+and let $h(a) \defeq f(x)(W(b)-W(a))$.
 (Then $h$ is $V$-integrable over $[a, b]$ by \cref{thm:dint:prod},
-since $f$ is $V$-integrable and $W$ is monotonic.)
+since $f$ is $V$-integrable and $W$ is non-increasing.)
 Then $\int_a^b r(x)dW(x) = \int_a^b h(x)dV(x)$.
 \end{lemma}
 \begin{proof}
-Let $P \defeq (x_0, \ldots, x_n) \in \Pcal(a, b)$.
-For $i \in [n]$, define $P_i \defeq (x_0, \ldots, x_i) \in \Pcal(a, x_i)$.
-Then for any $i \in [n]$, we get $r(x_i) \ge L_{f,V}(P_i)$.
+Suppose $W(b) = W(a)$. Then $W(x) = W(a) = W(b)$ for all $x \in [a, b]$.
+Hence, $\int_a^b r(x)dW(x) = 0$. Also, $h(x) = 0$ for all $x \in [a, b]$,
+so $\int_a^b h(x)dV(x) = 0$. Now assume $W(b) > W(a)$.
 
+Pick any $P \defeq (x_0, \ldots, x_n) \in \Pcal(a, b)$.
+For $i \in [n]$, define $P_i \defeq (x_0, \ldots, x_i) \in \Pcal(a, x_i)$.
+Then for any $i \in [n]$, we get $L_{f,V}(P_i) \le r(x_i) \le U_{f,V}(P_i)$.
+Also, $r(a) = \int_a^a f(y)dV(y) = 0$.
 For $i \in [n]$, let $\alpha_i \defeq \inf_{x \in (x_{i-1}, x_i)} f(x)$
-and $\beta_i \defeq \sup_{x \in (x_{i-1}, x_i)} f(x)$.
-%
-Then (TODO),
+and $\beta_i \defeq \sup_{x \in (x_{i-1}, x_i)} f(x)$. Then
 \begin{align*}
-L_{r,W}(P) &\ge \sum_{i=1}^n \alpha_i(V^-(x_i)-V^+(x_{i-1}))(W(b)-W^-(x_i))
-    \\ &\quad + \sum_{i=0}^{n-1} f(x_i)(V^+(x_i)-V(x_i))(W(b)-W^+(x_i))
-    \\ &\quad + \sum_{i=1}^n f(x_i)(V(x_i)-V^-(x_i))(W(b)-W^-(x_i)).
+L_{f,V}(P_i) &= \sum_{j=1}^i f(x_i)(V(x_j)-V^-(x_j)) + \sum_{j=1}^n \alpha_j(V^-(x_j)-V(x_{j-1})),
+\\ U_{f,V}(P_i) &= \sum_{j=1}^i f(x_i)(V(x_j)-V^-(x_j)) + \sum_{j=1}^n \beta_j(V^-(x_j)-V(x_{j-1})).
 \end{align*}
+
+\textbf{Part 1}: $L_{h,V}(a, b) \le L_{r,W}(a, b)$
+
+By \cref{thm:dint:eps}, $r^+(x) = r(x)$ for all $x \ge 0$.
+\begin{align*}
+L_{r,W}(a, b) &\ge L_{r,W}(P)
+\\ &= \sum_{i=1}^n r(x_i)(W^-(x_{i+1})-W^-(x_i))
+    \tag{$W^-(x_{n+1}) \defeq W(b)$ for notational convenience}
+\\ &\ge \sum_{i=1}^n L_{f,V}(P_i)(W^-(x_{i+1})-W^-(x_i))
+\\ &= \sum_{j=1}^n (W(b)-W^-(x_j))(f(x_j)(V(x_j)-V^-(x_j)) + \alpha_j(V^-(x_j)-V(x_{j-1})))
+\\ &\defeq K_L(P).
+\end{align*}
+Now we will upper-bound $L_{h,V}(P)$.
+\begin{align*}
+& \inf_{x \in (x_{i-1}, x_i)} h(x)
+\\ &= \inf_{x \in (x_{i-1}, x_i)} f(x)(W(b)-W^-(x))
+\\ &\le \inf_{x \in (x_{i-1}, x_i)} \beta_i(W(b)-W^-(x))
+\\ &= \beta_i\left(W(b) - \sup_{x \in (x_{i-1}, x_i)} W^-(x)\right)
+\\ &= \beta_i\left(W(b) - (W^-)^-(x_i)\right)
+\\ &= \beta_i\left(W(b) - W^-(x_i)\right)
+    \tag{by \cref{thm:eps-compose}}
+\end{align*}
+Hence,
+\begin{align*}
+L_{h,V}(P) &= \sum_{j=1}^n h(x_j)(V(x_j)-V^-(x_j))
+    + \sum_{j=1}^n \left(\inf_{x \in (x_{j-1}, x_j)} h(x)\right)(V^-(x_j)-V(x_{j-1}))
+\\ &\le \sum_{i=1}^n f(x_j)(W(b)-W^-(x_j))(V(x_j)-V^-(x_j))
+    \\ &\quad+ \sum_{j=1}^n \beta_j(W(b)-W^-(x_j))(V^-(x_j)-V(x_{j-1}))
+\\ &= K_L(P) + \sum_{j=1}^n (\beta_j - \alpha_j)(W(b)-W^-(x_j))(V^-(x_j)-V(x_{j-1}))
+\\ &\le K_L(P) + (W(b)-W(a))\sum_{j=1}^n (\beta_j - \alpha_j)(V^-(x_j)-V(x_{j-1}))
+\\ &= K_L(P) + (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P)).
+\\ &\le L_{r,W}(a, b) + (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P)).
+\end{align*}
+Hence, for all $P \in \Pcal(a, b)$, we have
+\[ L_{h,V}(P) \le L_{r,W}(a, b) + (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P)). \]
+Pick any $\eps > 0$. Then $\exists Q_1 \in \Pcal(a, b)$
+such that $L_{h,V}(Q_1) > L_{h,V}(a, b) - \eps$.
+Since $f$ is $V$-integrable, by \cref{thm:dint:l-le-u}, $\exists Q_2 \in \Pcal(a, b)$
+such that $U_{f,V}(Q_2) - L_{f,V}(Q_2) < \eps/(W(b)-W(a))$.
+Let $Q \defeq Q_1 \cup Q_2$. Then $Q$ is a refinement of $Q_1$ and $Q_2$,
+so by \cref{thm:dsum:refinement}, we get $L_{h,V}(Q) \ge L_{h,V}(Q_1) > L_{h,V}(a, b) - \eps$
+and $U_{f,V}(Q) - L_{f,V}(Q) \le U_{f,V}(Q_2) - L_{f,V}(Q_2) < \eps/(W(b)-W(a))$.
+Hence, $L_{h,V}(a, b) - \eps \le L_{h,V}(Q) \le L_{r,W}(a, b) + (U_{f,V}(Q)-L_{f,V}(Q))(W(b)-W(a))
+\le L_{r,W}(a, b) + \eps$. Since this holds for all $\eps > 0$,
+we get $L_{h,V}(a, b) \le L_{r,W}(a, b)$.
+
+\textbf{Part 1}: $U_{h,V}(a, b) \ge U_{r,W}(a, b)$
+
+By \cref{thm:dint:eps}, $r^-(x) = r(x) - f(x)(V(x)-V^-(x))$ for all $x > 0$.
+\begin{align*}
+U_{r,W}(a, b) &\le U_{r,W}(P)
+\\ &= \sum_{i=1}^n r(x_i)(W^+(x_i)-W^+(x_{i-1}))
+    \\ &\quad - \sum_{i=1}^n f(x_i)(V(x_i)-V^-(x_i))(W^-(x_i)-W^+(x_{i-1}))
+        \tag{$W^+(x_n) \defeq W(b)$ for notational convenience}
+\\ &\le \sum_{i=1}^n U_{f,V}(P_i)(W^+(x_i)-W^+(x_{i-1}))
+    \\ &\quad - \sum_{i=1}^n f(x_i)(V(x_i)-V^-(x_i))(W^-(x_i)-W^+(x_{i-1}))
+\\ &= \sum_{j=1}^n f(x_j)(V(x_j)-V^-(x_j))(W(b)-W^-(x_j))
+    \\ &\quad - \sum_{j=1}^n \beta_j(V^-(x_j)-V(x_{j-1}))(W(b)-W^+(x_{j-1}))
+\\ &\defeq K_U(P).
+\end{align*}
+\begin{align*}
+& \sup_{x \in (x_{i-1}, x_i)} h(x)
+\\ &= \sup_{x \in (x_{i-1}, x_i)} f(x)(W(b)-W^-(x))
+\\ &\ge \sup_{x \in (x_{i-1}, x_i)} \alpha_i(W(b)-W^-(x))
+\\ &= \alpha_i\left(W(b) - \inf_{x \in (x_{i-1}, x_i)} W^-(x)\right)
+\\ &= \alpha_i\left(W(b) - (W^-)^+(x_{i-1})\right)
+\\ &= \alpha_i\left(W(b) - W^+(x_{i-1})\right)
+    \tag{by \cref{thm:eps-compose}}
+\end{align*}
+\begin{align*}
+U_{h,V}(P) &\ge \sum_{j=1}^n h(x_j)(V(x_j)-V^-(x_j))
+    + \sum_{j=1}^n \left(\sup_{x \in (x_{j-1}, x_j)} h(x)\right)(V^-(x_j)-V(x_{j-1}))
+\\ &\ge \sum_{j=1}^n f(x_j)(W(b)-W^-(x_j))(V(x_j)-V^-(x_j))
+    \\ &\quad + \sum_{j=1}^n \alpha_j(W(b)-W^+(x_{j-1}))(V^-(x_j)-V(x_{j-1}))
+\\ &= K_U(P) - \sum_{j=1}^n (\beta_j - \alpha_j)(W(b)-W^+(x_{j-1}))(V^-(x_j)-V(x_{j-1}))
+\\ &\ge K_U(P) - (W(b)-W(a))\sum_{j=1}^n (\beta_j - \alpha_j)(V^-(x_j)-V(x_{j-1}))
+\\ &= K_U(P) - (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P)).
+\\ &\ge U_{r,W}(a, b) - (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P)).
+\end{align*}
+Hence, for all $P \in \Pcal(a, b)$, we have
+\[ U_{h,V}(P) \ge U_{r,W}(a, b) - (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P)). \]
+Pick any $\eps > 0$. Since $f$ is $V$-integrable,
+using \cref{thm:dint:l-le-u,thm:dsum:refinement},
+we get that for some $Q \in \Pcal(a, b)$, we have
+$U_{h,V}(Q) < U_{h,V}(a, b) + \eps$ and
+$U_{f,V}(Q) - L_{f,V}(Q) < \eps/(W(b)-W(a))$.
+Hence, $U_{h,V}(a, b) + \eps > U_{h,V}(Q) \ge U_{r,W}(a, b) - (W(b)-W(a))(U_{f,V}(P) - L_{f,V}(P))
+\ge U_{r,W}(a, b) - \eps$.
+Hence, $U_{h,V}(a, b) \ge U_{r,W}(a, b) - 2\eps$.
+Since this holds for all $\eps > 0$,
+we get $U_{h,V}(a, b) \ge U_{r,W}(a, b)$.
+
+Combining parts 1 and 2, and using the fact that $r$ is $W$-integrable
+and $h$ is $V$-integrable, we get that
+$\int_a^b r(x)dW(x) = \int_a^b h(y)dV(y)$.
 \end{proof}
 
 \section{Rate Sandwich Lemma}
