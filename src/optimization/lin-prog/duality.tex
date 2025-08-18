@@ -37,6 +37,7 @@ Define the linear program $P \defeq \LP(A, b, c, I, J)$ as
 Then the dual of $P$ is $D \defeq \LP(-A^T, -c, -b, J, I)$, i.e.,
 \[ \max_{y \in \mathbb{R}^m: y_I \ge 0} b^Ty \quad\textrm{where}\quad
 ((A^Ty)_j \le c_j, \forall j \in J) \textrm{ and } ((A^Ty)_j = c_j, \forall j \in [n]-J) \]
+$P$ is called the \emph{primal} LP.
 
 \begin{lemma}
 Dual of dual is primal.
@@ -49,12 +50,29 @@ P &: \min_{x \ge 0} c^Tx \textrm{ where } Ax \ge b
 & D&: \max_{y \ge 0} b^Ty \textrm{ where } A^Ty \le c
 \end{align*}
 
+\begin{theorem}[Weak duality]
+Let $\LP(A, b, c, I, J)$ and $\LP(-A^T, -c, -b, J, I)$ be the primal and dual LPs, respectively.
+Then for any feasible solution $x$ to the primal and any feasible solution $y$ to the dual,
+we have $b^Ty \le y^T\!Ax \le c^Tx$.
+\end{theorem}
+
+\begin{corollary}[Complementary slackness]
+$\xhat$ and $\yhat$ are optimal solutions to $\LP(A, b, c, I, J)$ and $\LP(-A^T, -c, -b, J, I)$, respectively,
+iff $\xhat^T(c - A^T\yhat) = 0$ and $\yhat^T(A\xhat - b) = 0$.
+\end{corollary}
+
+\begin{theorem}[Strong duality]
+The primal LP has an optimal solution iff the dual LP has an optimal solution.
+If $x^*$ is an optimal solution to the primal LP and $y^*$ is an optimal solution to the dual LP,
+then $x^*$ and $y^*$ have the same objective value.
+\end{theorem}
+
 \section{Method for Easy Application}
 
 Adapted from S\'ebastien Lahaie's \href{http://www.cs.columbia.edu/coms6998-3/lpprimer.pdf}{notes}.
 
 \begin{enumerate}
-\item Express problem in standard form:
+\item Express the problem in standard form:
     \begin{tightenum}
     \item Express as a minimization problem.
     \item Write each (non-trivial) constraint as $f(x) \le 0$ or $f(x) = 0$.
@@ -72,7 +90,7 @@ Adapted from S\'ebastien Lahaie's \href{http://www.cs.columbia.edu/coms6998-3/lp
 \[ \max_{y \in \mathbb{R}^m: y_I \ge 0}\; \min_{x \in \mathbb{R}^n: x_J \ge 0} c^Tx + y^T(b - Ax). \]
 \item Rearrange terms to express objective as an affine function of primal variables:
 \[ \max_{y \in \mathbb{R}^m: y_I \ge 0}\; \min_{x \in \mathbb{R}^n: x_J \ge 0} b^Ty + x^T(c - A^Ty). \]
-\item For each term $x_jg_j(y)$ in the objective, remove the term and add constraint
+\item For each term $x_jg_j(y)$ in the objective, remove the term and add the constraint
     \begin{tightenum}
     \item $g_j(y) \ge 0$ if $x_j$ is non-negative.
     \item $g_j(y) = 0$ if $x_j$ is unrestricted.
