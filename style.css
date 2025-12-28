@@ -3,12 +3,14 @@ body {
     --bg-color: white; --text-color: #202020; --text-secondary: #888; --emph-color: #101010;
     --link-color: #1a0dab; --vlink-color: #681da8;
     --text-danger: #dc3545; --text-warning: #ffc107; --text-success: #198754;
+    --light-tint: rgba(0, 0, 0, 0.05);
 }
 @media (prefers-color-scheme: dark) {
     body {
         --bg-color: #1b1e20; --text-color: #c8c8c8; --emph-color: #e4e4e4;
         --link-color: #8ab4f8; --vlink-color: #c58af9;
         --text-danger: #e74c3c; --text-warning: #f39c12; --text-success: #00bc8c;
+        --light-tint: rgba(255, 255, 255, 0.05);
     }
     img {filter: brightness(.8) contrast(1.2);}
 }
@@ -30,6 +32,22 @@ a:visited {color: var(--vlink-color);}
 table {border-collapse: collapse;}
 td, th {border: 1px solid var(--text-secondary); padding: 0.1rem 0.5rem;}
 thead th, .sticky th {position: sticky; top: 0; background-color: var(--bg-color);}
+
+/* toc */
+.toc {
+    background-color: var(--light-tint);
+    padding: 1em;
+}
+.toctitle {
+    font-size: 1.5em;
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: 500;
+}
+.toc ul {
+    margin: 0;
+    padding-left: 1.1em;
+}
 
 /* extra */
 h1, h2, h3, h4, h5, h6 {line-height: initial; color: var(--emph-color);}

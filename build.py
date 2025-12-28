@@ -62,13 +62,23 @@ global_css = None
 global_dot_error = False
 global_warn_count = 0
 
+MD_EXT_CONFIGS = {
+    'codehilite': {'guess_lang': False, 'use_pygments': True},
+    'toc': {
+        'title': 'Table of Contents',
+        'toc_depth': "2-3",
+    },
+    'fenced_code': {},
+    'md_in_html': {},
+}
+
 
 def get_markdown_and_template():
     global global_markdown
     if global_markdown is None:
         try:
             from markdown import Markdown
-            global_markdown = Markdown(extensions=['fenced_code'])
+            global_markdown = Markdown(extensions=list(MD_EXT_CONFIGS.keys()), extension_configs=MD_EXT_CONFIGS)
         except ImportError as e:
             print('error while importing package markdown:', file=sys.stderr)
             print('{}: {}'.format(type(e).__name__, str(e)))
