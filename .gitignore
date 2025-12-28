@@ -3,6 +3,7 @@ output
 deploy
 .env
 auto-index.py
+.flake8
 
 *.aux
 *.bbl
