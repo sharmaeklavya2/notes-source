@@ -229,6 +229,10 @@ When the subject is ఆమె/అది, in the Telangana dialect, the ఊ at th
 * (Telangana) అది తింటది. = (Non-Telangana) అది తింటుంది. = It eats. = वह खाता है।
 * (Telangana) ఆమె నవ్వుతది. = (Non-Telangana) ఆమె నవ్వుతుంది. = She laughs. = वह हँसती है।
 
+In spoken Telugu, when the subject is నేను, sometimes the final ను is dropped. E.g.,
+
+* నేను తింటా. = I eat. = मैं खाता हूँ।
+
 ### Negative Simple Present Tense
 
 #### Existential Verb
@@ -401,6 +405,10 @@ If the subject is ఆమె/అది, in the Telangana dialect, the ఊ at the 
 
 * (Telangana) అది తింటుంది. = (Non-Telangana) అది తింటోంది. = It is eating. = वह खा रहा है।
 * (Telangana) ఆమె నవ్వుతుంది. = (Non-Telangana) ఆమె నవ్వుతోంది. = She is laughing. = वह हँस रही है।
+
+In spoken Telugu, when the subject is నేను, sometimes the final ను is dropped. E.g.,
+
+* నేను తింటున్నా. = I am eating. = मैं खा रहा हूँ।
 
 ### Negative Present Continuous Tense
 
