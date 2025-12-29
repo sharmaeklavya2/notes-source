@@ -431,17 +431,151 @@ and they can be positive or negative.
 
 ### Present Adverbial Participle
 
+The present adverbial participle is used to describe two actions happening simultaneously.
+Examples:
+
+* ఆమె _పాడుతూ_ వచ్చింది. = She came _singing_. = वह _गाते हुए_ आई।
+* నేను _తింటూ_ పని చేస్తున్నాను. = I'm working _while eating_. = मैं _खाते हुए_ काम कर रहा हूँ।
+
+This form can often be obtained by adding తూ to the verb's
+[imperative](#imperative) form, but there are a lot of exceptions to this rule.
+
 ### Past Adverbial Participle
+
+The past adverbial participle is used to describe actions that happen sequentially. Examples:
+
+* చేతులు _కడిగి_ రా. = Wash your hands and come. = हाथ _धोकर_ आओ।
+* నేను _తిని_ వెళ్లాను. = I left _after eating_. = मैं _खाकर_ चला गया।
+
+This form can often be obtained by changing the [imperative](#imperative) form's
+final ఉ to ఇ, but there are a lot of exceptions to this rule.
 
 ### Negative Adverbial Participle
 
+The negative adverbial participle is used to describe an action happening
+without another action happening or having happened.
+
+* అతను _తినకుండా_ వెళ్లాడు. = He left _without eating_. = वह _खाए बिना_ चला गया।
+* ఆమె _నిద్రపోకుండా_ పని చేస్తోంది.
+    = She is working _without sleeping_.
+    = वह _बिना सोए_ काम कर रही है।
+
+This form can be obtained by appending అకుండా to the [infinitive](#infinitive)
+(or equivalently, by appending ఉండా to the [negative imperative](#imperative)).
+
 ### Present Adjectival Participle
+
+The present adjectival participle can describe
+either the subject currently doing the action
+or the object currently receiving the action.
+
+* పుస్తకం _చదువుతున్న_ అమ్మాయి
+    = The girl _who is reading_ the book
+    = किताब _पढ़ रही_ लड़की
+* అమ్మాయి _చదువుతున్న_ పుస్తకం
+    = The book _that_ the girl _is reading_
+    = लड़की _द्वारा पढ़ी जा रही_ किताब
+
+Other examples:
+
+* _ఆడుతున్న_ పిల్లలకు చూడు.
+    = Look at the children _who are playing_.
+    = _खेल रहे_ बच्चों को देखो।
+* _తింటున్న_ ఆహారం చప్పగా ఉంది.
+    = The food _that's being eaten_ is bland.
+    = _खाया जा रहा_ खाना फीका है।
+
+The present adjectival participle can be obtained from the
+[present adverbial participle](#present-adverbial-participle)
+by replacing the final ఊ with ఉన్న. Examples:
+
+* చదువు: చదువుతూ → చదువుతున్న
+* తిను: తింటూ → తింటున్న
 
 ### Past Adjectival Participle
 
-### Future Adjectival Participle
+The past adjectival participle can describe
+either the subject that did the action
+or the object that received the action.
+
+* పుస్తకం _చదివిన_ అమ్మాయి
+    = The girl _who read_ the book
+    = _वह_ लड़खी _जिसने_ किताब _पढ़ी_
+* అమ్మాయి _చదివిన_ పుస్తకం
+    = The book _read by_ the girl
+    = लड़की _द्वारा पढ़ी गई_ किताब
+
+Other examples:
+
+* _వచ్చిన_ పిల్లలకు నీళ్లు ఇవ్వు.
+    = Give water to the children _who have come_.
+    = _आए हुए_ बच्चों को पानी दो.
+* _అడిగిన_ ప్రశ్నలు నీకు గుర్తున్నాయా?
+    = Do you remember the questions _that were asked_?
+    = तुम्हें _पूछे गए_ प्रश्न याद हैं क्या?
+
+The past adjectival participle can be obtained from the
+[past adverbial participle](#past-adverbial-participle).
+If the past adverbial participle ends with ని, change the ని to న్న.
+Otherwise, append న to the past adverbial participle. Examples:
+
+* అడుగు: అడిగి → అడిగిన
+* తిను: తిని → తిన్న
+* కూర్చో: కూర్చుని → కూర్చున్న
+
+### Future/Habitual Adjectival Participle
+
+The future/habitual adjectival participle can describe
+either the subject that does (or will do) the action
+or the object that receives (or will receive) the action.
+
+* coffee _తాగే_ అమ్మాయి
+    = The girl _who drinks_ coffee
+    = coffee _पीने वाली_ लड़की
+* అమ్మాయి _తాగే_ coffee
+    = The coffee _that_ the girl _drinks_
+    = लड़की _द्वारा पिए जाने वाली_ coffee
+
+Other examples:
+
+* రేపు _వచ్చే_ పిల్లల కోసం ఆహారం ఉందా?
+    = Is there food for children _who will come_ tomorrow?
+    = कल _आने वाले_ बच्चों के लिए खाना है क्या?
+
+The future/habitual adjectival participle can be obtained from the
+[past adverbial participle](#past-adverbial-participle)
+by replacing the final ఇ with ఏ. Examples:
+
+* రా: వచ్చి → వచ్చే
+* కూర్చో: కూర్చుని → కూర్చునే
 
 ### Negative Adjectival Participle
+
+The negative adjectival participle can describe
+either the subject that doesn't/didn't do the action
+or the object that doesn't/didn't receive the action.
+
+* పుస్తకం _చదవని_ అమ్మాయి
+    = The girl _who did not read_ the book
+    = _वह_ लड़की _जिसने_ किताब _नहीं पढ़ी_
+* అమ్మాయి _చదవని_ పుస్తకం
+    = The book _not read by_ the girl
+    = _वह_ किताब _जो_ लड़की ने _नहीं पढ़ी_
+
+In Telugu, the negative adjectival participle doesn't change based on tense.
+
+* _ఆడని_ పిల్లలకు చూడు.
+    = Look at the children _who are not playing_.
+    = _उन_ बच्चों को देखो _जो नहीं खेल रहे_।
+* _తినని_ ఆహారం చప్పగా ఉంది.
+    = The food _that was not eaten_ is bland.
+    = _नहीं खाया गया_ खाना फीका है।
+
+The future/habitual adjectival participle can be obtained by appending ని
+to the [infinitive](#infinitive). Examples:
+
+* అడుగు: అడగ → అడగని
+* కూర్చో: కూర్చో → కూర్చోని
 
 ## Other Forms
 
