@@ -277,6 +277,12 @@ using the words ఇప్పుడు (= now = अब/अभी) and అప్�
 
 #### Other Verbs
 
+There are two ways to conjugate the simple past tense.
+Method 1 is understood everywhere.
+Sometimes method 2 is used in spoken Telangana Telugu.
+
+**Method 1**:
+
 Simple past tense conjugation rule for verbs other than ఉండు
 (actually this works for ఉండు too, depending on dialect and context):
 
@@ -293,6 +299,21 @@ Simple past tense conjugation rule for verbs other than ఉండు
 
 In case 3 above, the ఆ in the positive personal suffix
 is pronounced differently: like the 'a' in 'man' or 'cat'.
+
+**Method 2**:
+
+This method only applies to subjects other than ఆమె/అది, and only when the
+[past adjectival participle](#past-adjectival-participle) does not end with న్న.
+
+1.  If the subject is నేను, then the conjugation is the same as the
+    [past adjectival participle](#past-adjectival-participle). Example:
+    * నేను దూకిన. = I jumped. = मैं कूदा।
+2.  Otherwise, replace the ఆ in the [positive personal suffix](#png-suffix-table) to అ,
+    append this suffix to the [past adjectival participle](#past-adjectival-participle).
+    Examples:
+    * మేం దూకినం. = We jumped. = हम कूदे।
+    * అతను దూకినడు. = He jumped. = वह कूदा।
+    * అవి దూకినయి. = They jumped. = वे कूदे।
 
 ### Negative Simple Past Tense
 
