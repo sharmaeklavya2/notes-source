@@ -592,11 +592,66 @@ to the [infinitive](#infinitive). Examples:
 
 ### Gerund
 
+The gerund is a noun form of the verb. Examples:
+
+* నాకు _నిద్రపోవటం_ ఇష్టం. = I like _sleeping_. = मुझे _सोना_ पसंद है।
+* ఎక్కువగా _తినటం_ మంచిది కాదు. = _Eating_ a lot is not good. = ज्यादा _खाना_ ठीक नहीं होता।
+
+The gerund is usually formed by appending టం or డం to the verb's [infinitive](#infinitive).
+Examples:
+
+* అడుగు: అడగ → అడగటం / అడగడం
+* తిను: తిన → తినటం / తినడం
+* కూర్చో: కూర్చో → కూర్చోటం / కూర్చోడం
+
+For verbs whose infinitive ends with పో, కా, రా, or తే,
+the gerund is formed by appending వటం or వడం instead.
+Examples:
+
+* రా → రావటం / రావడం
+* నిద్రపో → నిద్రపోవటం / నిద్రపోవడం
+
+For verbs whose infinitive ends with కో, either టం/డం or వటం/వడం
+is appended depending on dialect. Example:
+
+* తీసుకో → తీసుకోటం / తీసుకోవటం
+
 ### Conditional
+
+* నువ్వు _వస్తే_ చెప్తాను. = If will tell you _if_ you _come_. = तुम _आओगे तो_ बताऊँगा।
+* ఈ అవకాశం _పోతే_ మళ్ళీ రాదు.
+    = _If_ this opportunity _is missed_ it won't come again.
+    = यह अवसर _चला गया तो_ फिर नही आएगा।
+
+It can often be obtained by replacing the final ఊ in the
+[present adverbial participle](#present-adverbial-participle) by ఏ,
+but unfortunately there are a lot of exceptions to this rule.
 
 ### Obligatory
 
+* నేను పుస్తకం _చదవాలి_. = I _should read_ the book. = मुझे किताब _पढ़नी चाहिए_।
+* నువ్వు _కూర్చోవాలి_. = You _should sit_. = तुम्हें _बैठना चाहिए_।
+* ఆమె _తినాలి_. = She _should eat_. = उसे _खाना चाहिए_।
+
+The obligatory form can be constructed from the [infinitive](#infinitive).
+If the infinitive ends in a long vowel, append వాలి to it, otherwise append ఆలి to it.
+Examples:
+
+* అడుగు: అడగ → అడగాలి
+* పో: పో → పోవాలి
+* తీసుకో: తీసుకో → తీసుకోవాలి
+
 ### Hortative
+
+* పోదాం = let's go = चलते हैं
+* తిందాం = let's eat = खाते हैं
+* కూర్చుందాం = let's sit = बैठते हैं
+* రాద్దాం = let's write = लिखते हैं
+
+The hortative can be obtained from the
+[present adverbial participle](#present-adverbial-participle).
+First, replace the final తూ or టూ with దాం,
+and then if it ends with స్డాం, replace that with ద్దాం.
 
 [google-sheet]: https://docs.google.com/spreadsheets/d/1N4qPA8Ku3jhVjY6ksTkHUy4Z8-P1rJFDBn3B8HUHCgM/edit?usp=sharing
 
