@@ -10,7 +10,9 @@ depending on how different they are from the transformation rule.
 
 [TOC]
 
-## Sources
+## Preface
+
+### Sources
 
 My primary source of Telugu grammar is the book
 [An Intensive Course in Telugu](https://archive.org/details/dli.language.2300)
@@ -18,17 +20,22 @@ by Parimi Ramanarsimham.
 The book has multiple chapters, each of which usually starts with
 a dialogue in Telugu between people,
 followed by exercises, vocabulary, and grammar notes related to the dialogue.
-The grammar notes are fragmented across chapters, making it hard to refer to a particular topic.
+Since the grammar notes are fragmented across chapters,
+it can be hard to refer to a particular topic.
 This article, on the other hand, is a structured reference of verb forms.
+
+In many cells of the [Google sheet][google-sheet], I have mentioned the
+book chapter that I sourced the entry from
+(where _ICT_ stands for _Intensive Course in Telugu_).
 
 My second source of Telugu grammar is my wife, who is a native Telugu speaker from Telangana.
 She said that Telangana uses a slightly different dialect of spoken Telugu
 compared to the above book. In this article, I have tried documenting these differences
 with regards to verb forms.
 
-## What to Memorize
+### What to Memorize
 
-If you're learning Telugu, memorizing the following forms is crucial:
+If you're learning Telugu, I recommend memorizing the following forms:
 
 1.  The [imperative](#imperative) form (the primary/defining form).
 2.  The [infinitive](#infinitive) form.
@@ -36,9 +43,10 @@ If you're learning Telugu, memorizing the following forms is crucial:
 4.  The [past adverbial participle](#past-adverbial-participle).
 
 This is because these four forms can be used to derive almost all of the other forms.
-Additionally, it's useful to memorize the [past adjectival participle](#past-adjectival-participle).
+Additionally, it's useful to also memorize the
+[past adjectival participle](#past-adjectival-participle).
 
-## Sandhi
+### Sandhi
 
 We will learn how to transform a verb from one form to other forms.
 To do these transformations, we will often need to join two words together.
@@ -99,8 +107,11 @@ Moreover, there are sub-types of the imperative form:
 * Negative imperative: తినకు = don't eat = मत खाओ.
 * Polite negative imperative: తినకండి = (please) don't eat = मत खाइए.
 
-**Transformation Rule**:
-Take the [infinitive form](#infinitive) of the verb and append (with [sandhi](#sandhi)):
+The simple imperative form is generally considered the primary/defining form of the verb.
+
+The other imperative forms (polite, negative, and polite negative)
+can be obtained from the [infinitive](#infinitive) form
+by appending (with [sandhi](#sandhi)) an appropriate suffix:
 
 1.  'అకు' to get the negative imperative form.
     E.g., వెళ్ళు → వెళ్ళకు, కూర్చో → కూర్చోకు, అడుగు → అడగకు.
@@ -124,10 +135,14 @@ The infinitive form has many functions.
 * **Prohibitive form**: obtained by adding 'కూడదు' to the infinitive. Examples:
     * నువ్వు నీళ్ళు తాగకూడదు. = You may not drink water. = तुम पानी नहीं पी सकते।
     * రవి లోపలికి రాకూడదు. = Ravi cannot come inside. = रवि अंदर नहीं आ सकता।
+* [Negative imperative form](#imperative):
+    obtained by adding 'అకు' to the infinitive.
+* [Polite imperative form](#imperative):
+    obtained by adding 'అండి' to the infinitive.
 
 **Transformation Rule**:
 Usually, the infinitive form is obtained by appending
-ఆ to the imperative form (with [sandhi](#sandhi)).
+అ to the simple imperative form (with [sandhi](#sandhi)).
 Examples: వెళ్ళు → వెళ్ళ, కూర్చో → కూర్చో.
 
 There are many exceptions to this rule.
@@ -656,7 +671,7 @@ The gerund is a noun form of the verb. Examples:
 * నాకు _నిద్రపోవటం_ ఇష్టం. = I like _sleeping_. = मुझे _सोना_ पसंद है।
 * ఎక్కువగా _తినటం_ మంచిది కాదు. = _Eating_ a lot is not good. = ज्यादा _खाना_ ठीक नहीं होता।
 
-The gerund is usually formed by appending టం or డం to the verb's [infinitive](#infinitive).
+The gerund is usually formed by appending అటం or అడం to the verb's [infinitive](#infinitive).
 Examples:
 
 * అడుగు: అడగ → అడగటం / అడగడం
@@ -670,7 +685,7 @@ Examples:
 * రా → రావటం / రావడం
 * నిద్రపో → నిద్రపోవటం / నిద్రపోవడం
 
-For verbs whose infinitive ends with కో, either టం/డం or వటం/వడం
+For verbs whose infinitive ends with కో, either అటం/అడం or వటం/వడం
 is appended depending on dialect. Example:
 
 * తీసుకో → తీసుకోటం / తీసుకోవటం
