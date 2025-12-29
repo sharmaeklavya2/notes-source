@@ -8,10 +8,6 @@ Some entries in the sheet don't follow the transformation rules described here.
 Those entries are highlighted in red or yellow,
 depending on how different they are from the transformation rule.
 
-The [imperative](#imperative) form is the primary/defining form of a verb.
-The [infinitive](#infinitive) and [participle](#participle) forms
-are the most important, since they can be used to construct most of the other forms.
-
 [TOC]
 
 ## Sources
@@ -30,6 +26,18 @@ She said that Telangana uses a slightly different dialect of spoken Telugu
 compared to the above book. In this article, I have tried documenting these differences
 with regards to verb forms.
 
+## What to Memorize
+
+If you're learning Telugu, memorizing the following forms is crucial:
+
+1.  The [imperative](#imperative) form (the primary/defining form).
+2.  The [infinitive](#infinitive) form.
+3.  The [present adverbial participle](#present-adverbial-participle).
+4.  The [past adverbial participle](#past-adverbial-participle).
+
+This is because these four forms can be used to derive almost all of the other forms.
+Additionally, it's useful to memorize the [past adjectival participle](#past-adjectival-participle).
+
 ## Sandhi
 
 We will learn how to transform a verb from one form to other forms.
@@ -37,8 +45,8 @@ To do these transformations, we will often need to join two words together.
 This process of joining words is called సంధి (संधि / sandhi).
 There are many different sandhi rules in Telugu, but for this article,
 the rules given by the following table will suffice.
-The rules depend on whether the first word ends with a vowel
-and whether the second word starts with a vowel.
+The rules depend on the kind of vowel the first word ends with
+and the kind of character the second word starts with.
 (Note that అ = अ is considered a vowel, so, e.g.,
 మన ends with a vowel, but రాకేష్ and పుస్తకం don't.)
 
@@ -66,6 +74,12 @@ and whether the second word starts with a vowel.
     <td>long vowel</td>
     <td>remove 1st word's vowel and concatenate</td>
     <td>తింటూ + ఆను = తింటాను</td>
+</tr>
+<tr>
+    <td>vowel</td>
+    <td>consonant</td>
+    <td>concatenate</td>
+    <td>పో + వాలి = పోవాలి</td>
 </tr>
 </table>
 
@@ -121,7 +135,7 @@ Most exceptions come from *Trisyllabic* verbs.
 These are verbs whose imperative form consists of three syllables.
 For them, before appending ఆ to the imperative form,
 the middle syllable's vowel is changed to అ.
-Examples: అడుగు → అడగ, వెతుకు → వెతక
+Examples: అడుగు → అడగ, వెతుకు → వెతక.
 
 ## Tenses
 
@@ -136,16 +150,13 @@ Modifying a verb based on context is called _verb conjugation_.
 In Telugu, verbs are conjugated based on:
 
 1.  **Tense**: the time when an event happens.
-    In Telugu, there are primarily four tenses:
-    simple present, simple past, present continuous, and future continuous.
 2.  **Subject**: The pronoun of the subject, i.e., the person/object doing the action.
 3.  Whether the action is **positive** or **negative**.
 
 Conjugating a verb usually involves picking an appropriate form of a verb based on tense
 and positivity/negativity, and then appending an appropriate _personal suffix_
-<span class="secondary">(aka PNG suffix, where PNG stands for Person, Number, Gender)</span>
 based on the subject's pronoun.
-So, we will frequently refer to the following table of _personal suffixes_:
+So, we will frequently refer to the following table of personal suffixes:
 
 <table id="png-suffix-table">
 <tr>
@@ -325,7 +336,7 @@ This method only applies to subjects other than ఆమె/అది, and only wh
 
 ఉండు is conjugated differently depending on dialect and context.
 
-Method 1: conjugate to లేకుండే.
+Method 1: conjugate to లేకుండే or లేకపోయింది.
 
 * నేను ఇంట్లో _లేకుండే_. = I _was not_ at home. = मैं घर पर _नहीं था_।
 * మేం ఇంట్లో _లేకుండే_. = We _were not_ at home. = हम घर पर _नहीं थे_।
