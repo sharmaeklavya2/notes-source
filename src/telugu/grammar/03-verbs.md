@@ -588,6 +588,65 @@ to the [infinitive](#infinitive). Examples:
 * అడుగు: అడగ → అడగని
 * కూర్చో: కూర్చో → కూర్చోని
 
+## Comparative Adverb Forms
+
+### Manner Adverb Form
+
+* Present: నువ్వు _నడుస్తున్నట్లు_ నేను నడవను.
+    = I will not walk _the way_ you _are walking_.
+    = तुम _जैसे चल रहे हो वैसे_ मैं नहीं चलूँगा।
+* Past: వాళ్లు _ఆడినట్లు_ మనం ఆడినకూడదు.
+    = We should not play _the way_ they _played_.
+    = उन्होंने _जैसे खेला वैसे_ हमें नहीं खेलना चाहिए।
+* Habitual: మనం _అనుకునేటట్లు_ జరుగుతుందా?
+    = Do things happen _the way_ we _think_?
+    = हम _जैसा सोचते हैं वैसा_ होता है क्या?
+
+The derived manner adverb can be derived from the
+adjectival [participle](#participles) of the appropriate tense.
+For the future/habitual tense, append టట్లు to the participle,
+and for the other tenses, append అట్లు to the participle.
+
+Examples:
+
+* Habitual: ఆమె వచ్చేటట్లు = the way she comes = वह जैसे आती है वैसे
+* Future: ఆమె వచ్చేటట్లు = the way she will come = वह जैसे आएगी वैसे
+* Present: అతను వస్తున్నట్లు = the way he is coming = वह जैसे आ रहा है वैसे
+* Past: నేను వచ్చినట్లు = the way I came = मैं जैसे आया वैसे
+
+### Temporal Adverb Form
+
+* Present: నేను _మాట్లాడ్తున్నప్పుడు_ తినకు.
+    = Don't eat _while_ I'm _talking_.
+    = मैं _जब बात कर रहा हूँ तब_ मत खाओ।
+* Future: నువ్వు _వచ్చేటప్పుడు_ నా కోసం పూలు తీసుకురా.
+    = _When_ you _come_, bring flowers for me.
+    = तुम _जब आओ तब_ मेरे लिए फूल ले आना।
+* Past: అతను _వచ్చినప్పుడు_ నా కోసం పూలు తీసుకొచ్చాడు.
+    = _When_ he _came_, he brought flowers for me.
+    = वह _जब आया तब_ मेरे लिए फूल लाया।
+
+The temporal adverb can be derived from the
+adjectival [participle](#participles) of the appropriate tense.
+For the future/habitual tense, append టప్పుడు to the participle,
+and for the other tenses, append అప్పుడు to the participle.
+
+### Quantitative Adverb Form
+
+* Amount: నా దగ్గర నువ్వు _అడిగినంత_ డబ్బులు లేదు.
+    = I don't have _as much_ money _as_ you _asked for_.
+    = मेरे पास तुमने _जितना पूछा उतना_ पैसा नहीं है।
+* Number: నేను _తిన్నన్ని_ రొట్టెలు నువ్వు కూడా తిను.
+    = Eat _as many_ rotis _as_ I _ate_.
+    = मैंने _जितनी_ रोटियाँ _खाई उतनी_ तुम भी खाओ।
+
+Construction rule:
+
+* Amount quantitative adverb form is obtained by adding అంత to the
+[past adjectival participle](#past-adjectival-participle).
+* Number quantitative adverb form is obtained by adding అన్ని to the
+[past adjectival participle](#past-adjectival-participle).
+
 ## Other Forms
 
 ### Gerund
