@@ -701,6 +701,15 @@ It can often be obtained by replacing the final ఊ in the
 [present adverbial participle](#present-adverbial-participle) by ఏ,
 but unfortunately there are a lot of exceptions to this rule.
 
+#### Negative Conditional
+
+* నువ్వు _మాట్లాడకపోతే_, నేను మాట్లాడతాను.
+    = _If_ you _won't talk_, I will talk.
+    = तुम _बात नहीं करोगे तो_ मैं बात करूँगा।
+
+The negative conditional can be obtained by adding పోతే to the [negative imperative](#imperative)
+(or equivalently, adding కపోతే to the [infinitive](#infinitive)).
+
 ### Obligatory
 
 * నేను పుస్తకం _చదవాలి_. = I _should read_ the book. = मुझे किताब _पढ़नी चाहिए_।
@@ -726,6 +735,12 @@ The hortative can be obtained from the
 [present adverbial participle](#present-adverbial-participle).
 First, replace the final తూ or టూ with దాం,
 and then if it ends with స్డాం, replace that with ద్దాం.
+
+#### Negative Hortative
+
+* తినవద్దు = let's not eat = नहीं खाते हैं
+
+The negative hortative can be obtained by adding వద్దు to the [infinitive](#infinitive).
 
 [google-sheet]: https://docs.google.com/spreadsheets/d/1N4qPA8Ku3jhVjY6ksTkHUy4Z8-P1rJFDBn3B8HUHCgM/edit?usp=sharing
 
