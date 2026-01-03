@@ -136,7 +136,7 @@ The infinitive form has many functions.
     * నువ్వు నీళ్ళు తాగకూడదు. = You may not drink water. = तुम पानी नहीं पी सकते।
     * రవి లోపలికి రాకూడదు. = Ravi cannot come inside. = रवि अंदर नहीं आ सकता।
 * [Negative imperative form](#imperative):
-    obtained by adding 'అకు' to the infinitive.
+    obtained by adding 'కు' to the infinitive.
 * [Polite imperative form](#imperative):
     obtained by adding 'అండి' to the infinitive.
 
@@ -707,7 +707,7 @@ but unfortunately there are a lot of exceptions to this rule.
     = _If_ you _won't talk_, I will talk.
     = तुम _बात नहीं करोगे तो_ मैं बात करूँगा।
 
-The negative conditional can be obtained by adding పోతే to the [negative imperative](#imperative)
+The negative conditional can be obtained by adding అపోతే to the [negative imperative](#imperative)
 (or equivalently, adding కపోతే to the [infinitive](#infinitive)).
 
 ### Obligatory
